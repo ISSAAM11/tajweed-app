@@ -1,4 +1,4 @@
-import '../../../../base/screens/exports.dart';
+import '../../../../../base/screens/exports.dart';
 import '../../data/models/shift_report_do.dart';
 import 'note_card.dart';
 

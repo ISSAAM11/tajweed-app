@@ -1,4 +1,4 @@
-import '../../../../core/api/requester_config.dart';
+import '../../../../../core/api/requester_config.dart';
 import '../enums/note_type.dart';
 import '../models/shift_report_do.dart';
 

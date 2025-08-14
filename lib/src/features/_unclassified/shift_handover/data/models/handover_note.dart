@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../base/helpers/timestamp_helper.dart';
+import '../../../../../base/helpers/timestamp_helper.dart';
 import '../enums/note_type.dart';
 
 base class HandoverNote extends Equatable {

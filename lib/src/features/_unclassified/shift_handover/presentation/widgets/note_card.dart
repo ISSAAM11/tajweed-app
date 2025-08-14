@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-import '../../../../base/screens/exports.dart';
+import '../../../../../base/screens/exports.dart';
 import '../../data/enums/note_type.dart';
 import '../../data/models/handover_note.dart';
 

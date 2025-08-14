@@ -1,4 +1,4 @@
-import '../../../../base/screens/exports.dart';
+import '../../../../../base/screens/exports.dart';
 
 class WarningSnackbar extends CommonSnackbar {
   WarningSnackbar({required super.context, required super.message})

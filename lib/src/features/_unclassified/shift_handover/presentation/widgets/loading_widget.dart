@@ -1,4 +1,4 @@
-import '../../../../base/screens/exports.dart';
+import '../../../../../base/screens/exports.dart';
 
 final class LoadingWidget extends StatelessWidget {
   const LoadingWidget({super.key});
