@@ -1,4 +1,4 @@
-import 'package:cg_core_defs/helpers/debugging_printer.dart';
+import '../../core/defs/helpers/debugging_printer.dart';
 import 'package:flutter/widgets.dart'
     show WidgetsBinding, WidgetsBindingObserver, AppLifecycleState, mustCallSuper, protected;
 import 'package:flutter/widgets.dart';

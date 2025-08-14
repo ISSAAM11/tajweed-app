@@ -1,4 +1,3 @@
-import 'package:cg_core_defs/strategies/location/location_plugin.dart';
 import 'package:flutter/material.dart';
 
 part 'parts/bars.dart';
@@ -25,5 +24,5 @@ abstract final class AppMetrics {
   static const progressIndicators = _ProgressIndicators._();
   static final filePicking = _FilePicking._();
 
-  static const mapDefaultCentralPoint = GeoCoordinates(35.501212354988134, 11.057053644177238);
+  // static const mapDefaultCentralPoint = GeoCoordinates(35.501212354988134, 11.057053644177238);
 }

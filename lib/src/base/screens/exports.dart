@@ -1,4 +1,4 @@
-export 'package:cg_core_defs/cg_core_defs.dart';
+export '../../core/defs/cg_core_defs.dart';
 export 'package:flutter/gestures.dart';
 export 'package:flutter/material.dart' hide BackButton;
 export 'package:flutter_bloc/flutter_bloc.dart';

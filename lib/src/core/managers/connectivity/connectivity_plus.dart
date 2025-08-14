@@ -1,6 +1,6 @@
-import 'package:cg_core_defs/cg_core_defs.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
+import '../../defs/cg_core_defs.dart';
 
 class ConnectivityPlus extends ConnectivityMonitor {
   final Connectivity _connectivity;
