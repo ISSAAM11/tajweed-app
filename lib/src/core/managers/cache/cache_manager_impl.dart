@@ -1,8 +1,8 @@
-import 'package:cg_core_defs/cg_core_defs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/binding/app_bindings.dart';
+import '../../defs/cg_core_defs.dart';
 import 'secure_caching_mixin.dart';
 
 @immutable

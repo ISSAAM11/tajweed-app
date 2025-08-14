@@ -1,4 +1,3 @@
-import 'package:cg_core_defs/cg_core_defs.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart' show WidgetsFlutterBinding;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,9 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/dependency/get_it_container.dart';
 import '../../core/managers/cache/cache_manager_impl.dart';
 import '../../core/managers/connectivity/connectivity_plus.dart';
+import '../../core/defs/cg_core_defs.dart';
 
 //= Use this to inject dependencies
-final DependecyInjectionContainer di = GetItContainer();
+final DependencyInjectionContainer di = GetItContainer();
 
 //= Use this to get dependencies
 T get<T extends Object>([_]) => di.get<T>();
