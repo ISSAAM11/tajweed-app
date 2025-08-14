@@ -1,0 +1,1 @@
+xcrun simctl push booted com.nomow.tajweedai push_notifications/default_push.json

@@ -1,0 +1,16 @@
+{
+    "aps": {
+        "alert": {
+            "title": "Tajweed AI",
+            "subtitle": "Tajweed AI is the best tajweed learning app."
+        },
+        "sound": "tajweed_ai_notification.wav",
+        "category": "CustomPush",
+        "badge": 1,
+        "mutable-content": 1
+    },
+    "Employee": {
+        "Name": "Jewel CHERIAA",
+        "Designation": "Flutter Architect"
+    }
+}
