@@ -23,7 +23,9 @@ final class ShiftHandoverDataSourceImpl extends RequestPerformer
        super(client);
 
   @override
-  FutureRequestResult<ShiftReportDO> getShiftReport(String caregiverId) async => true
+  FutureRequestResult<ShiftReportDO> getShiftReport(String caregiverId) async {
+    _connectivityMonitor.startMonitoring();
+    return false
       ? Future.delayed(const Duration(milliseconds: 500), () => Right(ShiftReportDO.empty()))
       : _connectivityMonitor.isConnected
       ? await performDecodingRequest(
@@ -38,4 +40,5 @@ final class ShiftHandoverDataSourceImpl extends RequestPerformer
           const Duration(milliseconds: 500),
           () => Left(Exception('No internet connection')),
         );
+  }
 }
