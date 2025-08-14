@@ -45,18 +45,18 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/tajweed_ai_icon.jpg"
+  image_path: "assets/images/tajweed_ai_icon.png"
   min_sdk_android: 26
   remove_alpha_ios: true
 
 #= Flutter Native Splash
 flutter_native_splash:
   color: "#FFFFFF"
-  image: assets/images/tajweed_ai_splash.jpg
+  image: assets/images/tajweed_ai_splash.png
   android_gravity: center
   ios_content_mode: center
   android_12:
-    image: assets/images/tajweed_ai_splash.jpg
+    image: assets/images/tajweed_ai_splash.png
     color: "#FFFFFF"
   web: false
     
