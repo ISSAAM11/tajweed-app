@@ -7,7 +7,8 @@ final router = GoRouter(
   navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'root'),
   initialLocation: ShiftHandoverScreen.path,
   debugLogDiagnostics: true,
-  routes: [GoRoute(path: ShiftHandoverScreen.path, builder: (_, _) => ShiftHandoverScreen())],
+  routes: [
+    GoRoute(path: ShiftHandoverScreen.path, builder: (_, _) => ShiftHandoverScreen())],
 );
 
 BuildContext globalContext = router.routerDelegate.navigatorKey.currentContext!;
