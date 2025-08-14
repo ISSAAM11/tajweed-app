@@ -1,7 +1,7 @@
-export 'package:cg_core_defs/helpers/debugging_printer.dart';
 export 'package:flutter/material.dart' show ScaffoldMessenger, Theme, Scaffold, showDialog;
 export 'package:flutter/widgets.dart' show TextEditingController, FocusNode;
 export 'package:generic_requester/generic_requester.dart' hide Debugger;
+export '../../core/defs/helpers/debugging_printer.dart' show Debugger;
 
 // show Failure;
 
