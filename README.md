@@ -1,4 +1,4 @@
-# tajweed_ai
+# Tajweed-AI
 
 A new Flutter project.
 
@@ -48,7 +48,7 @@ Passionate and results-driven, with a solid track record of creating high-qualit
 
 ### Notable Applications
 * My Swiss Keeper (Switzerland) - [App Store](https://apps.apple.com/fr/app/my-swiss-keeper/id1617620449)
-* RTA Dubai (UAE Roads & Transport Authority) (+1M users) - [App Store](https://apps.apple.com/ae/app/rta-dubai/id426109507)
+* RTA Dubai (UAE Roads & Transport Authority) (+1M users) - [App Store](https://apps.apple.com/fr/app/rta-dubai/id426109507)
 * Maskan (UAE Federal Tax Authority) (+1K users) - [App Store](https://apps.apple.com/us/app/maskan-fta/id6478710219)
 * IRP AUTO Santé (FRANCE) (+100K users) - [App Store](https://apps.apple.com/fr/app/irp-auto-sant%C3%A9/id948623366?l=en) | [Play Store](https://play.google.com/store/apps/details?id=com.irpauto.sante&hl=en_US)
 * Ville de Marseille (FRANCE) (+10K users) - [App Store](https://apps.apple.com/fr/app/ville-de-marseille/id1267540404?platform=iphone)
