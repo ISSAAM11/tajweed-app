@@ -1,4 +1,5 @@
 import '../../../../base/screens/exports.dart';
+import '../../../common/widgets/form_input.dart';
 import '../../data/models/shift_report_do.dart';
 import '../../vm/bloc/shift_handover_bloc.dart';
 import 'note_adding/view/add_note_button.dart';
@@ -29,6 +30,13 @@ final class ReportViewWidget extends SubWidget<ShiftHandoverBloc> {
                 ).expanded(),
 
                 NoteAddingUC().symmetricPadding(vertical: 20),
+
+                FormInput(
+                  label: 'Add a note',
+                  hint: 'Add a note',
+                  type: FormInputType.normal,
+                  onChanged: (value) {},
+                ),
 
                 _AccessHomeButton().customPadding(bottom: 40),
               ],
