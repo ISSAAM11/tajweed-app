@@ -26,8 +26,19 @@ class SignInBody extends SubWidget<SignInBloc> {
       child: Column(
         children: [
         //$ Header
-        const Header(),
-        VerticalSpacing(AppMetrics.spacing.section),              
+        const AppLogo(),
+        VerticalSpacing(AppMetrics.spacing.sm),
+        //$ App Info
+        Text(
+          'Tajweed AI',
+          style: AppStyles.headline1.bold().primary(),
+        ),
+        VerticalSpacing(AppMetrics.spacing.xs),
+        Text(
+          'Learn Quran with AI',
+          style: AppStyles.subtitle.medium().greyRegular(),
+        ),
+        VerticalSpacing(AppMetrics.spacing.xl),
         //$ Inputs  
         FormInput(
           type: FormInputType.email,
