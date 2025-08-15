@@ -10,9 +10,7 @@ final router = GoRouter(
   debugLogDiagnostics: true,
   routes: [
     signInRoute,
-    
-    // shiftHandoverRoute,
-  ],
+    ],
 );
 
 BuildContext globalContext = router.routerDelegate.navigatorKey.currentContext!;
