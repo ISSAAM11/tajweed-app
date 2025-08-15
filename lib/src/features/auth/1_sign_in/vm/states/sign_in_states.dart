@@ -7,12 +7,9 @@ sealed class SignInState extends Equatable {
   List<Object> get props => [];
 }
 
-final class Loading extends SignInState {}
+final class Idle extends SignInState {}
 
-final class Empty extends SignInState {
-  @override
-  List<Object> get props => [];
-}
+final class Loading extends SignInState {}
 
 final class Success extends SignInState {
   final User userAccount;

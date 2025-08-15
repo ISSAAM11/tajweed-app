@@ -7,7 +7,7 @@ abstract interface class SignInDataSource {
   static const String endpoint = "sign-in";
 
   /// Calls the Sign In API endpoints.
-  FutureRequestResult<User> signIn(String email, String password);
+  FutureRequestResult<User> signInWithEmailAndPassword(String email, String password);
 
   /// Calls the Forgot Password API endpoints.
   FutureRequestResult<String> forgotPassword(String email);
@@ -23,7 +23,7 @@ final class SignInDataSourceImpl extends DataSource implements SignInDataSource 
   final responseMock = ResponseMock.success;
 
   @override
-  FutureRequestResult<User> signIn(String email, String password) async =>
+  FutureRequestResult<User> signInWithEmailAndPassword(String email, String password) async =>
       switch (responseMock) {
         //! Failure
         ResponseMock.failure => Future.delayed(
