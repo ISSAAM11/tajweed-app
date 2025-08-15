@@ -1,18 +1,18 @@
 
 import 'package:cg_core_defs/cg_core_defs.dart';
+// import 'package:go_router/go_router.dart';
 import 'package:tajweed_ai/src/utils/input_validator.dart';
 
 import '../../../../../base/bloc/exports.dart';
 import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
-import '../../data/models/user.dart';
+import '../../data/models/sign_in_model.dart';
 import '../../datasource/sign_in_datasource.dart';
 import '../events/sign_in_events.dart';
 import '../states/sign_in_states.dart';
 
 //$ USE CASES
 part '../usecases/sign_in_uc.dart'  ;
-part '../usecases/forgot_password_uc.dart'  ;
-part '../usecases/create_account_uc.dart'  ;
+part '../usecases/sign_in_navigation_uc.dart'  ;
 part '../usecases/continue_as_guest_uc.dart'  ;
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
@@ -28,18 +28,23 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   late final  passwordController=inputControllers[1].controller  ;
 
   //! Event Callers
-  Future<void> signIn() async => add(SignIn(emailController.text, passwordController.text));
-  Future<void> forgotPassword() async => add(ForgotPassword());
-  Future<void> createAccount() async => add(CreateAccount());
+  Future<void> signInWithEmailAndPassword() async => 
+    add(SignInWithEmailAndPassword(emailController.text, passwordController.text));
+  Future<void> signInWithGoogle() async => add(SignInWithGoogle());
+  Future<void> signInWithFacebook() async => add(SignInWithFacebook());
   Future<void> continueAsGuest() async => add(ContinueAsGuest());
+  Future<void> navigateToSignUp() async => add(NavigateToSignUp());
+  Future<void> navigateToForgotPassword() async => add(NavigateToForgotPassword());
 
-    
+
 
   SignInBloc(this._signInDataSource) : super(Idle(), debugginEnabled: true) {
-    on<SignIn>(_signInWithEmailAndPassword);
-    on<ForgotPassword>(_forgotPassword);
-    on<CreateAccount>(_createAccount);
+    on<SignInWithEmailAndPassword>(_signInWithEmailAndPassword);
+    on<SignInWithGoogle>(_signInWithGoogle);
+    on<SignInWithFacebook>(_signInWithFacebook);
     on<ContinueAsGuest>(_continueAsGuest);
+    on<NavigateToForgotPassword>(_navigateToForgotPassword);
+    on<NavigateToSignUp>(_navigateToSignUp);
   }
 
   //@ LIFECYCLE
