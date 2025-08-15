@@ -1,6 +1,6 @@
 # Tajweed AI
 
-A Flutter application for Tajweed learning and practice, built with modern architecture patterns and best practices.
+A Flutter application for Tajweed learning and practice, built with modern architecture patterns and best practices. This project serves as a foundation for developing Islamic learning applications with a focus on Quran recitation rules and tajweed principles.
 
 ## 🏗️ Architecture
 
@@ -20,19 +20,19 @@ lib/
 │   │   ├── bloc/              # Base BLoC implementations
 │   │   ├── dependencies/      # Base dependency injection
 │   │   ├── extensions/        # Utility extensions
-│   │   ├── helpers/           # Helper functions
-│   │   └── screens/           # Base screen implementations
+│   │   ├── screens/           # Base screen implementations
+│   │   └── datasource/        # Base data source implementations
 │   ├── core/                  # Core functionality
 │   │   ├── api/               # API configuration and setup
 │   │   ├── dependency/        # Core dependency injection
 │   │   └── managers/          # Core managers (cache, connectivity)
 │   └── features/              # Feature modules
 │       ├── common/            # Shared feature components
-│       └── shift_handover/    # Shift handover feature
+│       └── [feature_name]/    # Individual feature modules
 │           ├── binding/       # Feature dependencies
 │           ├── bloc/          # Feature business logic
-│           ├── presentation/  # UI layer
-│           └── domain/        # Business entities
+│           ├── data/          # Data layer (models, datasources)
+│           └── presentation/  # UI layer
 ```
 
 ### Key Architectural Patterns
@@ -50,12 +50,19 @@ lib/
 - **Responsive UI**: Material Design 3 with custom theming
 - **Error Handling**: Comprehensive error handling and user feedback
 - **State Management**: Reactive state management with BLoC pattern
+- **Dependency Injection**: Robust DI system with GetIt
+- **Network Management**: Connectivity monitoring and API configuration
+- **Caching System**: Local data persistence with SharedPreferences
+- **Secure Storage**: Sensitive data storage with Flutter Secure Storage
+- **Custom Widgets**: Reusable UI components with consistent design
 
 ### Planned Features
 - **Tajweed Learning Modules**: Interactive lessons and exercises
 - **Audio Integration**: Quran recitation with tajweed rules
 - **Progress Tracking**: User learning progress and achievements
 - **Offline Support**: Local data persistence with Isar database
+- **User Authentication**: Secure login and user management
+- **Content Management**: Dynamic content delivery system
 
 ## 🛠️ Technology Stack
 
@@ -94,10 +101,23 @@ lib/
 
 ## 🎨 Design System
 
+### Design Architecture
 - **Material Design 3**: Modern, adaptive design system
 - **Custom Themes**: Light theme with consistent color palette
 - **Responsive Layout**: Adaptive UI for different screen sizes
 - **Accessibility**: Built-in accessibility support
+
+### Design Components
+- **Color System**: Comprehensive color palette with semantic naming
+- **Typography**: Custom font system with consistent sizing
+- **Spacing**: Systematic spacing using design tokens
+- **Components**: Reusable UI components with consistent behavior
+- **Metrics**: Standardized dimensions for UI elements
+
+### Custom Widgets
+- **LoadingButton**: Interactive button with loading states
+- **Spacing Widgets**: Horizontal and vertical spacing utilities
+- **Widget Modifiers**: Extensive extension methods for common UI patterns
 
 ## 📱 Platform Support
 
@@ -157,7 +177,10 @@ Each feature follows a consistent structure:
 feature_name/
 ├── binding/           # Dependency injection
 ├── bloc/             # Business logic and state
-├── domain/           # Business entities and models
+├── data/             # Data layer
+│   ├── datasource/   # Data sources
+│   ├── models/       # Data models
+│   └── mock/         # Mock data for testing
 └── presentation/     # UI components and screens
     ├── screen/       # Main screen
     ├── widgets/      # Reusable widgets
@@ -165,36 +188,65 @@ feature_name/
 ```
 
 ### Base Classes
-- **BaseBloc**: Enhanced BLoC with lifecycle management
-- **BlocProviderWidget**: Widget wrapper for BLoC providers
-- **BaseScreen**: Common screen functionality
+- **BaseBloc**: Enhanced BLoC with lifecycle management and debugging
+- **Feature**: Base widget for feature screens with dependency injection
+- **Dependencies**: Abstract class for feature dependency management
+
+### Core Infrastructure
+- **GetItContainer**: Dependency injection container implementation
+- **CacheManager**: Local data caching with SharedPreferences
+- **ConnectivityMonitor**: Network connectivity monitoring
+- **RequesterConfig**: API configuration and setup
 
 ## 🔧 Configuration
 
 ### Environment Setup
 The app supports multiple environments:
-- **Development**: `Environment.dev`
-- **Staging**: `Environment.staging`
-- **Production**: `Environment.prod`
+- **Development**: `Environment.dev` - Development API endpoints
+- **Staging**: `Environment.preprod` - Pre-production testing
+- **Production**: `Environment.prod` - Production environment
+- **Testing**: `Environment.test` - Testing environment
+- **Mock**: `Environment.mock` - Mock data for development
 
 ### API Configuration
 - Centralized API configuration in `src/core/api/requester_config.dart`
-- Environment-based API endpoints
-- Request/response interceptors
+- Environment-based API endpoints with configurable timeouts
+- Request/response interceptors for debugging and monitoring
+- Mock data support for development and testing
+
+### Design Configuration
+- Centralized design tokens in `src/app/design/`
+- Consistent spacing, colors, and typography
+- Responsive breakpoints and adaptive layouts
+- Theme switching support (currently light theme only)
 
 ## 📊 Performance
 
+### Optimization Strategies
 - **Lazy Loading**: Dependencies are registered as lazy singletons
 - **State Optimization**: Smart rebuild strategies to minimize UI updates
 - **Memory Management**: Proper lifecycle management in BLoCs
 - **Image Optimization**: Oversized image handling and optimization
+- **Widget Reuse**: Efficient widget rebuilding with BLoC patterns
+
+### Monitoring & Debugging
+- **Debugger Integration**: Comprehensive logging with color-coded output
+- **Performance Overlay**: Built-in Flutter performance monitoring
+- **State Tracking**: BLoC state change monitoring and debugging
+- **Lifecycle Management**: App lifecycle state tracking and management
 
 ## 🧪 Testing
 
-- **Unit Tests**: Business logic testing
+### Testing Strategy
+- **Unit Tests**: Business logic testing with BLoC testing
 - **Widget Tests**: UI component testing
 - **Integration Tests**: End-to-end testing
 - **Code Coverage**: Comprehensive test coverage
+
+### Testing Infrastructure
+- **Test Environment**: Dedicated testing environment configuration
+- **Mock Data**: Comprehensive mock data for testing scenarios
+- **Test Utilities**: Base classes and utilities for testing
 
 ## 📦 Build & Deployment
 
@@ -202,11 +254,32 @@ The app supports multiple environments:
 - **Build**: `flutter build apk --release`
 - **Bundle**: `flutter build appbundle --release`
 - **Icon**: Custom launcher icon support
+- **Splash**: Custom splash screen with native Android 12 support
 
 ### iOS
 - **Build**: `flutter build ios --release`
 - **Icon**: Custom app icon support
 - **Splash**: Custom splash screen
+
+### Build Scripts
+- **Launcher Icon**: `./scripts/launcher_icon.sh`
+- **Splash Screen**: `./scripts/bsplash_sceeen.sh`
+- **Remove Splash**: `./scripts/rsplash_screen.sh`
+
+## 🔒 Security
+
+### Data Protection
+- **Secure Storage**: Sensitive data stored using Flutter Secure Storage
+- **Network Security**: HTTPS-only API communication
+- **Input Validation**: Comprehensive input validation and sanitization
+- **Error Handling**: Secure error messages without information leakage
+
+## 🌐 Internationalization
+
+### Localization Support
+- **Multi-language**: Framework ready for multiple languages
+- **RTL Support**: Right-to-left language support
+- **Cultural Adaptation**: Design adapted for Islamic cultural context
 
 ## 🤝 Contributing
 
@@ -217,6 +290,14 @@ We welcome contributions! Please follow these guidelines:
 - Use meaningful variable and function names
 - Add comments for complex logic
 - Maintain consistent formatting
+- Follow the established architectural patterns
+
+### Development Workflow
+1. Create a feature branch from main
+2. Implement your changes following the established patterns
+3. Add appropriate tests
+4. Ensure code analysis passes
+5. Submit a pull request with detailed description
 
 ## 📄 License
 
@@ -244,7 +325,7 @@ This project is licensed under the terms specified in the LICENSE file.
 - **Mobile**: +216 21 208 134
 - **WhatsApp**: +216 21 208 134
 
-**Expertise**:Flutter Developer with 4 years of experience
+**Expertise**: Flutter Developer with 4 years of experience
 - **State Management**: BLoC, Riverpod, Provider, GetX
 - **Performance**: Optimization, testing, automation
 - **Focus**: Mobile app development and UI/UX implementation
@@ -254,7 +335,8 @@ This project is licensed under the terms specified in the LICENSE file.
 - **Flutter Team**: For the amazing framework
 - **BLoC Community**: For state management solutions
 - **Open Source Contributors**: For various packages and tools
+- **Islamic Scholars**: For tajweed knowledge and guidance
 
 ---
 
-**Built with ❤️ using Flutter and Clean Architecture**
+**Built with ❤️ using Flutter**
