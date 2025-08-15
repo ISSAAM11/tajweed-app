@@ -19,10 +19,10 @@ class CommonSnackbar extends SnackBar {
   }) : super(
          content: Text(message),
          backgroundColor: switch (type) {
-           SnackbarType.success => Theme.of(globalContext).colorScheme.primary,
-           SnackbarType.error => Theme.of(globalContext).colorScheme.error,
-           SnackbarType.warning => Theme.of(globalContext).colorScheme.tertiary,
-           SnackbarType.info => Theme.of(globalContext).colorScheme.secondary,
+           SnackbarType.success => AppColors.success,
+           SnackbarType.error => AppColors.error,
+           SnackbarType.warning => AppColors.warning,
+           SnackbarType.info => AppColors.info,
          },
          duration: const Duration(seconds: 5),
          action: SnackBarAction(

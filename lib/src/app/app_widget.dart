@@ -18,6 +18,7 @@ class AppWidget extends StatelessWidget {
     debugInvertOversizedImages = invertOversizedImages;
 
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: showMaterialGrid,
       showPerformanceOverlay: showPerformanceOverlay,
       theme: AppThemes.light,
