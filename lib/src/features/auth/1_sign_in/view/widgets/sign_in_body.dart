@@ -65,12 +65,12 @@ class SignInBody extends SubWidget<SignInBloc> {
         ),
         //$ Forgot Password Button
         ForgotPasswordButton(
-          onTap: bloc.forgotPassword,
+          onTap: bloc.navigateToForgotPassword,
         ),
         //$ Sign In Button
         LoadingButton(
           title: 'Sign In',
-          onTap: bloc.signIn,
+          onTap: bloc.signInWithEmailAndPassword,
           isLoading: state is Loading,
           titleFontSize: FontSizes.title,
           height: AppMetrics.buttons.elevated.height,
@@ -83,17 +83,13 @@ class SignInBody extends SubWidget<SignInBloc> {
         VerticalSpacing(AppMetrics.spacing.sm),
         //$ Social Login Buttons
         SocialLoginButtons(
-          onGoogleTap: () {
-            // TODO: Implement Google sign in
-          },
-          onFacebookTap: () {
-            // TODO: Implement Facebook sign in
-          },
+          onGoogleTap: bloc.signInWithGoogle,
+          onFacebookTap: bloc.signInWithFacebook,
         ),
         VerticalSpacing(AppMetrics.spacing.sm),
       //? Don't have an account? Create one
        DontHaveAccount(
-        onTap: bloc.createAccount,
+        onTap: bloc.navigateToSignUp,
        ),
         //$ Continue as Guest Button
         CustomTextButton(
