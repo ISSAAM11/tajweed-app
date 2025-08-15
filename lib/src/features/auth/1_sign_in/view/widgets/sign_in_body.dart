@@ -6,7 +6,7 @@ import '../../../../../utils/input_validator.dart' show InputValidators;
 import '../../../../common/widgets/custom_text_button.dart';
 import '../../vm/states/sign_in_states.dart';
 import 'forgot_password_button.dart';
-import 'header.dart';
+import '../../../../common/app_logo.dart';
 import '../../../../common/widgets/form_input.dart';
 import '../../../../common/widgets/or_devider.dart';
 
