@@ -1,8 +1,8 @@
 {
   "better-comments.tags": [
     {
-      "tag": "$",
-      "color": "#FF0000",
+      "tag": "?",
+      "color": "#3498DB",
       "strikethrough": false,
       "underline": false,
       "backgroundColor": "transparent",
@@ -19,25 +19,7 @@
       "italic": false
     },
     {
-      "tag": "?",
-      "color": "#3498DB",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    },
-    {
-      "tag": "//",
-      "color": "#474747",
-      "strikethrough": true,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    },
-    {
-      "tag": "todo",
+      "tag": "$",
       "color": "#FF8C00",
       "strikethrough": false,
       "underline": false,
@@ -46,8 +28,26 @@
       "italic": false
     },
     {
-      "tag": "*",
-      "color": "#98C379",
+      "tag": "@",
+      "color": "#9B59B6",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "=",
+      "color": "#27AE60",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "todo",
+      "color": "#FF8C00",
       "strikethrough": false,
       "underline": false,
       "backgroundColor": "transparent",
@@ -85,6 +85,24 @@
       "tag": "hack",
       "color": "#FFA500",
       "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "*",
+      "color": "#98C379",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "//",
+      "color": "#474747",
+      "strikethrough": true,
       "underline": false,
       "backgroundColor": "transparent",
       "bold": false,
