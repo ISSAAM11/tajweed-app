@@ -1,5 +1,6 @@
 
 import 'package:cg_core_defs/cg_core_defs.dart';
+import 'package:tajweed_ai/src/utils/input_validator.dart';
 
 import '../../../../../base/bloc/exports.dart';
 import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
@@ -16,15 +17,15 @@ part '../usecases/continue_as_guest_uc.dart'  ;
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   //! Data Sources
-  final SignInDataSource signInDataSource;
+  final SignInDataSource _signInDataSource;
 
   //! Keys
   final formKey = GlobalKey<FormState>();
 
   //! Input Controllers
   final inputControllers=InputControl.generate(2);
-  late final emailController=inputControllers[0].controller;
-  late final passwordController=inputControllers[1].controller;
+  late final  emailController=inputControllers[0].controller  ;
+  late final  passwordController=inputControllers[1].controller  ;
 
   //! Event Callers
   Future<void> signIn() async => add(SignIn(emailController.text, passwordController.text));
@@ -34,7 +35,7 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
 
     
 
-  SignInBloc(this.signInDataSource) : super(Idle(), debugginEnabled: true) {
+  SignInBloc(this._signInDataSource) : super(Idle(), debugginEnabled: true) {
     on<SignIn>(_signInWithEmailAndPassword);
     on<ForgotPassword>(_forgotPassword);
     on<CreateAccount>(_createAccount);
@@ -42,11 +43,6 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   }
 
   //@ LIFECYCLE
-  // void onReady() {
-  //   super.onReady();
-  // }
-
-
   @override
   void onDispose() {
     inputControllers.disposeAll();

@@ -4,14 +4,35 @@ class OrDivider extends StatelessWidget {
   const OrDivider({super.key});
 
   @override
-  Widget build(BuildContext context) =>  Row(
+  Widget build(BuildContext context) => Row(
     children: [
-      Divider(color: Colors.black26).expanded(),
-      Text(
-        'Or',
-        style: AppStyles.subtitle.medium().withColor(AppColors.greyRegular),
-      ).symmetricPadding(horizontal: 16),
-      Divider(color: Colors.black26).expanded(),
+      Expanded(
+        child: Container(
+          height: 1,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.transparent, AppColors.divider, Colors.transparent],
+            ),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          'Or',
+          style: AppStyles.subtitle.medium().withColor(AppColors.greyRegular),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          height: 1,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.transparent, AppColors.divider, Colors.transparent],
+            ),
+          ),
+        ),
+      ),
     ],
   );
 }

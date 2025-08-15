@@ -4,32 +4,37 @@ class Header extends StatelessWidget {
   const Header({super.key});
 
   @override
-  Widget build(BuildContext context) =>Column(
+  Widget build(BuildContext context) => Column(
       children: [
-        Icon(
-            Icons.mosque,
-            size: 40,
-            color: AppColors.primary,
-          ).decorate(
-          width: 80,
-          height: 80,
+        Container(
+          width: 100,
+          height: 100,
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.2),
-              width: 2,
-            ),
+            gradient: AppColors.primaryGradient,
+            borderRadius: BorderRadius.circular(25),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.2),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
+          child: const Icon(
+            Icons.mosque,
+            size: 50,
+            color: Colors.white,
           ),
-        VerticalSpacing(AppMetrics.spacing.sm),
+        ),
+        VerticalSpacing(AppMetrics.spacing.md),
         Text(
           'Tajweed AI',
           style: AppStyles.headline1.bold().primary(),
         ),
+        VerticalSpacing(AppMetrics.spacing.xs),
         Text(
           'Learn Quran with AI',
-          style: AppStyles.subtitle.medium().withColor(AppColors.greyRegular),
+          style: AppStyles.subtitle.medium().greyRegular(),
         ),
       ],
     );

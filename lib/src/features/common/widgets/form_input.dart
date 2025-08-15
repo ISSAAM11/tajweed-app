@@ -40,6 +40,8 @@ class FormInput extends StatefulWidget {
     this.style,
     this.centerLabel = false,
     this.onFieldSubmitted,
+    this.onValidationChanged,
+    this.enableRealTimeValidation = false,
   });
 
   final InputTheme theme;
@@ -76,6 +78,8 @@ class FormInput extends StatefulWidget {
   final TextStyle? style;
   final bool centerLabel;
   final VoidCallback? onFieldSubmitted;
+  final void Function(String?)? onValidationChanged;
+  final bool enableRealTimeValidation;
 
   @override
   createState() => _State();
@@ -84,16 +88,17 @@ class FormInput extends StatefulWidget {
 class _State extends State<FormInput> {
   bool _obscure = true;
   bool get lightTheme => widget.theme == InputTheme.light;
+  String? _currentValidationError;
 
   @override
   Widget build(BuildContext context) {
     return switch (widget.type) {
       FormInputType.normal => _contentInput(
-          onChanged: widget.onChanged,
+          onChanged: _handleOnChanged,
           suffixIcon: widget.suffixIcon,
         ),
       FormInputType.password => _contentInput(
-          onChanged: widget.onChanged,
+          onChanged: _handleOnChanged,
           isPassword: true,
           obscure: _obscure,
           suffixIcon: IconButton(
@@ -103,96 +108,131 @@ class _State extends State<FormInput> {
           ),
         ),
       FormInputType.email => _contentInput(
-          onChanged: widget.onChanged,
+          onChanged: _handleOnChanged,
           suffixIcon: Icon(Icons.email),
           keyboardType: TextInputType.emailAddress,
         ),
       FormInputType.phoneNumber => _contentInput(
-          onChanged: widget.onChanged,
+          onChanged: _handleOnChanged,
           suffixIcon: Icon(Icons.phone),
           keyboardType: TextInputType.phone,
         ),
     };
   }
 
-  TextFormField _contentInput({
-    Widget? prefixIcon,
+  void _handleOnChanged(String value) {
+    widget.onChanged?.call(value);
+    
+    if (widget.enableRealTimeValidation && widget.validator != null) {
+      final error = widget.validator!(value);
+      if (error != _currentValidationError) {
+        _currentValidationError = error;
+        widget.onValidationChanged?.call(error);
+      }
+    }
+  }
+
+  Widget _contentInput({
     bool isPassword = false,
     bool obscure = false,
     Widget? suffixIcon,
+    Widget? prefixIcon,
     TextInputType? keyboardType,
     void Function(String)? onChanged,
   }) {
-    return TextFormField(
-      cursorColor: lightTheme ? AppColors.primary : AppColors.scaffold,
-      enabled: widget.enabled,
-      initialValue: widget.initialValue,
-      expands: widget.expands,
-      textCapitalization: widget.textCapitalization,
-      enableInteractiveSelection: true,
-      controller: widget.controller,
-      // TODO: Re-add when AppFonts class is implemented
-      // style: widget.style ?? AppFonts.inter.withColor(lightTheme ? AppColors.textColor : AppColors.scaffold),
-      style: widget.style,
-      obscureText: obscure,
-      minLines: isPassword ? 1 : widget.minLines,
-      maxLines: isPassword ? 1 : widget.maxLines,
-      maxLength: isPassword ? AppMetrics.inputs.passwordInputMaxLength : widget.maxLength,
-      keyboardType: keyboardType ?? (isPassword ? TextInputType.visiblePassword : widget.keyboardType),
-      validator: widget.validator,
-      autovalidateMode: AppMetrics.inputs.inputsAutovalidationMode,
-      focusNode: widget.focusNode,
-      onChanged: onChanged ?? widget.onChanged,
-      onFieldSubmitted: (_) => widget.onFieldSubmitted?.call(),
-      onEditingComplete: () {
-        widget.focusNode?.unfocus();
-        widget.nextFocusNode?.requestFocus();
-      },
-      buildCounter: (_, {int? currentLength, int? maxLength, bool? isFocused}) => widget.displayCounter
-          ? Text(
-              "$currentLength/$maxLength",
-              // style: AppFonts.inter.withSize(FontSizes.indication),
-              style: widget.style,
-            )
-          : null,
-      inputFormatters: widget.inputFormatters,
-      textAlign: widget.textAlign ?? TextAlign.start,
-      decoration: InputDecoration(
-        
-        enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder?.copyWith(
-              borderSide: BorderSide(
-                color: lightTheme ? AppColors.primary : AppColors.inputBorder,
-                width: AppMetrics.inputs.borderWidth,
-              ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        cursorColor: lightTheme ? AppColors.primary : AppColors.scaffold,
+        enabled: widget.enabled,
+        initialValue: widget.initialValue,
+        expands: widget.expands,
+        textCapitalization: widget.textCapitalization,
+        enableInteractiveSelection: true,
+        controller: widget.controller,
+        style: widget.style ?? AppStyles.subtitle.withColor(AppColors.greyDark),
+        obscureText: obscure,
+        minLines: isPassword ? 1 : widget.minLines,
+        maxLines: isPassword ? 1 : widget.maxLines,
+        maxLength: isPassword ? AppMetrics.inputs.passwordInputMaxLength : widget.maxLength,
+        keyboardType: keyboardType ?? (isPassword ? TextInputType.visiblePassword : widget.keyboardType),
+        validator: widget.validator,
+        autovalidateMode: widget.enableRealTimeValidation 
+            ? AutovalidateMode.onUserInteraction 
+            : AppMetrics.inputs.inputsAutovalidationMode,
+        focusNode: widget.focusNode,
+        onChanged: onChanged,
+        onFieldSubmitted: (_) => widget.onFieldSubmitted?.call(),
+        onEditingComplete: () {
+          widget.focusNode?.unfocus();
+          widget.nextFocusNode?.requestFocus();
+        },
+        buildCounter: (_, {int? currentLength, int? maxLength, bool? isFocused}) => widget.displayCounter
+            ? Text(
+                "$currentLength/$maxLength",
+                style: AppStyles.indication.withColor(AppColors.greyRegular),
+              )
+            : null,
+        inputFormatters: widget.inputFormatters,
+        textAlign: widget.textAlign ?? TextAlign.start,
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.inputBorder,
+              width: AppMetrics.inputs.borderWidth,
             ),
-        focusedBorder: Theme.of(context).inputDecorationTheme.focusedBorder?.copyWith(
-              borderSide: BorderSide(
-                color: lightTheme ? AppColors.primary : AppColors.inputBorder,
-                width: AppMetrics.inputs.borderWidth,
-              ),
+            borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.primary,
+              width: AppMetrics.inputs.borderWidth + 0.5,
             ),
-        isDense: true,
-        fillColor: widget.fillColor,
-        filled: widget.fillColor != null,
-        labelText: widget.label,
-        labelStyle:
-        // TODO: Re-add when AppFonts class is implemented
-            // AppFonts.inter.withSize(FontSizes.title).withColor(lightTheme ? AppColors.hint : AppColors.scaffold),
-            widget.style,
-        floatingLabelBehavior: widget.centerLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
-        alignLabelWithHint: widget.centerLabel,
-        hintText: widget.hint ?? "",
-        // TODO: Re-add when AppFonts class is implemented
-        //  hintStyle: AppFonts.inter.withColor(widget.hintColor ?? AppColors.hint),
-        hintStyle: widget.style,
-        // TODO: Re-add when AppFonts class is implemented
-        // errorStyle: AppFonts.inter.withColor(AppColors.error),
-        errorStyle: widget.style,
-        prefixIcon: prefixIcon ?? widget.prefixIcon,
-        prefixIconConstraints: widget.prefixConstraints ?? AppMetrics.inputs.prefixIconConstraints,
-        prefixIconColor: lightTheme ? AppColors.hint : AppColors.scaffold,
-        suffixIcon: suffixIcon,
-        suffixIconColor: lightTheme ? AppColors.hint : AppColors.scaffold,
+            borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.error,
+              width: AppMetrics.inputs.borderWidth,
+            ),
+            borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.error,
+              width: AppMetrics.inputs.borderWidth + 0.5,
+            ),
+            borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+          ),
+          isDense: true,
+          fillColor: widget.fillColor ?? AppColors.greyBackground,
+          filled: true,
+          labelText: widget.label,
+          labelStyle: AppStyles.subtitle.withColor(AppColors.greyRegular),
+          floatingLabelBehavior: widget.centerLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
+          alignLabelWithHint: widget.centerLabel,
+          hintText: widget.hint ?? "",
+          hintStyle: AppStyles.subtitle.withColor(widget.hintColor ?? AppColors.hint),
+          errorStyle: AppStyles.caption.withColor(AppColors.error),
+          prefixIcon: prefixIcon ?? widget.prefixIcon,
+          prefixIconConstraints: widget.prefixConstraints ?? AppMetrics.inputs.prefixIconConstraints,
+          prefixIconColor: AppColors.greyRegular,
+          suffixIcon: suffixIcon,
+          suffixIconColor: AppColors.greyRegular,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: AppMetrics.inputs.horizontalContentPadding,
+            vertical: AppMetrics.inputs.verticalContentPadding,
+          ),
+        ),
       ),
     );
   }
