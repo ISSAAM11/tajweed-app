@@ -281,27 +281,6 @@ The app supports multiple environments:
 - **RTL Support**: Right-to-left language support
 - **Cultural Adaptation**: Design adapted for Islamic cultural context
 
-## 🤝 Contributing
-
-We welcome contributions! Please follow these guidelines:
-
-### Code Style
-- Follow Flutter/Dart style guidelines
-- Use meaningful variable and function names
-- Add comments for complex logic
-- Maintain consistent formatting
-- Follow the established architectural patterns
-
-### Development Workflow
-1. Create a feature branch from main
-2. Implement your changes following the established patterns
-3. Add appropriate tests
-4. Ensure code analysis passes
-5. Submit a pull request with detailed description
-
-## 📄 License
-
-This project is licensed under the terms specified in the LICENSE file.
 
 ## 👥 Team
 
