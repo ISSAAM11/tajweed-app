@@ -1,15 +1,19 @@
 //? Base needed imports
 import '../../../../../base/screens/exports.dart';
+import '../../vm/states/sign_in_states.dart';
+
 
 //? Sub widgets needed imports
-import '../../../../../utils/input_validator.dart' show InputValidators;
-import '../../../../common/widgets/custom_text_button.dart';
-import '../../vm/states/sign_in_states.dart';
+import 'dont_have_an_account.dart';
 import 'forgot_password_button.dart';
-import '../../../../common/app_logo.dart';
+import 'social_login_buttons.dart';
+import '../../../../common/widgets/app_logo.dart';
 import '../../../../common/widgets/form_input.dart';
 import '../../../../common/widgets/or_devider.dart';
+import '../../../../common/widgets/custom_text_button.dart';
 
+//? Utils needed imports
+import '../../../../../utils/input_validator.dart' show InputValidators;
 
 //? Bloc needed imports
 import '../../vm/bloc/sign_in_bloc.dart';
@@ -74,20 +78,24 @@ class SignInBody extends SubWidget<SignInBloc> {
           gradient: AppColors.primaryGradient,
         ),
         //$ Or Divider
-        VerticalSpacing(AppMetrics.spacing.lg),
+        VerticalSpacing(AppMetrics.spacing.xs),
         OrDivider(),
-        //$ Create Account Button
-        VerticalSpacing(AppMetrics.spacing.md),
-        OutlinedLoadingButton(
-          title: 'Create Account',
-          onTap: bloc.createAccount,
-          titleFontSize: FontSizes.title,
-          height: AppMetrics.buttons.elevated.height,
-          textColor: AppColors.primary,
-          borderGradient: AppColors.primaryGradient,
+        VerticalSpacing(AppMetrics.spacing.sm),
+        //$ Social Login Buttons
+        SocialLoginButtons(
+          onGoogleTap: () {
+            // TODO: Implement Google sign in
+          },
+          onFacebookTap: () {
+            // TODO: Implement Facebook sign in
+          },
         ),
-        VerticalSpacing(AppMetrics.spacing.md),
-      //$ Continue as Guest Button
+        VerticalSpacing(AppMetrics.spacing.sm),
+      //? Don't have an account? Create one
+       DontHaveAccount(
+        onTap: bloc.createAccount,
+       ),
+        //$ Continue as Guest Button
         CustomTextButton(
           title: 'Continue as Guest',
           onTap: bloc.continueAsGuest,
@@ -97,3 +105,4 @@ class SignInBody extends SubWidget<SignInBloc> {
     ),
   ).center().gradientBackground();
 }
+
