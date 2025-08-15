@@ -11,9 +11,9 @@ dependencies:
     sdk: flutter
 
   cg_core_defs:
-    path: ../flutter_projects/cg_core_defs
+    path: packages/cg_core_defs
   generic_requester:
-    path: ../flutter_projects/generic_requester
+    path: packages/generic_requester
 
   get_it: ^8.2.0
   flutter_bloc: ^9.1.1
