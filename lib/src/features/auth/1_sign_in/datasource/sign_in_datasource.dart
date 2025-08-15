@@ -20,7 +20,7 @@ final class SignInDataSourceImpl extends DataSource implements SignInDataSource 
     required super.connectivityMonitor,
   });
 
-  final responseMock = ResponseMock.success;
+  final responseMock = ResponseMock.failure;
 
   @override
   FutureRequestResult<User> signInWithEmailAndPassword(String email, String password) async =>

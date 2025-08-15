@@ -12,9 +12,11 @@ final class SignInScreen extends Feature<SignInBloc, SignInState> {
   SignInScreen({super.key})
     : super(
         dependencies: SignInDependencies().inject,
-        onUpdate: (context, state) =>
-          state is Success ? 
-            appMessenger.showSnackBar(SuccessSnackbar()) : null,
+        onUpdate: (context, state) =>switch (state) {
+          Success() => appMessenger.showSnackBar(SuccessSnackbar()),
+          Error() => appMessenger.showSnackBar(FailureSnackbar(message: state.message)),
+          _ => null,
+        },
       );
 
   @override

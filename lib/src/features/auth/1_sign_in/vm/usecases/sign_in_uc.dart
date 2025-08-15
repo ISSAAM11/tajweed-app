@@ -5,20 +5,13 @@ extension on SignInBloc {
   Future<void> _signInWithEmailAndPassword(SignIn event, Emitter<SignInState> emit) async {
     if(formKey.isUnvalid)return;
     emit(Loading());
-    
-    try{
-      await Future.delayed(const Duration(seconds: 2));
       final result=await _signInDataSource
         .signInWithEmailAndPassword(event.email, event.password);
-      result.fold(
+      final user=result.fold(
         (exception) => _handleSignInFailure(exception, emit),
         (user) => _handleSignInSuccess(user, emit),
       );
-    }catch(e){  
-      emit(Error.from(e as Exception));
-    }finally{
-      emit(Idle());
-    }
+    user;
   }
 }
 void _handleSignInSuccess(User user, Emitter<SignInState> emit) =>
