@@ -9,8 +9,8 @@ final router = GoRouter(
   initialLocation: signInRoute.path,
   debugLogDiagnostics: true,
   routes: [
+    signInRoute
     // shiftHandoverRoute,
-    signInRoute,
   ],
 );
 
