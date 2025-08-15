@@ -3,7 +3,6 @@ import '../../base/screens/exports.dart';
 final ScaffoldMessengerState appMessenger = ScaffoldMessenger.of(globalContext);
 
 class CommonSnackbar extends SnackBar {
-  final BuildContext context;
   final String message;
   final SnackbarType type;
   final String? actionTitle;
@@ -12,7 +11,6 @@ class CommonSnackbar extends SnackBar {
 
   CommonSnackbar({
     super.key,
-    required this.context,
     required this.message,
     required this.type,
     this.actionTitle,
@@ -34,15 +32,17 @@ class CommonSnackbar extends SnackBar {
                : appMessenger.clearSnackBars,
          ),
          behavior: SnackBarBehavior.floating,
-         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-         margin: const EdgeInsets.all(10),
-         padding: const EdgeInsets.all(10),
+         shape: RoundedRectangleBorder(
+           borderRadius: BorderRadius.circular(AppMetrics.snackBars.defaultRadius),
+         ),
+         margin: AppMetrics.snackBars.defaultMargin,
+         padding: AppMetrics.snackBars.defaultPadding,
          hitTestBehavior: HitTestBehavior.opaque,
          dismissDirection: DismissDirection.horizontal,
          clipBehavior: Clip.hardEdge,
          closeIconColor: Colors.white,
          showCloseIcon: defaultCloseButton,
-         elevation: 10,
+         elevation: AppMetrics.snackBars.defaultElevation,
        );
 }
 

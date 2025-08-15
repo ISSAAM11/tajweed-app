@@ -2,13 +2,6 @@ import 'package:generic_requester/generic_requester.dart' hide Debugger;
 
 import '../../app/environment/app_environment.dart';
 
-export '../defs/cg_core_defs.dart' show Debugger, CacheManager, ConnectivityMonitor;
-export 'package:generic_requester/generic_requester.dart' hide Debugger;
-
-export '../../app/environment/app_environment.dart';
-export '../../core/managers/cache/cache_manager_impl.dart';
-export '../../core/managers/connectivity/connectivity_plus.dart';
-
 abstract interface class RequesterConfig {
   static void configure() => RequestPerformer.configure(
     BaseOptions(
@@ -24,6 +17,6 @@ abstract interface class RequesterConfig {
     ),
     debuggingEnabled: true,
     mockingEnabled: false,
-    // mockingDurationInMs: 300,
+    mockingDurationInMs: 300,
   );
 }

@@ -24,7 +24,7 @@ class _ListTiles {
 class _ProgressIndicators {
   const _ProgressIndicators._();
 
-  final double circularStrokeWidth = 2;
+  final double circularStrokeWidth = 1.5;
   final double linearMinHeight = 4;
   final double downloadCircularColorSize = 45;
 }

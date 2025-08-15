@@ -1,6 +1,8 @@
+import 'package:cg_core_defs/cg_core_defs.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
-import '../../defs/cg_core_defs.dart';
+
+import '../../../app/binding/app_bindings.dart';
 
 class ConnectivityPlus extends ConnectivityMonitor {
   final Connectivity _connectivity;
@@ -13,8 +15,11 @@ class ConnectivityPlus extends ConnectivityMonitor {
   @override
   void startMonitoring() {
     super.startMonitoring();
-    _connectivity.onConnectivityChanged.listen((connectivityResult) {
-      isConnectedObs.value = !connectivityResult.contains(ConnectivityResult.none);
-    });
+
+    _connectivity.onConnectivityChanged.listen(
+      (result) => isConnectedObs.updateIfDifferent(!result.contains(ConnectivityResult.none)),
+    );
   }
+
+  static void init() => get<ConnectivityMonitor>().startMonitoring();
 }

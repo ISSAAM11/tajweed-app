@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {
-  static const Color primary = Color.fromRGBO(255, 215, 0, 1); // Gold color
-  static const Color secondary = Color.fromRGBO(255, 223, 100, 1); // Light gold
-  static const Color tertiary = Color.fromRGBO(255, 235, 150, 1); // Very light gold
+  static const Color primary = Color.fromRGBO(32, 70, 155, 1);
+  static const Color secondary = Color.fromRGBO(32, 70, 155, .7);
+  static const Color tertiary = Color.fromARGB(255, 81, 76, 133);
 
   static const Color greyDark = Color(0xFF405052);
   static const Color greyMedium = Color(0xFF555555);

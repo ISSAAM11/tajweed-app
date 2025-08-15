@@ -1,14 +1,25 @@
+import 'package:cg_core_defs/cg_core_defs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/binding/app_bindings.dart';
-import '../../defs/cg_core_defs.dart';
 import 'secure_caching_mixin.dart';
 
 @immutable
 class CacheManagerImpl with SecureCachingMixin implements CacheManager<SharedPreferences> {
+  SharedPreferences? _sharedPrefs;
+
   @override
-  SharedPreferences get actor => get<SharedPreferences>();
+  SharedPreferences get actor {
+    if (_sharedPrefs == null) {
+      throw StateError('SharedPreferences not initialized. Call initialize() first.');
+    }
+    return _sharedPrefs!;
+  }
+
+  Future<void> initialize() async {
+    _sharedPrefs ??= get<SharedPreferences>();
+  }
 
   @override
   String? getString(String key) => actor.getString(key);

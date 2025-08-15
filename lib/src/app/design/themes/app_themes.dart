@@ -158,10 +158,11 @@ final class AppThemes {
     //! Progress Indicator
     progressIndicatorTheme: ProgressIndicatorThemeData(
       linearMinHeight: AppMetrics.progressIndicators.linearMinHeight,
-      color: AppColors.primary,
-      linearTrackColor: AppColors.secondary,
-      refreshBackgroundColor: AppColors.secondary,
-      circularTrackColor: AppColors.secondary,
+      strokeWidth: AppMetrics.progressIndicators.circularStrokeWidth,
+      color: AppColors.warning,
+      linearTrackColor: AppColors.success,
+      refreshBackgroundColor: AppColors.success,
+      circularTrackColor: AppColors.success,
     ),
 
     //! Tooltip
