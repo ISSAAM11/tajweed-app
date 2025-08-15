@@ -83,3 +83,85 @@ class LoadingButton extends StatelessWidget {
     );
   }
 }
+
+class OutlinedLoadingButton extends StatelessWidget {
+  final double? width;
+  final bool isTransparent;
+  final bool isLoading;
+  final VoidCallback onTap;
+  final String title;
+  final double? titleFontSize;
+  final Color? backgroundColor;
+  final Color textColor;
+  final double borderWidth;
+  final double? height;
+  final IconData? prefixIcon;
+  final Widget? prefixWidget;
+  final double? prefixIconSize;
+  final Color? prefixIconColor;
+
+  const OutlinedLoadingButton({
+    super.key,
+    this.width,
+    this.isTransparent = false,
+    this.isLoading = false,
+    required this.onTap,
+    required this.title,
+    required this.titleFontSize,
+    this.backgroundColor,
+    this.textColor = AppColors.primary,
+    this.borderWidth = 1.5,
+    this.height,
+    this.prefixIcon,
+    this.prefixWidget,
+    this.prefixIconSize = 20,
+    this.prefixIconColor = AppColors.primary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        elevation: 0,
+        iconColor: prefixIconColor,
+        backgroundColor: Colors.transparent,
+        fixedSize: Size.fromHeight(height ?? AppMetrics.buttons.elevated.height),
+        side: BorderSide(width: borderWidth, color: textColor),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppMetrics.buttons.radius),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (prefixIcon != null)
+            Icon(
+              prefixIcon,
+              color: prefixIconColor,
+              size: prefixIconSize,
+            ).customPadding(right: 8, top: 1),
+          if (prefixWidget != null) prefixWidget!,
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                title,
+                style: AppStyles.title.copyWith(
+                  color: isLoading ? Colors.transparent : textColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: titleFontSize ?? AppStyles.title.fontSize,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const CircularProgressIndicator()
+                  .resize(height: 18, width: 18)
+                  .center()
+                  .visibleWhen(isLoading),
+            ],
+          ),
+        ],
+      ).resize(width: width),
+    );
+  }
+}
