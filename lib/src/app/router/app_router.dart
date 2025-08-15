@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/_unclassified/shift_handover/view/screen/shift_handover_screen.dart';
+import '../../features/_unclassified/shift_handover/router/shift_handover_route.dart';
 
 final router = GoRouter(
   navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'root'),
-  initialLocation: ShiftHandoverScreen.path,
+  initialLocation: shiftHandoverRoute.path,
   debugLogDiagnostics: true,
-  routes: [GoRoute(path: ShiftHandoverScreen.path, builder: (_, _) => ShiftHandoverScreen())],
+  routes: [shiftHandoverRoute],
 );
 
 BuildContext globalContext = router.routerDelegate.navigatorKey.currentContext!;

@@ -4,5 +4,6 @@ analyzer:
     curly_braces_in_flow_control_structures: ignore
     dead_code: ignore
     must_be_immutable: ignore
+    unnecessary_underscores: ignore
     unused_element_parameter: ignore
     use_key_in_widget_constructors: ignore
