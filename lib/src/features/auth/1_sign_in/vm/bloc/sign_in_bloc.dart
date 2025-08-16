@@ -1,4 +1,4 @@
-import 'package:cg_core_defs/cg_core_defs.dart';
+import 'package:cg_core_defs/cg_core_defs.dart' show InputControl;
 
 import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
 import 'package:tajweed_ai/src/utils/input_validator.dart';
@@ -21,9 +21,9 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   final formKey = GlobalKey<FormState>();
 
   //! Input Controllers
-  final inputControllers=InputControl.generate(2);
-  late final  emailController=inputControllers[0].controller  ;
-  late final  passwordController=inputControllers[1].controller  ;
+  late final List<InputControl>   inputControllers;
+  late final TextEditingController emailController  ;
+  late final TextEditingController passwordController  ;
 
   //! Event Callers
   Future<void> signInWithEmailAndPassword() async => 
@@ -43,10 +43,20 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
 
   //@ LIFECYCLE
   @override
+  void onInit() {
+    inputControllers=InputControl.generate(2);
+    emailController=inputControllers[0].controller;
+    passwordController=inputControllers[1].controller;
+    super.onInit();
+  }
+
+
+  @override
   void onDispose() {
-    inputControllers.clearAllTECs();
-    inputControllers.unfocusAllFocusNodes();
-    inputControllers.disposeAll();
+    emailController.dispose();
+    Debugger.red("onDispose emailController");
+    passwordController.dispose();
+    Debugger.red("onDispose passwordController");
     super.onDispose();
   }
   
