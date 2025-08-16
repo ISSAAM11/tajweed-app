@@ -22,7 +22,8 @@ base class HandoverNote extends Equatable {
     required this.type,
   });
 
-  factory HandoverNote.acknowledged(HandoverNote note) => note.copyWith(isAcknowledged: true);
+  factory HandoverNote.acknowledged(HandoverNote note) =>
+      note.copyWith(isAcknowledged: true);
 
   factory HandoverNote.from(Map<String, dynamic> json) => HandoverNote._(
     id: json['id'] ?? '',
@@ -58,5 +59,12 @@ base class HandoverNote extends Equatable {
   );
 
   @override
-  List<Object?> get props => [id, text, timestamp, authorId, isAcknowledged, isEmpty];
+  List<Object?> get props => [
+    id,
+    text,
+    timestamp,
+    authorId,
+    isAcknowledged,
+    isEmpty,
+  ];
 }

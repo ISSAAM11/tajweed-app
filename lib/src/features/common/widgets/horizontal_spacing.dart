@@ -7,5 +7,6 @@ class HorizontalSpacing extends StatelessWidget {
   final bool visible;
 
   @override
-  Widget build(BuildContext context) => SizedBox(width: width).visibleWhen(visible);
+  Widget build(BuildContext context) =>
+      SizedBox(width: width).visibleWhen(visible);
 }

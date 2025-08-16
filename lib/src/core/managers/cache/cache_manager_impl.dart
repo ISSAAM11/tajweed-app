@@ -6,13 +6,17 @@ import '../../../app/binding/app_bindings.dart';
 import 'secure_caching_mixin.dart';
 
 @immutable
-class CacheManagerImpl with SecureCachingMixin implements CacheManager<SharedPreferences> {
+class CacheManagerImpl
+    with SecureCachingMixin
+    implements CacheManager<SharedPreferences> {
   SharedPreferences? _sharedPrefs;
 
   @override
   SharedPreferences get actor {
     if (_sharedPrefs == null) {
-      throw StateError('SharedPreferences not initialized. Call initialize() first.');
+      throw StateError(
+        'SharedPreferences not initialized. Call initialize() first.',
+      );
     }
     return _sharedPrefs!;
   }
@@ -25,7 +29,8 @@ class CacheManagerImpl with SecureCachingMixin implements CacheManager<SharedPre
   String? getString(String key) => actor.getString(key);
 
   @override
-  Future<bool> setString(String key, String value) => actor.setString(key, value);
+  Future<bool> setString(String key, String value) =>
+      actor.setString(key, value);
 
   @override
   int? getInt(String key) => actor.getInt(key);
@@ -43,13 +48,15 @@ class CacheManagerImpl with SecureCachingMixin implements CacheManager<SharedPre
   double? getDouble(String key) => actor.getDouble(key);
 
   @override
-  Future<bool> setDouble(String key, double value) => actor.setDouble(key, value);
+  Future<bool> setDouble(String key, double value) =>
+      actor.setDouble(key, value);
 
   @override
   List<String>? getStringList(String key) => actor.getStringList(key);
 
   @override
-  Future<bool> setStringList(String key, List<String> value) => actor.setStringList(key, value);
+  Future<bool> setStringList(String key, List<String> value) =>
+      actor.setStringList(key, value);
 
   @override
   Future<bool> remove(String key) => actor.remove(key);

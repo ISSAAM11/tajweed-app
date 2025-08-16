@@ -1,6 +1,5 @@
 import '../../../../../base/screens/exports.dart';
 
-
 class FailureSnackbar extends CommonSnackbar {
   FailureSnackbar({required BuildContext context, required super.message})
     : super(

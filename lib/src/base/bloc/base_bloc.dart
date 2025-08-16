@@ -1,6 +1,11 @@
 import 'package:cg_core_defs/helpers/debugging_printer.dart';
 import 'package:flutter/widgets.dart'
-    show WidgetsBinding, WidgetsBindingObserver, AppLifecycleState, mustCallSuper, protected;
+    show
+        WidgetsBinding,
+        WidgetsBindingObserver,
+        AppLifecycleState,
+        mustCallSuper,
+        protected;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,7 +25,10 @@ abstract class BaseBloc<E, S> extends Bloc<E, S> with WidgetsBindingObserver {
   @mustCallSuper
   void onInit() {
     WidgetsBinding.instance.addPostFrameCallback((_) => onReady());
-    Debugger.yellow.execute(() => "$runtimeType initialized", when: debugginEnabled);
+    Debugger.yellow.execute(
+      () => "$runtimeType initialized",
+      when: debugginEnabled,
+    );
     _observeLifecycle();
   }
 
@@ -42,7 +50,10 @@ abstract class BaseBloc<E, S> extends Bloc<E, S> with WidgetsBindingObserver {
   void onPause() {
     if (_isPaused) return;
     _isPaused = true;
-    Debugger.black.execute(() => "$runtimeType paused at $time", when: debugginEnabled);
+    Debugger.black.execute(
+      () => "$runtimeType paused at $time",
+      when: debugginEnabled,
+    );
   }
 
   @protected
@@ -50,14 +61,18 @@ abstract class BaseBloc<E, S> extends Bloc<E, S> with WidgetsBindingObserver {
   void onResume() {
     if (!_isPaused) return;
     _isPaused = false;
-    Debugger.white.execute(() => "$runtimeType resumed at $time", when: debugginEnabled);
+    Debugger.white.execute(
+      () => "$runtimeType resumed at $time",
+      when: debugginEnabled,
+    );
   }
 
   @protected
   void _observeLifecycle() => WidgetsBinding.instance.addObserver(this);
 
   @protected
-  void _removeLifecycleObserver() => WidgetsBinding.instance.removeObserver(this);
+  void _removeLifecycleObserver() =>
+      WidgetsBinding.instance.removeObserver(this);
 
   @override
   @protected
@@ -67,5 +82,6 @@ abstract class BaseBloc<E, S> extends Bloc<E, S> with WidgetsBindingObserver {
     _ => null,
   };
 
-  String get time => DateTime.now().toLocal().toString().split(' ')[1].substring(0, 8);
+  String get time =>
+      DateTime.now().toLocal().toString().split(' ')[1].substring(0, 8);
 }

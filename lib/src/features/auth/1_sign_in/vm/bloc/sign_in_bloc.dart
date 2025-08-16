@@ -5,7 +5,7 @@ import '../events/sign_in_events.dart';
 import '../states/sign_in_states.dart';
 
 //$ USE CASES
-part '../usecases/sign_in_uc.dart'  ;
+part '../usecases/sign_in_uc.dart';
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   final SignInDataSource signInDataSource;
@@ -22,6 +22,4 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   void onReady() {
     super.onReady();
   }
-
-  
 }

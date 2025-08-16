@@ -44,7 +44,9 @@ final class AppThemes {
         minimumSize: Size.fromHeight(AppMetrics.buttons.elevated.height),
         backgroundColor: AppColors.secondary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(AppMetrics.buttons.radius)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(AppMetrics.buttons.radius),
+          ),
         ),
         textStyle: AppFonts.helvetica.bold().withSize(FontSizes.headline3),
         foregroundColor: AppColors.scaffold,
@@ -59,7 +61,9 @@ final class AppThemes {
         minimumSize: Size.fromHeight(AppMetrics.buttons.text.height),
         backgroundColor: AppColors.scaffold,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(AppMetrics.buttons.radius)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(AppMetrics.buttons.radius),
+          ),
         ),
         textStyle: AppFonts.helvetica.bold().withSize(FontSizes.title),
         foregroundColor: AppColors.primary,
@@ -73,12 +77,18 @@ final class AppThemes {
       foregroundColor: AppColors.scaffold,
       iconSize: AppMetrics.buttons.floating.iconSize,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(AppMetrics.buttons.floating.radius)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(AppMetrics.buttons.floating.radius),
+        ),
       ),
     ),
 
     //! Divider
-    dividerTheme: const DividerThemeData(color: AppColors.divider, thickness: 1, space: 1),
+    dividerTheme: const DividerThemeData(
+      color: AppColors.divider,
+      thickness: 1,
+      space: 1,
+    ),
 
     //? Inputs
     inputDecorationTheme: InputDecorationTheme(
@@ -98,19 +108,31 @@ final class AppThemes {
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.secondary, width: AppMetrics.inputs.borderWidth),
+        borderSide: BorderSide(
+          color: AppColors.secondary,
+          width: AppMetrics.inputs.borderWidth,
+        ),
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.secondary, width: AppMetrics.inputs.borderWidth),
+        borderSide: BorderSide(
+          color: AppColors.secondary,
+          width: AppMetrics.inputs.borderWidth,
+        ),
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       errorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.error, width: AppMetrics.inputs.borderWidth),
+        borderSide: BorderSide(
+          color: AppColors.error,
+          width: AppMetrics.inputs.borderWidth,
+        ),
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.error, width: AppMetrics.inputs.borderWidth),
+        borderSide: BorderSide(
+          color: AppColors.error,
+          width: AppMetrics.inputs.borderWidth,
+        ),
       ),
     ),
 
@@ -127,7 +149,9 @@ final class AppThemes {
       elevation: AppMetrics.cards.elevation,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(AppMetrics.cards.radius)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(AppMetrics.cards.radius),
+        ),
       ),
     ),
 
@@ -137,14 +161,18 @@ final class AppThemes {
       textColor: Colors.black,
       titleAlignment: ListTileTitleAlignment.top,
       titleTextStyle: AppFonts.helvetica.bold().withSize(FontSizes.headline3),
-      subtitleTextStyle: AppFonts.helvetica.withSize(FontSizes.subtitle).withHeight(1.3),
+      subtitleTextStyle: AppFonts.helvetica
+          .withSize(FontSizes.subtitle)
+          .withHeight(1.3),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       horizontalTitleGap: 12,
       minVerticalPadding: 20,
       style: ListTileStyle.list,
       enableFeedback: true,
       tileColor: Colors.transparent,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppMetrics.cards.radius)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppMetrics.cards.radius),
+      ),
     ),
 
     //! Checkbox
@@ -152,7 +180,9 @@ final class AppThemes {
       checkColor: WidgetStateProperty.all(AppColors.primary),
       fillColor: WidgetStateProperty.all(AppColors.tertiary),
       side: const BorderSide(color: AppColors.primary),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
     ),
 
     //! Progress Indicator
@@ -172,13 +202,18 @@ final class AppThemes {
         borderRadius: BorderRadius.circular(AppMetrics.defaultRadius),
       ),
       enableFeedback: true,
-      textStyle: AppFonts.helvetica.withSize(FontSizes.subtitle).semiBold().withColor(Colors.white),
+      textStyle: AppFonts.helvetica
+          .withSize(FontSizes.subtitle)
+          .semiBold()
+          .withColor(Colors.white),
     ),
 
     //! SnackBar
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.fixed,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppMetrics.defaultRadius)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppMetrics.defaultRadius),
+      ),
       elevation: AppMetrics.defaultElevation,
     ),
 

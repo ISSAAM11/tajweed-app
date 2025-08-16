@@ -13,8 +13,9 @@ abstract interface class SignInDataSource {
   FutureRequestResult<String> forgotPassword(String email);
 }
 
-final class SignInDataSourceImpl extends DataSource implements SignInDataSource {
-  SignInDataSourceImpl({    
+final class SignInDataSourceImpl extends DataSource
+    implements SignInDataSource {
+  SignInDataSourceImpl({
     required super.client,
     required super.cacheManager,
     required super.connectivityMonitor,
@@ -44,10 +45,7 @@ final class SignInDataSourceImpl extends DataSource implements SignInDataSource 
         ResponseMock.success => await performDecodingRequest(
           decodableModel: User.empty(),
           method: RestfulMethods.post,
-          body: {
-            "email": email,
-            "password": password,
-          },
+          body: {"email": email, "password": password},
           path: SignInDataSource.endpoint,
           mockingData: _mockSignIn(),
           mockIt: true,
@@ -61,8 +59,6 @@ final class SignInDataSourceImpl extends DataSource implements SignInDataSource 
       () => Right('Success'),
     );
   }
-
-
 }
 
 enum ResponseMock { noInternet, noData, success, failure }

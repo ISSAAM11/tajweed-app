@@ -2,7 +2,10 @@ part of '../bloc/shift_handover_bloc.dart';
 
 //- GET SHIFT REPORT
 extension on ShiftHandoverBloc {
-  void _loadShiftReport(GetShiftReport event, Emitter<ShiftHandoverState> emit) async {
+  void _loadShiftReport(
+    GetShiftReport event,
+    Emitter<ShiftHandoverState> emit,
+  ) async {
     emit(Loading());
 
     await shiftHandoverDataSource
@@ -15,9 +18,15 @@ extension on ShiftHandoverBloc {
         );
   }
 
-  void _handleShiftHandoverFailure(Exception exception, Emitter<ShiftHandoverState> emit) =>
-      emit(Error.from(exception));
+  void _handleShiftHandoverFailure(
+    Exception exception,
+    Emitter<ShiftHandoverState> emit,
+  ) => emit(Error.from(exception));
 
-  void _handleLoadShiftReport(ShiftReportDO shiftReport, Emitter<ShiftHandoverState> emit) =>
-      emit(shiftReport.notes.isEmpty ? Empty() : Success(shiftReport: shiftReport));
+  void _handleLoadShiftReport(
+    ShiftReportDO shiftReport,
+    Emitter<ShiftHandoverState> emit,
+  ) => emit(
+    shiftReport.notes.isEmpty ? Empty() : Success(shiftReport: shiftReport),
+  );
 }

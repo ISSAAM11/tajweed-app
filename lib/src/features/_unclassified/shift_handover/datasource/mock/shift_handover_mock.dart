@@ -6,7 +6,9 @@ part of '../shift_handover_datasource_impl.dart';
 Map<String, dynamic> _mockShiftReport({int notesCount = 5}) => {
   "id": "shift-123",
   "caregiverId": "current-user-id",
-  "startTime": DateTime.now().subtract(const Duration(hours: 8)).toIso8601String(),
+  "startTime": DateTime.now()
+      .subtract(const Duration(hours: 8))
+      .toIso8601String(),
   "endTime": null,
   "summary": "",
   "isSubmitted": false,
@@ -16,7 +18,9 @@ Map<String, dynamic> _mockShiftReport({int notesCount = 5}) => {
         "id": "note-$index",
         "text": "This is a sample note of type ${_getNoteType(index).name}.",
         "type": _getNoteType(index).name,
-        "timestamp": DateTime.now().subtract(Duration(hours: index)).toIso8601String(),
+        "timestamp": DateTime.now()
+            .subtract(Duration(hours: index))
+            .toIso8601String(),
         "authorId": "caregiver-A",
         "taggedResidentIds": [],
         "isAcknowledged": false,

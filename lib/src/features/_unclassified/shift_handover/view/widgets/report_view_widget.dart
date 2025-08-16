@@ -17,16 +17,21 @@ final class ReportViewWidget extends SubWidget<ShiftHandoverBloc> {
           ? Text(
               'No notes added yet.\nUse the form below to add the first note.',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             ).center().expanded()
           : Column(
               children: [
                 ListView.separated(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   itemCount: report.notes.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) =>
-                      NoteCard(key: ValueKey(report.notes[index].id), note: report.notes[index]),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemBuilder: (context, index) => NoteCard(
+                    key: ValueKey(report.notes[index].id),
+                    note: report.notes[index],
+                  ),
                 ).expanded(),
 
                 NoteAddingUC().symmetricPadding(vertical: 20),

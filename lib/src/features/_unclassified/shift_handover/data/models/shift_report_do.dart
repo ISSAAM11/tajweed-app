@@ -41,7 +41,11 @@ final class ShiftReportDO extends ModelingProtocol {
         endTime: json?['endTime'] ?? '',
         summary: json?['summary'] ?? '',
         isSubmitted: json?['isSubmitted'] ?? false,
-        notes: (json?['notes'] as List<dynamic>?)?.map((e) => HandoverNote.from(e)).toList() ?? [],
+        notes:
+            (json?['notes'] as List<dynamic>?)
+                ?.map((e) => HandoverNote.from(e))
+                .toList() ??
+            [],
       );
     } catch (e, s) {
       throw JsonParsingException(e, s);
@@ -49,5 +53,13 @@ final class ShiftReportDO extends ModelingProtocol {
   }
 
   @override
-  List<Object?> get props => [id, caregiverId, startTime, endTime, notes, summary, isSubmitted];
+  List<Object?> get props => [
+    id,
+    caregiverId,
+    startTime,
+    endTime,
+    notes,
+    summary,
+    isSubmitted,
+  ];
 }

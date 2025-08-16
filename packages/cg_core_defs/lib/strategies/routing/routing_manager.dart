@@ -38,23 +38,30 @@ abstract class RoutingManager<A> {
   Future<T?> push<T extends Object?>(String route, {Object? arguments});
 
   /// Navigate to a new route and replace the current route.
-  Future<T?> pushReplacement<T extends Object?, TO extends Object?>(String route,
-      {Object? arguments, TO? result});
+  Future<T?> pushReplacement<T extends Object?, TO extends Object?>(
+      String route,
+      {Object? arguments,
+      TO? result});
 
   /// Navigate to a new route and remove all previous routes.
-  Future<T?> pushAndRemoveUntil<T extends Object?>(String route, RoutePredicate predicate,
+  Future<T?> pushAndRemoveUntil<T extends Object?>(
+      String route, RoutePredicate predicate,
       {Object? arguments});
 
   /// Navigate to a new route and clear the entire navigation stack.
-  Future<T?> pushNamedAndRemoveUntil<T extends Object?>(String route, RoutePredicate predicate,
+  Future<T?> pushNamedAndRemoveUntil<T extends Object?>(
+      String route, RoutePredicate predicate,
       {Object? arguments});
 
   /// Navigate to a new route with a name.
-  Future<T?> pushNamed<T extends Object?>(String routeName, {Object? arguments});
+  Future<T?> pushNamed<T extends Object?>(String routeName,
+      {Object? arguments});
 
   /// Navigate to a new route with a name and replace the current route.
-  Future<T?> pushReplacementNamed<T extends Object?, TO extends Object?>(String routeName,
-      {Object? arguments, TO? result});
+  Future<T?> pushReplacementNamed<T extends Object?, TO extends Object?>(
+      String routeName,
+      {Object? arguments,
+      TO? result});
 
   /// Pop the current route and return a result.
   Future<void> pop<T extends Object?>([T? result]);

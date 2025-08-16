@@ -32,6 +32,8 @@ final class AppBinding extends AppBindings {
 
     //& Packages
     di.registerLazySingleton(() => Dio());
-    di.registerLazySingleton<ConnectivityMonitor>(() => ConnectivityPlus(Connectivity()));
+    di.registerLazySingleton<ConnectivityMonitor>(
+      () => ConnectivityPlus(Connectivity()),
+    );
   }
 }

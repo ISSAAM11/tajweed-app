@@ -44,8 +44,12 @@ class LoadingButton extends StatelessWidget {
         backgroundColor: isTransparent
             ? Colors.transparent
             : (backgroundColor ?? AppColors.primary),
-        fixedSize: Size.fromHeight(height ?? AppMetrics.buttons.elevated.height),
-        side: borderWidth == 0 ? BorderSide.none : BorderSide(width: borderWidth, color: textColor),
+        fixedSize: Size.fromHeight(
+          height ?? AppMetrics.buttons.elevated.height,
+        ),
+        side: borderWidth == 0
+            ? BorderSide.none
+            : BorderSide(width: borderWidth, color: textColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +72,12 @@ class LoadingButton extends StatelessWidget {
                   fontSize: titleFontSize ?? AppStyles.title.fontSize,
                   shadows: isLoading
                       ? null
-                      : [const BoxShadow(blurRadius: 5, offset: Offset(-1, 1.3))],
+                      : [
+                          const BoxShadow(
+                            blurRadius: 5,
+                            offset: Offset(-1, 1.3),
+                          ),
+                        ],
                 ),
                 textAlign: TextAlign.center,
               ),

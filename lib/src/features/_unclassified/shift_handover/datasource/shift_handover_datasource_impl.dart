@@ -11,7 +11,8 @@ abstract interface class ShiftHandoverDataSource {
   FutureRequestResult<ShiftReportDO> getShiftReport(String caregiverId);
 }
 
-final class ShiftHandoverDataSourceImpl extends DataSource implements ShiftHandoverDataSource {
+final class ShiftHandoverDataSourceImpl extends DataSource
+    implements ShiftHandoverDataSource {
   ShiftHandoverDataSourceImpl({
     required super.client,
     required super.cacheManager,
@@ -43,7 +44,9 @@ final class ShiftHandoverDataSourceImpl extends DataSource implements ShiftHando
           decodableModel: ShiftReportDO.empty(),
           method: RestfulMethods.get,
           path: "${ShiftHandoverDataSource.endpoint}/$caregiverId",
-          mockingData: _mockShiftReport(notesCount: AppEnvironment.testing ? 1 : 5),
+          mockingData: _mockShiftReport(
+            notesCount: AppEnvironment.testing ? 1 : 5,
+          ),
           mockIt: true,
           simulateFailure: false,
         ),

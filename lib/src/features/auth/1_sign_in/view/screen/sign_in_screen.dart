@@ -1,8 +1,7 @@
-import '../../../../../base/screens/exports.dart';    
+import '../../../../../base/screens/exports.dart';
 import '../../binding/sign_in_deps.dart';
 import '../../vm/bloc/sign_in_bloc.dart';
 import '../../vm/states/sign_in_states.dart';
-
 
 final class SignInScreen extends Feature<SignInBloc, SignInState> {
   static final path = "/sign-in";

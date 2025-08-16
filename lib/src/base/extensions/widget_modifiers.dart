@@ -68,17 +68,21 @@ extension WidgetModifier on Widget {
     child: this,
   );
 
-  PopScope captureScopePopping(void Function(bool value)? onPopInvoked, {required bool canPop}) =>
-      PopScope(
-        canPop: canPop,
-        onPopInvokedWithResult: (value, _) {
-          onPopInvoked?.call(value);
-        },
-        child: this,
-      );
-  IgnorePointer ignoreWhen(bool ignoring) => IgnorePointer(ignoring: ignoring, child: this);
+  PopScope captureScopePopping(
+    void Function(bool value)? onPopInvoked, {
+    required bool canPop,
+  }) => PopScope(
+    canPop: canPop,
+    onPopInvokedWithResult: (value, _) {
+      onPopInvoked?.call(value);
+    },
+    child: this,
+  );
+  IgnorePointer ignoreWhen(bool ignoring) =>
+      IgnorePointer(ignoring: ignoring, child: this);
 
-  AbsorbPointer absorbWhen(bool absorbing) => AbsorbPointer(absorbing: absorbing, child: this);
+  AbsorbPointer absorbWhen(bool absorbing) =>
+      AbsorbPointer(absorbing: absorbing, child: this);
 
   SafeArea safeArea({
     final bool safeAreaTop = true,
@@ -104,17 +108,21 @@ extension WidgetModifier on Widget {
     Color overlayColor = AppColors.overlayColor,
   }) => InkWell(
     onTap: onTap,
-    borderRadius: BorderRadius.all(Radius.circular(radius ?? AppMetrics.defaultRadius)),
+    borderRadius: BorderRadius.all(
+      Radius.circular(radius ?? AppMetrics.defaultRadius),
+    ),
     overlayColor: WidgetStateProperty.all(overlayColor),
     splashColor: Colors.red,
     child: Padding(padding: padding, child: this),
   );
 
-  GestureDetector detectGesture(VoidCallback onTap, {EdgeInsets padding = EdgeInsets.zero}) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Container(padding: padding, child: this),
-      );
+  GestureDetector detectGesture(
+    VoidCallback onTap, {
+    EdgeInsets padding = EdgeInsets.zero,
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Container(padding: padding, child: this),
+  );
 
   IconButton asIconButton({required VoidCallback onTap}) =>
       IconButton(onPressed: onTap, icon: this);
@@ -125,14 +133,26 @@ extension WidgetModifier on Widget {
     child: this,
   );
 
-  Padding symmetricPadding({double horizontal = 0, double vertical = 0}) => Padding(
+  Padding symmetricPadding({double horizontal = 0, double vertical = 0}) =>
+      Padding(
+        key: key,
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontal,
+          vertical: vertical,
+        ),
+        child: this,
+      );
+
+  Padding customPadding({
+    double left = 0,
+    double right = 0,
+    double top = 0,
+    double bottom = 0,
+  }) => Padding(
     key: key,
-    padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
+    padding: EdgeInsets.fromLTRB(left, top, right, bottom),
     child: this,
   );
-
-  Padding customPadding({double left = 0, double right = 0, double top = 0, double bottom = 0}) =>
-      Padding(key: key, padding: EdgeInsets.fromLTRB(left, top, right, bottom), child: this);
 
   ClipRRect clipRRect({
     Key? key,
@@ -141,15 +161,25 @@ extension WidgetModifier on Widget {
     Clip clipBehavior = Clip.antiAlias,
   }) => ClipRRect(
     key: key,
-    borderRadius: borderRadius ?? BorderRadius.circular(AppMetrics.defaultRadius),
+    borderRadius:
+        borderRadius ?? BorderRadius.circular(AppMetrics.defaultRadius),
     clipper: clipper,
     clipBehavior: clipBehavior,
     child: this,
   );
 
-  Widget center({Key? key, bool enabled = true, double? widthFactor, double? heightFactor}) =>
-      enabled
-      ? Center(key: key, widthFactor: widthFactor, heightFactor: heightFactor, child: this)
+  Widget center({
+    Key? key,
+    bool enabled = true,
+    double? widthFactor,
+    double? heightFactor,
+  }) => enabled
+      ? Center(
+          key: key,
+          widthFactor: widthFactor,
+          heightFactor: heightFactor,
+          child: this,
+        )
       : this;
 
   ColoredBox coloredBox({Key? key, required Color color, bool top = true}) =>
@@ -196,7 +226,8 @@ extension WidgetModifier on Widget {
     maintainInteractivity: maintainInteractivity,
     child: this,
   );
-  Visibility hide({Key? key}) => Visibility(key: key, visible: false, child: this);
+  Visibility hide({Key? key}) =>
+      Visibility(key: key, visible: false, child: this);
 
   Container decorate({
     Key? key,
@@ -246,7 +277,11 @@ extension WidgetModifier on Widget {
   /// an [AnimatedOpacity] or a [FadeTransition] instead.
   /// {  https://docs.flutter.dev/perf/best-practices#minimize-use-of-opacity-and-clipping}
   ///
-  Opacity opacity(double opacity, {Key? key, bool alwaysIncludeSemantics = false}) => Opacity(
+  Opacity opacity(
+    double opacity, {
+    Key? key,
+    bool alwaysIncludeSemantics = false,
+  }) => Opacity(
     key: key,
     opacity: opacity,
     alwaysIncludeSemantics: alwaysIncludeSemantics,
@@ -256,7 +291,8 @@ extension WidgetModifier on Widget {
   Flexible flexible({Key? key, int flex = 1, FlexFit fit = FlexFit.loose}) =>
       Flexible(key: key, flex: flex, fit: fit, child: this);
 
-  Expanded expanded({Key? key, int flex = 1}) => Expanded(key: key, flex: flex, child: this);
+  Expanded expanded({Key? key, int flex = 1}) =>
+      Expanded(key: key, flex: flex, child: this);
 
   Container addTopShadow({
     EdgeInsetsGeometry? margin = EdgeInsets.zero,
@@ -265,19 +301,25 @@ extension WidgetModifier on Widget {
     margin: margin,
     padding: padding,
     decoration: const BoxDecoration(
-      boxShadow: [BoxShadow(color: Colors.white, blurRadius: 20, offset: Offset(0, -20))],
+      boxShadow: [
+        BoxShadow(color: Colors.white, blurRadius: 20, offset: Offset(0, -20)),
+      ],
     ),
     child: this,
   );
 
-  Align align(AlignmentGeometry alignment, {Key? key, double? widthFactor, double? heightFactor}) =>
-      Align(
-        key: key,
-        alignment: alignment,
-        widthFactor: widthFactor,
-        heightFactor: heightFactor,
-        child: this,
-      );
+  Align align(
+    AlignmentGeometry alignment, {
+    Key? key,
+    double? widthFactor,
+    double? heightFactor,
+  }) => Align(
+    key: key,
+    alignment: alignment,
+    widthFactor: widthFactor,
+    heightFactor: heightFactor,
+    child: this,
+  );
 
   /// Creates a widget that scales and positions its child within itself according to [fit].
   FittedBox makeFitted({
@@ -285,8 +327,13 @@ extension WidgetModifier on Widget {
     BoxFit fit = BoxFit.contain,
     AlignmentGeometry alignment = Alignment.center,
     Clip clipBehavior = Clip.none,
-  }) =>
-      FittedBox(key: key, fit: fit, alignment: alignment, clipBehavior: clipBehavior, child: this);
+  }) => FittedBox(
+    key: key,
+    fit: fit,
+    alignment: alignment,
+    clipBehavior: clipBehavior,
+    child: this,
+  );
 
   Widget wrap({
     Key? key,
@@ -328,7 +375,11 @@ extension WidgetModifier on Widget {
     color: color,
     child: ClipRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY, tileMode: tileMode),
+        filter: ImageFilter.blur(
+          sigmaX: sigmaX,
+          sigmaY: sigmaY,
+          tileMode: tileMode,
+        ),
         child: this,
       ),
     ),
@@ -342,7 +393,12 @@ extension WidgetModifier on Widget {
     Key? key,
     required ImageFilter filter,
     BlendMode blendMode = BlendMode.srcOver,
-  }) => BackdropFilter(key: key, filter: filter, blendMode: blendMode, child: this);
+  }) => BackdropFilter(
+    key: key,
+    filter: filter,
+    blendMode: blendMode,
+    child: this,
+  );
 
   /// Creates a widget that paints a [Decoration].
   ///
@@ -352,13 +408,22 @@ extension WidgetModifier on Widget {
     Key? key,
     required Decoration decoration,
     DecorationPosition position = DecorationPosition.background,
-  }) => DecoratedBox(key: key, decoration: decoration, position: position, child: this);
+  }) => DecoratedBox(
+    key: key,
+    decoration: decoration,
+    position: position,
+    child: this,
+  );
 
   /// Creates a widget that paints a [Decoration].
   ///
   /// The [decoration] and [position] arguments must not be null. By default the
   /// decoration paints behind the child.
-  DecoratedBox border({Key? key, BoxBorder? border, BorderRadius? borderRadius}) => DecoratedBox(
+  DecoratedBox border({
+    Key? key,
+    BoxBorder? border,
+    BorderRadius? borderRadius,
+  }) => DecoratedBox(
     key: key,
     decoration: BoxDecoration(border: border, borderRadius: borderRadius),
     child: this,
@@ -388,11 +453,13 @@ extension WidgetModifier on Widget {
     double edgeOffset = 0.0,
     Color? color,
     Color? backgroundColor = AppColors.scaffold,
-    bool Function(ScrollNotification) notificationPredicate = defaultScrollNotificationPredicate,
+    bool Function(ScrollNotification) notificationPredicate =
+        defaultScrollNotificationPredicate,
     String? semanticsLabel,
     String? semanticsValue,
     double strokeWidth = RefreshProgressIndicator.defaultStrokeWidth,
-    RefreshIndicatorTriggerMode triggerMode = RefreshIndicatorTriggerMode.onEdge,
+    RefreshIndicatorTriggerMode triggerMode =
+        RefreshIndicatorTriggerMode.onEdge,
   }) => RefreshIndicator(
     displacement: displacement,
     edgeOffset: edgeOffset,
@@ -499,7 +566,9 @@ extension CircleAvatarCreator on String {
     backgroundColor: backgroundColor ?? Colors.transparent,
     foregroundColor: foregroundColor ?? Colors.transparent,
     backgroundImage: NetworkImage(this),
-    foregroundImage: (foregroundImage != null) ? NetworkImage(foregroundImage) : null,
+    foregroundImage: (foregroundImage != null)
+        ? NetworkImage(foregroundImage)
+        : null,
   );
 }
 

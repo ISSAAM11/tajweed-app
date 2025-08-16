@@ -6,7 +6,8 @@ abstract final class Debugger {
 
   static void black(dynamic text) => log('${_prefix}30m$text$_suffix');
 
-  static void yellow(dynamic text) => log('${_prefix}33;1m\x1B[5m$text$_suffix');
+  static void yellow(dynamic text) =>
+      log('${_prefix}33;1m\x1B[5m$text$_suffix');
 
   static void orange(dynamic text) => log('${_prefix}33m$text$_suffix');
 
@@ -16,7 +17,8 @@ abstract final class Debugger {
 
   static void blue(dynamic text) => log('${_prefix}34m$text$_suffix');
 
-  static void magenta(dynamic text) => log('${_prefix}35;1m\x1B[5m$text$_suffix');
+  static void magenta(dynamic text) =>
+      log('${_prefix}35;1m\x1B[5m$text$_suffix');
 
   static void cyan(dynamic text) => log('${_prefix}36m$text$_suffix');
 

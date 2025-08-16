@@ -15,22 +15,34 @@ class GetItContainer extends DependecyInjectionContainer {
   }
 
   @override
-  void registerInstanceAsync<T extends Object>(Future<T> Function() factoryFunc, {String? name}) {
+  void registerInstanceAsync<T extends Object>(
+    Future<T> Function() factoryFunc, {
+    String? name,
+  }) {
     if (isRegistered<T>(name: name)) return;
     actor.registerSingletonAsync(() => factoryFunc.call(), instanceName: name);
   }
 
   //? Factory
   @override
-  void registerFactory<T extends Object>(T Function() factoryFunc, {String? name}) {
+  void registerFactory<T extends Object>(
+    T Function() factoryFunc, {
+    String? name,
+  }) {
     if (isRegistered<T>(name: name)) return;
     actor.registerFactory(() => factoryFunc(), instanceName: name);
   }
 
   @override
-  void registerFactoryAsync<T extends Object>(Future<T> Function() factoryFunc, {String? name}) {
+  void registerFactoryAsync<T extends Object>(
+    Future<T> Function() factoryFunc, {
+    String? name,
+  }) {
     if (GetIt.instance.isRegistered<T>()) return;
-    GetIt.instance.registerFactoryAsync(() => factoryFunc.call(), instanceName: name);
+    GetIt.instance.registerFactoryAsync(
+      () => factoryFunc.call(),
+      instanceName: name,
+    );
   }
 
   //= Singleton
@@ -76,7 +88,11 @@ class GetItContainer extends DependecyInjectionContainer {
     FutureOr<dynamic> Function(T)? dispose,
   }) {
     if (isRegistered<T>(name: name)) return;
-    actor.registerLazySingleton(() => factoryFunc(), instanceName: name, dispose: dispose);
+    actor.registerLazySingleton(
+      () => factoryFunc(),
+      instanceName: name,
+      dispose: dispose,
+    );
   }
 
   @override
@@ -100,7 +116,8 @@ class GetItContainer extends DependecyInjectionContainer {
   T getNamed<T extends Object>(String name) => actor.get<T>(instanceName: name);
 
   @override
-  bool isRegistered<T extends Object>({String? name}) => actor.isRegistered<T>(instanceName: name);
+  bool isRegistered<T extends Object>({String? name}) =>
+      actor.isRegistered<T>(instanceName: name);
 
   @override
   void unregister<T extends Object>({String? name}) {

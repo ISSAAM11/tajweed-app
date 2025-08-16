@@ -15,10 +15,12 @@ Map<String, dynamic> _mockSignIn() => {
       "password": "password123",
       "role": "admin",
       "status": "active",
-      "createdAt": DateTime.now().subtract(Duration(hours: 8)).toIso8601String(),
-      "updatedAt": DateTime.now().subtract(Duration(hours: 8)).toIso8601String(),
+      "createdAt": DateTime.now()
+          .subtract(Duration(hours: 8))
+          .toIso8601String(),
+      "updatedAt": DateTime.now()
+          .subtract(Duration(hours: 8))
+          .toIso8601String(),
     },
   },
 };
-
-

@@ -7,7 +7,7 @@ enum FormInputType { normal, password, email, phoneNumber }
 enum InputTheme { light, dark }
 
 class FormInput extends StatefulWidget {
-  const FormInput({   
+  const FormInput({
     super.key,
     this.theme = InputTheme.light,
     this.type = FormInputType.normal,
@@ -89,29 +89,32 @@ class _State extends State<FormInput> {
   Widget build(BuildContext context) {
     return switch (widget.type) {
       FormInputType.normal => _contentInput(
-          onChanged: widget.onChanged,
-          suffixIcon: widget.suffixIcon,
-        ),
+        onChanged: widget.onChanged,
+        suffixIcon: widget.suffixIcon,
+      ),
       FormInputType.password => _contentInput(
-          onChanged: widget.onChanged,
-          isPassword: true,
-          obscure: _obscure,
-          suffixIcon: IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () => setState(() => _obscure = !_obscure),
-            icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility, size: 20),
+        onChanged: widget.onChanged,
+        isPassword: true,
+        obscure: _obscure,
+        suffixIcon: IconButton(
+          padding: EdgeInsets.zero,
+          onPressed: () => setState(() => _obscure = !_obscure),
+          icon: Icon(
+            _obscure ? Icons.visibility_off : Icons.visibility,
+            size: 20,
           ),
         ),
+      ),
       FormInputType.email => _contentInput(
-          onChanged: widget.onChanged,
-          suffixIcon: Icon(Icons.email),
-          keyboardType: TextInputType.emailAddress,
-        ),
+        onChanged: widget.onChanged,
+        suffixIcon: Icon(Icons.email),
+        keyboardType: TextInputType.emailAddress,
+      ),
       FormInputType.phoneNumber => _contentInput(
-          onChanged: widget.onChanged,
-          suffixIcon: Icon(Icons.phone),
-          keyboardType: TextInputType.phone,
-        ),
+        onChanged: widget.onChanged,
+        suffixIcon: Icon(Icons.phone),
+        keyboardType: TextInputType.phone,
+      ),
     };
   }
 
@@ -137,8 +140,12 @@ class _State extends State<FormInput> {
       obscureText: obscure,
       minLines: isPassword ? 1 : widget.minLines,
       maxLines: isPassword ? 1 : widget.maxLines,
-      maxLength: isPassword ? AppMetrics.inputs.passwordInputMaxLength : widget.maxLength,
-      keyboardType: keyboardType ?? (isPassword ? TextInputType.visiblePassword : widget.keyboardType),
+      maxLength: isPassword
+          ? AppMetrics.inputs.passwordInputMaxLength
+          : widget.maxLength,
+      keyboardType:
+          keyboardType ??
+          (isPassword ? TextInputType.visiblePassword : widget.keyboardType),
       validator: widget.validator,
       autovalidateMode: AppMetrics.inputs.inputsAutovalidationMode,
       focusNode: widget.focusNode,
@@ -148,24 +155,27 @@ class _State extends State<FormInput> {
         widget.focusNode?.unfocus();
         widget.nextFocusNode?.requestFocus();
       },
-      buildCounter: (_, {int? currentLength, int? maxLength, bool? isFocused}) => widget.displayCounter
-          ? Text(
-              "$currentLength/$maxLength",
-              // style: AppFonts.inter.withSize(FontSizes.indication),
-              style: widget.style,
-            )
-          : null,
+      buildCounter:
+          (_, {int? currentLength, int? maxLength, bool? isFocused}) =>
+              widget.displayCounter
+              ? Text(
+                  "$currentLength/$maxLength",
+                  // style: AppFonts.inter.withSize(FontSizes.indication),
+                  style: widget.style,
+                )
+              : null,
       inputFormatters: widget.inputFormatters,
       textAlign: widget.textAlign ?? TextAlign.start,
       decoration: InputDecoration(
-        
-        enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder?.copyWith(
+        enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder
+            ?.copyWith(
               borderSide: BorderSide(
                 color: lightTheme ? AppColors.primary : AppColors.inputBorder,
                 width: AppMetrics.inputs.borderWidth,
               ),
             ),
-        focusedBorder: Theme.of(context).inputDecorationTheme.focusedBorder?.copyWith(
+        focusedBorder: Theme.of(context).inputDecorationTheme.focusedBorder
+            ?.copyWith(
               borderSide: BorderSide(
                 color: lightTheme ? AppColors.primary : AppColors.inputBorder,
                 width: AppMetrics.inputs.borderWidth,
@@ -176,10 +186,12 @@ class _State extends State<FormInput> {
         filled: widget.fillColor != null,
         labelText: widget.label,
         labelStyle:
-        // TODO: Re-add when AppFonts class is implemented
+            // TODO: Re-add when AppFonts class is implemented
             // AppFonts.inter.withSize(FontSizes.title).withColor(lightTheme ? AppColors.hint : AppColors.scaffold),
             widget.style,
-        floatingLabelBehavior: widget.centerLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
+        floatingLabelBehavior: widget.centerLabel
+            ? FloatingLabelBehavior.always
+            : FloatingLabelBehavior.auto,
         alignLabelWithHint: widget.centerLabel,
         hintText: widget.hint ?? "",
         // TODO: Re-add when AppFonts class is implemented
@@ -189,7 +201,8 @@ class _State extends State<FormInput> {
         // errorStyle: AppFonts.inter.withColor(AppColors.error),
         errorStyle: widget.style,
         prefixIcon: prefixIcon ?? widget.prefixIcon,
-        prefixIconConstraints: widget.prefixConstraints ?? AppMetrics.inputs.prefixIconConstraints,
+        prefixIconConstraints:
+            widget.prefixConstraints ?? AppMetrics.inputs.prefixIconConstraints,
         prefixIconColor: lightTheme ? AppColors.hint : AppColors.scaffold,
         suffixIcon: suffixIcon,
         suffixIconColor: lightTheme ? AppColors.hint : AppColors.scaffold,

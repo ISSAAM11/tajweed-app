@@ -33,7 +33,9 @@ class CommonSnackbar extends SnackBar {
          ),
          behavior: SnackBarBehavior.floating,
          shape: RoundedRectangleBorder(
-           borderRadius: BorderRadius.circular(AppMetrics.snackBars.defaultRadius),
+           borderRadius: BorderRadius.circular(
+             AppMetrics.snackBars.defaultRadius,
+           ),
          ),
          margin: AppMetrics.snackBars.defaultMargin,
          padding: AppMetrics.snackBars.defaultPadding,

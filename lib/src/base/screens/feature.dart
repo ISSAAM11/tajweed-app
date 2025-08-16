@@ -37,7 +37,8 @@ import 'exports.dart';
 /// - `EmptyWidget`: A widget displayed when the state is empty.
 /// - `SuccessWidget`: A widget displayed when the state is successful, typically containing a list of products.
 /// - [dependencies] allows dependency injection
-abstract class Feature<B extends BaseBloc<dynamic, S>, S> extends StatefulWidget {
+abstract class Feature<B extends BaseBloc<dynamic, S>, S>
+    extends StatefulWidget {
   /// Creates a [Feature].
   ///
   /// - [dependencies]: Optional. A [Dependencies] instance for lazy or eager dependency injection.
@@ -124,7 +125,9 @@ class _State<B extends BaseBloc<dynamic, S>, S> extends State<Feature<B, S>> {
         if (widget.onUpdate != null) widget.onUpdate!.call(context, state);
 
         if (widget.debugStateChanges)
-          Debugger.cyan('${widget.runtimeType} state: ${state.toString().split('(').first}');
+          Debugger.cyan(
+            '${widget.runtimeType} state: ${state.toString().split('(').first}',
+          );
       },
     ),
   );

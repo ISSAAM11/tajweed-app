@@ -17,7 +17,9 @@ class ConnectivityPlus extends ConnectivityMonitor {
     super.startMonitoring();
 
     _connectivity.onConnectivityChanged.listen(
-      (result) => isConnectedObs.updateIfDifferent(!result.contains(ConnectivityResult.none)),
+      (result) => isConnectedObs.updateIfDifferent(
+        !result.contains(ConnectivityResult.none),
+      ),
     );
   }
 

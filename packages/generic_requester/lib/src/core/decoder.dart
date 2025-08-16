@@ -11,17 +11,21 @@ mixin GenericResponseDecoder {
     bool mocking = false,
   }) {
     try {
-      if (mockingData == null && response == null) throw NoDataToDecodeException();
+      if (mockingData == null && response == null)
+        throw NoDataToDecodeException();
 
       final data = mocking ? mockingData : response?.data;
 
-      if (data is! List && data is! Map<String, dynamic>) throw UnsupportedDataTypeException();
+      if (data is! List && data is! Map<String, dynamic>)
+        throw UnsupportedDataTypeException();
 
       return Right((decodableModel is NoDataModel)
           ? decodableModel.fromJson(
               {
-                'success':
-                    mocking ? true : (response!.statusCode! >= 200 && response.statusCode! < 300),
+                'success': mocking
+                    ? true
+                    : (response!.statusCode! >= 200 &&
+                        response.statusCode! < 300),
               },
             )
           : decodableModel.fromJson(data));

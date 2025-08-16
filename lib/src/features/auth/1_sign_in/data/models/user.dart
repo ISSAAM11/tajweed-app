@@ -1,6 +1,5 @@
 import 'package:generic_requester/generic_requester.dart';
 
-
 final class User extends ModelingProtocol {
   final String id;
   final String name;
@@ -56,5 +55,15 @@ final class User extends ModelingProtocol {
   }
 
   @override
-  List<Object?> get props => [id, name, email, phone, password, role, status, createdAt, updatedAt];
+  List<Object?> get props => [
+    id,
+    name,
+    email,
+    phone,
+    password,
+    role,
+    status,
+    createdAt,
+    updatedAt,
+  ];
 }

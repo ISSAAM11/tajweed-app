@@ -8,10 +8,12 @@ import '../states/shift_handover_states.dart';
 part '../usecases/access_home_uc.dart';
 part '../usecases/shift_handover_uc.dart';
 
-class ShiftHandoverBloc extends BaseBloc<ShiftHandoverEvent, ShiftHandoverState> {
+class ShiftHandoverBloc
+    extends BaseBloc<ShiftHandoverEvent, ShiftHandoverState> {
   final ShiftHandoverDataSource shiftHandoverDataSource;
 
-  ShiftHandoverBloc(this.shiftHandoverDataSource) : super(Loading(), debugginEnabled: true) {
+  ShiftHandoverBloc(this.shiftHandoverDataSource)
+    : super(Loading(), debugginEnabled: true) {
     on<GetShiftReport>(_loadShiftReport);
     on<AccessHome>(_accessHome);
   }

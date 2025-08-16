@@ -2,7 +2,8 @@ import '../../utils/debugging_printer.dart';
 
 class NoDataToDecodeException implements Exception {
   NoDataToDecodeException() {
-    Debugger.red('You should provide either some mocking data or a real response to be treated');
+    Debugger.red(
+        'You should provide either some mocking data or a real response to be treated');
   }
 }
 

@@ -8,7 +8,8 @@ import '../widgets/loading_widget.dart';
 import '../widgets/report_view_widget.dart';
 import '../widgets/shift_handover_app_bar.dart';
 
-final class ShiftHandoverScreen extends Feature<ShiftHandoverBloc, ShiftHandoverState> {
+final class ShiftHandoverScreen
+    extends Feature<ShiftHandoverBloc, ShiftHandoverState> {
   static final path = "/shift-handover";
 
   ShiftHandoverScreen({super.key})

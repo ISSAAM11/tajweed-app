@@ -5,6 +5,9 @@ final class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-    child: CircularProgressIndicator(strokeWidth: 1.5, backgroundColor: AppColors.warning),
+    child: CircularProgressIndicator(
+      strokeWidth: 1.5,
+      backgroundColor: AppColors.warning,
+    ),
   ).squared(30).center();
 }

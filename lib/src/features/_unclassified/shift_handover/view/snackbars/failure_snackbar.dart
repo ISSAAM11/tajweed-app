@@ -7,6 +7,7 @@ class FailureSnackbar extends CommonSnackbar {
     : super(
         type: SnackbarType.error,
         actionTitle: 'Retry',
-        onActionPressed: () => context.read<ShiftHandoverBloc>().add(GetShiftReport("3")),
+        onActionPressed: () =>
+            context.read<ShiftHandoverBloc>().add(GetShiftReport("3")),
       );
 }

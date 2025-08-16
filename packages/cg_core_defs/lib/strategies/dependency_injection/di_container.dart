@@ -13,17 +13,20 @@ abstract class DependecyInjectionContainer<A> {
   }
 
   /// Register an asynchronous instance.
-  void registerInstanceAsync<T extends Object>(Future<T> Function() factoryFunc, {String? name}) {
+  void registerInstanceAsync<T extends Object>(Future<T> Function() factoryFunc,
+      {String? name}) {
     throw UnimplementedError("registerInstanceAsync not defined");
   }
 
   //? Factory
 
   /// Register a factory function that creates a new instance each time it is requested. //! mandatory
-  void registerFactory<T extends Object>(T Function() factoryFunc, {String? name});
+  void registerFactory<T extends Object>(T Function() factoryFunc,
+      {String? name});
 
   /// Register an asynchronous factory function.
-  void registerFactoryAsync<T extends Object>(Future<T> Function() factoryFunc, {String? name}) {
+  void registerFactoryAsync<T extends Object>(Future<T> Function() factoryFunc,
+      {String? name}) {
     throw UnimplementedError("registerFactoryAsync not defined");
   }
 
@@ -31,10 +34,13 @@ abstract class DependecyInjectionContainer<A> {
 
   /// Register a singleton instance. //! mandatory
   void registerSingleton<T extends Object>(T instance,
-      {String? name, bool? signalsReady, FutureOr<dynamic> Function(T)? dispose});
+      {String? name,
+      bool? signalsReady,
+      FutureOr<dynamic> Function(T)? dispose});
 
   /// Register a singleton with an asynchronous factory function.
-  void registerSingletonAsync<T extends Object>(Future<T> Function() factoryFunc,
+  void registerSingletonAsync<T extends Object>(
+      Future<T> Function() factoryFunc,
       {String? name,
       Iterable<Type>? dependsOn,
       bool? signalsReady,
@@ -51,8 +57,10 @@ abstract class DependecyInjectionContainer<A> {
   }
 
   /// Register a lazy singleton with an asynchronous factory function.
-  void registerLazySingletonAsync<T extends Object>(Future<T> Function() factoryFunc,
-      {String? instanceName, FutureOr Function(T)? dispose}) {
+  void registerLazySingletonAsync<T extends Object>(
+      Future<T> Function() factoryFunc,
+      {String? instanceName,
+      FutureOr Function(T)? dispose}) {
     throw UnimplementedError("registerLazySingletonAsync not defined");
   }
 

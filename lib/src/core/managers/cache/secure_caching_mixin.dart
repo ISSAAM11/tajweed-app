@@ -5,7 +5,8 @@ import '../../../app/binding/app_bindings.dart';
 mixin SecureCachingMixin {
   FlutterSecureStorage get secureActor => get<FlutterSecureStorage>();
 
-  Future<String?> getSecureString(String key) async => secureActor.read(key: key);
+  Future<String?> getSecureString(String key) async =>
+      secureActor.read(key: key);
 
   Future<bool> setSecureString(String key, String value) async {
     await secureActor.write(key: key, value: value);
@@ -22,7 +23,8 @@ mixin SecureCachingMixin {
     return true;
   }
 
-  Future<bool> containsSecureKey(String key) async => secureActor.containsKey(key: key);
+  Future<bool> containsSecureKey(String key) async =>
+      secureActor.containsKey(key: key);
 
   Future<Set<String>> getSecureKeys() async {
     final allData = await secureActor.readAll();
@@ -30,7 +32,8 @@ mixin SecureCachingMixin {
   }
 
   // Méthodes asynchrones pour l'utilisation réelle avec FlutterSecureStorage
-  Future<String?> getStringAsync(String key) async => secureActor.read(key: key);
+  Future<String?> getStringAsync(String key) async =>
+      secureActor.read(key: key);
 
   Future<int?> getIntAsync(String key) async {
     final value = await secureActor.read(key: key);
@@ -57,7 +60,8 @@ mixin SecureCachingMixin {
     }
   }
 
-  Future<bool> containsKeyAsync(String key) async => secureActor.containsKey(key: key);
+  Future<bool> containsKeyAsync(String key) async =>
+      secureActor.containsKey(key: key);
 
   Future<Set<String>> getKeysAsync() async {
     final allData = await secureActor.readAll();

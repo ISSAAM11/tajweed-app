@@ -83,10 +83,12 @@ class PrettyDioLogger extends Interceptor {
     if (request) {
       final uri = options.uri;
       final method = options.method;
-      _printBoxed(_DebugTypes.request, header: 'Request ║ $method ', text: uri.toString());
+      _printBoxed(_DebugTypes.request,
+          header: 'Request ║ $method ', text: uri.toString());
     }
     if (requestHeader) {
-      _printMapAsTable(_DebugTypes.request, options.queryParameters, header: 'Query Parameters');
+      _printMapAsTable(_DebugTypes.request, options.queryParameters,
+          header: 'Query Parameters');
       final requestHeaders = <String, dynamic>{};
       requestHeaders.addAll(options.headers);
       requestHeaders['contentType'] = options.contentType?.toString();
@@ -101,13 +103,15 @@ class PrettyDioLogger extends Interceptor {
       final dynamic data = options.data;
       if (data != null) {
         if (data is Map) {
-          _printMapAsTable(_DebugTypes.request, options.data as Map?, header: 'Body');
+          _printMapAsTable(_DebugTypes.request, options.data as Map?,
+              header: 'Body');
         }
         if (data is FormData) {
           final formDataMap = <String, dynamic>{}
             ..addEntries(data.fields)
             ..addEntries(data.files);
-          _printMapAsTable(_DebugTypes.request, formDataMap, header: 'Form data | ${data.boundary}');
+          _printMapAsTable(_DebugTypes.request, formDataMap,
+              header: 'Form data | ${data.boundary}');
         } else {
           _printBlock(_DebugTypes.request, data.toString());
         }
@@ -123,7 +127,8 @@ class PrettyDioLogger extends Interceptor {
         final uri = err.response?.requestOptions.uri;
         _printBoxed(
           _DebugTypes.error,
-          header: 'DioError ║ Status: ${err.response?.statusCode} ${err.response?.statusMessage}',
+          header:
+              'DioError ║ Status: ${err.response?.statusCode} ${err.response?.statusMessage}',
           text: uri.toString(),
         );
         if (err.response != null && err.response?.data != null) {
@@ -133,7 +138,8 @@ class PrettyDioLogger extends Interceptor {
         _printLine(_DebugTypes.error, '╚');
         logPrint(_DebugTypes.error, "");
       } else {
-        _printBoxed(_DebugTypes.error, header: 'DioError ║ ${err.type}', text: err.message);
+        _printBoxed(_DebugTypes.error,
+            header: 'DioError ║ ${err.type}', text: err.message);
       }
     }
     super.onError(err, handler);
@@ -144,12 +150,16 @@ class PrettyDioLogger extends Interceptor {
     final uri = response.requestOptions.uri;
     final method = response.requestOptions.method;
     _printBoxed(_DebugTypes.response,
-        header: 'Response ║ $method ║ Status: ${response.statusCode} ${response.statusMessage}', text: uri.toString());
+        header:
+            'Response ║ $method ║ Status: ${response.statusCode} ${response.statusMessage}',
+        text: uri.toString());
 
     if (responseHeader) {
       final responseHeaders = <String, String>{};
-      response.headers.forEach((k, list) => responseHeaders[k] = list.toString());
-      _printMapAsTable(_DebugTypes.response, responseHeaders, header: 'Headers');
+      response.headers
+          .forEach((k, list) => responseHeaders[k] = list.toString());
+      _printMapAsTable(_DebugTypes.response, responseHeaders,
+          header: 'Headers');
     }
 
     if (responseBody) {
@@ -183,7 +193,8 @@ class PrettyDioLogger extends Interceptor {
     }
   }
 
-  void _printLine(_DebugTypes type, [String pre = "", String suf = '╝']) => logPrint(type, '$pre${'═' * maxWidth}$suf');
+  void _printLine(_DebugTypes type, [String pre = "", String suf = '╝']) =>
+      logPrint(type, '$pre${'═' * maxWidth}$suf');
 
   void _printKV(_DebugTypes type, String? key, Object? v) {
     final pre = '╟ $key: ';
@@ -201,7 +212,10 @@ class PrettyDioLogger extends Interceptor {
     final lines = (msg.length / maxWidth).ceil();
     for (var i = 0; i < lines; ++i) {
       logPrint(
-          type, (i >= 0 ? '║ ' : "") + msg.substring(i * maxWidth, math.min<int>(i * maxWidth + maxWidth, msg.length)));
+          type,
+          (i >= 0 ? '║ ' : "") +
+              msg.substring(i * maxWidth,
+                  math.min<int>(i * maxWidth + maxWidth, msg.length)));
     }
   }
 
@@ -229,7 +243,8 @@ class PrettyDioLogger extends Interceptor {
       }
       if (value is Map) {
         if (compact && _canFlattenMap(value)) {
-          logPrint(type, '║${_indent(tabs0)} $key: $value${!isLast ? ',' : ""}');
+          logPrint(
+              type, '║${_indent(tabs0)} $key: $value${!isLast ? ',' : ""}');
         } else {
           logPrint(type, '║${_indent(tabs0)} $key: {');
           _printPrettyMap(type, value, tabs: tabs0);
@@ -268,7 +283,8 @@ class PrettyDioLogger extends Interceptor {
         if (compact && _canFlattenMap(e)) {
           logPrint(type, '║${_indent(tabs)}  $e${!isLast ? ',' : ""}');
         } else {
-          _printPrettyMap(type, e, tabs: tabs + 1, isListItem: true, isLast: isLast);
+          _printPrettyMap(type, e,
+              tabs: tabs + 1, isListItem: true, isLast: isLast);
         }
       } else {
         logPrint(type, '║${_indent(tabs + 2)} $e${isLast ? "" : ','}');
@@ -277,7 +293,10 @@ class PrettyDioLogger extends Interceptor {
   }
 
   bool _canFlattenMap(Map map) {
-    return map.values.where((dynamic val) => val is Map || val is List).isEmpty && map.toString().length < maxWidth;
+    return map.values
+            .where((dynamic val) => val is Map || val is List)
+            .isEmpty &&
+        map.toString().length < maxWidth;
   }
 
   bool _canFlattenList(List list) {
@@ -287,7 +306,8 @@ class PrettyDioLogger extends Interceptor {
   void _printMapAsTable(_DebugTypes type, Map? map, {String? header}) {
     if (map == null || map.isEmpty) return;
     logPrint(type, '╔ $header ');
-    map.forEach((dynamic key, dynamic value) => _printKV(type, key.toString(), value));
+    map.forEach(
+        (dynamic key, dynamic value) => _printKV(type, key.toString(), value));
     _printLine(type, '╚');
   }
 }

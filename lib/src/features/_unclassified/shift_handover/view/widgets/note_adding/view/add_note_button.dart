@@ -4,8 +4,10 @@ import '../../../../../../../base/screens/exports.dart';
 import '../../../../vm/bloc/shift_handover_bloc.dart';
 import '../vm/bloc/note_adding_bloc.dart';
 
-class NoteAddingUC extends SubFeature<NoteAddingBloc, NoteAddingState, ShiftHandoverBloc> {
-  NoteAddingUC() : super(dependencies: () => di.registerInstance(NoteAddingBloc()));
+class NoteAddingUC
+    extends SubFeature<NoteAddingBloc, NoteAddingState, ShiftHandoverBloc> {
+  NoteAddingUC()
+    : super(dependencies: () => di.registerInstance(NoteAddingBloc()));
 
   @override
   Widget build(BuildContext context, NoteAddingState state) => LoadingButton(

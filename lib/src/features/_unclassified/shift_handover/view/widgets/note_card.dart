@@ -46,22 +46,31 @@ final class NoteCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(note.text, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.4)),
+              Text(
+                note.text,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(height: 1.4),
+              ),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Text(
                       note.type.name.toUpperCase(),
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Text(

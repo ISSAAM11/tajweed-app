@@ -39,7 +39,8 @@ class RequestPerformer with GenericResponseDecoder {
   static int _mockingDuration = 500;
 
   /// ### A generic method that consumes an API and handles automatic data serialization/mocking
-  Future<Either<Exception, R>> performDecodingRequest<R, MP extends ModelingProtocol>({
+  Future<Either<Exception, R>>
+      performDecodingRequest<R, MP extends ModelingProtocol>({
     required MP decodableModel,
     final bool mockIt = false,
     final bool debugIt = true,

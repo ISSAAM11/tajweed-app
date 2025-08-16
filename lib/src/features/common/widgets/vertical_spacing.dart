@@ -7,5 +7,6 @@ class VerticalSpacing extends StatelessWidget {
   final bool visible;
 
   @override
-  Widget build(BuildContext context) => SizedBox(height: height).visibleWhen(visible);
+  Widget build(BuildContext context) =>
+      SizedBox(height: height).visibleWhen(visible);
 }

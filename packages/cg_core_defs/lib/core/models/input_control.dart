@@ -16,7 +16,8 @@ class InputControl {
 
   static List<InputControl> generate(int count) => List<InputControl>.generate(
         count,
-        (_) => InputControl(controller: TextEditingController(), node: FocusNode()),
+        (_) => InputControl(
+            controller: TextEditingController(), node: FocusNode()),
       );
 
   void dispose() {

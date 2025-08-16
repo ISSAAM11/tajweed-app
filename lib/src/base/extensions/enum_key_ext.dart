@@ -5,6 +5,7 @@ extension KeyFromString on Enum {
 }
 
 extension KeyExtension on Key {
-  String get alphabeticValue =>
-      RegExp(r'[a-zA-Z]+').allMatches(toString()).map((match) => match.group(0)).join();
+  String get alphabeticValue => RegExp(
+    r'[a-zA-Z]+',
+  ).allMatches(toString()).map((match) => match.group(0)).join();
 }

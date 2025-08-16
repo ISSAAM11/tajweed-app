@@ -17,8 +17,7 @@ extension on SignInBloc {
 
   void _handleSignInFailure(Exception exception, Emitter<SignInState> emit) =>
       emit(Error.from(exception));
-  
+
   void _handleLoadUser(User user, Emitter<SignInState> emit) =>
       emit(Success(user));
-
 }

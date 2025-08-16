@@ -1,7 +1,11 @@
 import '../bloc/base_bloc.dart';
 import 'exports.dart';
 
-abstract class SubFeature<B extends BaseBloc<dynamic, S>, S, PB extends BaseBloc>
+abstract class SubFeature<
+  B extends BaseBloc<dynamic, S>,
+  S,
+  PB extends BaseBloc
+>
     extends Feature<B, S> {
   SubFeature({
     super.key,
