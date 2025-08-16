@@ -1,5 +1,6 @@
 //? Base needed imports
 import '../../../../../base/screens/exports.dart';
+import '../../../2_sign_up/router/sign_up_route.dart';
 import '../../vm/states/sign_in_states.dart';
 
 
@@ -65,7 +66,9 @@ class SignInBody extends SubWidget<SignInBloc> {
         ),
         //$ Forgot Password Button
         ForgotPasswordButton(
-          onTap: bloc.navigateToForgotPassword,
+          onTap: (){
+            // TODO: Navigate to forgot password
+          },
         ),
         //$ Sign In Button
         LoadingButton(
@@ -87,9 +90,9 @@ class SignInBody extends SubWidget<SignInBloc> {
           onFacebookTap: bloc.signInWithFacebook,
         ),
         VerticalSpacing(AppMetrics.spacing.sm),
-      //? Don't have an account? Create one
+      //$ Don't have an account? Create one
        DontHaveAccount(
-        onTap: bloc.navigateToSignUp,
+        onTap: ()=>globalContext.push(signUpRoute.path),
        ),
         //$ Continue as Guest Button
         CustomTextButton(
@@ -101,4 +104,3 @@ class SignInBody extends SubWidget<SignInBloc> {
     ),
   ).center().gradientBackground();
 }
-

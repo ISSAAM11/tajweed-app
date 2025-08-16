@@ -25,15 +25,8 @@ final class SignInWithFacebook extends SignInEvent {
   const SignInWithFacebook();
 }
 
-final class NavigateToSignUp extends SignInEvent {
-  const NavigateToSignUp();
-}
-
 final class ContinueAsGuest extends SignInEvent {
   const ContinueAsGuest();
 }
 
-final class NavigateToForgotPassword extends SignInEvent {
-  const NavigateToForgotPassword();
-}
 

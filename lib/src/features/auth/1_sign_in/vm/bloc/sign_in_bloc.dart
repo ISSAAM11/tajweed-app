@@ -1,6 +1,5 @@
-
 import 'package:cg_core_defs/cg_core_defs.dart';
-// import 'package:go_router/go_router.dart';
+
 import 'package:tajweed_ai/src/utils/input_validator.dart';
 
 import '../../../../../base/bloc/exports.dart';
@@ -12,7 +11,6 @@ import '../states/sign_in_states.dart';
 
 //$ USE CASES
 part '../usecases/sign_in_uc.dart'  ;
-part '../usecases/sign_in_navigation_uc.dart'  ;
 part '../usecases/continue_as_guest_uc.dart'  ;
 
 class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
@@ -33,8 +31,6 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   Future<void> signInWithGoogle() async => add(SignInWithGoogle());
   Future<void> signInWithFacebook() async => add(SignInWithFacebook());
   Future<void> continueAsGuest() async => add(ContinueAsGuest());
-  Future<void> navigateToSignUp() async => add(NavigateToSignUp());
-  Future<void> navigateToForgotPassword() async => add(NavigateToForgotPassword());
 
 
 
@@ -43,8 +39,6 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
     on<SignInWithGoogle>(_signInWithGoogle);
     on<SignInWithFacebook>(_signInWithFacebook);
     on<ContinueAsGuest>(_continueAsGuest);
-    on<NavigateToForgotPassword>(_navigateToForgotPassword);
-    on<NavigateToSignUp>(_navigateToSignUp);
   }
 
   //@ LIFECYCLE

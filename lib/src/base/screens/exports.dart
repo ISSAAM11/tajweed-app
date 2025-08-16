@@ -3,6 +3,7 @@ export 'package:flutter/gestures.dart';
 export 'package:flutter/material.dart' hide BackButton;
 export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:generic_requester/generic_requester.dart' show Failure;
+export 'package:go_router/go_router.dart';
 
 export '../../app/binding/app_bindings.dart' show di;
 export '../../app/binding/app_bindings.dart' show get;
