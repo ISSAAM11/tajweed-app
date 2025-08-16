@@ -121,6 +121,11 @@
       "bold": false,
       "italic": false
     }
-  ]
+  ],
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnType": true,
+    "editor.rulers": [80]
+  }
 }
-
