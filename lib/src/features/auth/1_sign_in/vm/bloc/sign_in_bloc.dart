@@ -21,9 +21,11 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   final formKey = GlobalKey<FormState>();
 
   //! Input Controllers
-  final inputControllers=InputControl.generate(2);
-  late final  emailController=inputControllers[0].controller  ;
-  late final  passwordController=inputControllers[1].controller  ;
+ late final List<InputControl> inputControllers;
+  late final TextEditingController emailController;
+  late final TextEditingController passwordController;
+  late final FocusNode emailFocusNode;
+  late final FocusNode passwordFocusNode;
 
   //! Event Callers
   Future<void> signInWithEmailAndPassword() async => 
@@ -42,6 +44,24 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   }
 
   //@ LIFECYCLE
+  @override
+  void onInit() {
+    inputControllers=InputControl.generate(2);
+    emailController=inputControllers[0].controller;
+    passwordController=inputControllers[1].controller;
+    emailFocusNode=inputControllers[0].node;
+    passwordFocusNode=inputControllers[1].node;
+    super.onInit();
+  }
+
+  //! FOCUS NODES
+  @override
+  void onReady() {
+    emailFocusNode.requestFocus();
+    super.onReady();
+  }
+
+  
   @override
   void onDispose() {
     inputControllers.disposeAll();

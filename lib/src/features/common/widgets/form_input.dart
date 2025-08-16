@@ -41,7 +41,7 @@ class FormInput extends StatefulWidget {
     this.centerLabel = false,
     this.onFieldSubmitted,
     this.onValidationChanged,
-    this.enableRealTimeValidation = false,
+    this.enableRealTimeValidation = true,
   });
 
   final InputTheme theme;
@@ -99,6 +99,7 @@ class _State extends State<FormInput> {
         ),
       FormInputType.password => _contentInput(
           onChanged: _handleOnChanged,
+          prefixIcon: const Icon(Icons.lock_outline),
           isPassword: true,
           obscure: _obscure,
           suffixIcon: IconButton(
@@ -108,8 +109,8 @@ class _State extends State<FormInput> {
           ),
         ),
       FormInputType.email => _contentInput(
+          prefixIcon: const Icon(Icons.email_outlined),
           onChanged: _handleOnChanged,
-          suffixIcon: Icon(Icons.email),
           keyboardType: TextInputType.emailAddress,
         ),
       FormInputType.phoneNumber => _contentInput(

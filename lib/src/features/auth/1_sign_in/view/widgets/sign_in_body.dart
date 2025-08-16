@@ -1,6 +1,5 @@
 //? Base needed imports
 import '../../../../../base/screens/exports.dart';
-import '../../../2_sign_up/router/sign_up_route.dart';
 import '../../vm/states/sign_in_states.dart';
 
 
@@ -47,22 +46,22 @@ class SignInBody extends SubWidget<SignInBloc> {
         //$ Inputs  
         FormInput(
           type: FormInputType.email,
-          controller: bloc.emailController,
-          validator: InputValidators.validateEmail,
           label: 'Email Address',
           hint: 'Enter your email',
-          prefixIcon: const Icon(Icons.email_outlined),
-          enableRealTimeValidation: true,
+          controller: bloc.emailController,
+          focusNode: bloc.emailFocusNode,
+          nextFocusNode: bloc.passwordFocusNode,
+          validator: InputValidators.validateEmail,
         ),
         VerticalSpacing(AppMetrics.spacing.md),
         FormInput(
           type: FormInputType.password,
+          label: 'Password',
+          hint: 'Enter your password',         
+          focusNode: bloc.passwordFocusNode,
           controller: bloc.passwordController,
           validator: InputValidators.validateLoginPassword,
-          label: 'Password',
-          hint: 'Enter your password',
-          prefixIcon: const Icon(Icons.lock_outline),
-          enableRealTimeValidation: true,
+          onFieldSubmitted: bloc.signInWithEmailAndPassword,
         ),
         //$ Forgot Password Button
         ForgotPasswordButton(
@@ -91,8 +90,12 @@ class SignInBody extends SubWidget<SignInBloc> {
         ),
         VerticalSpacing(AppMetrics.spacing.sm),
       //$ Don't have an account? Create one
-       DontHaveAccount(
-        onTap: ()=>globalContext.push(signUpRoute.path),
+        IsUserHaveAccount(
+        firstText: "Don't have an Account? ",
+        secondText: "create one",
+        onTap: (){
+          //! Navigate to sign up
+        },
        ),
         //$ Continue as Guest Button
         CustomTextButton(

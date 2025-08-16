@@ -9,8 +9,12 @@ abstract interface class SignInDataSource {
   /// Calls the Sign In API endpoints.
   FutureRequestResult<SignInModel> signInWithEmailAndPassword(String email, String password);
 
-  /// Calls the Forgot Password API endpoints.
-  FutureRequestResult<String> forgotPassword(String email);
+  /// Calls the Sign In API endpoints.
+  FutureRequestResult<SignInModel> signInWithGoogle();
+
+  /// Calls the Sign In API endpoints.
+  FutureRequestResult<SignInModel> signInWithFacebook();
+
 }
 
 final class SignInDataSourceImpl extends DataSource implements SignInDataSource {
@@ -42,13 +46,16 @@ final class SignInDataSourceImpl extends DataSource implements SignInDataSource 
   }
 
   @override
-  FutureRequestResult<String> forgotPassword(String email) async {
-    return Future.delayed(
-      const Duration(milliseconds: 500),
-      () => Right('Success'),
-    );
+  FutureRequestResult<SignInModel> signInWithGoogle() {
+    // TODO: implement signInWithGoogle
+    throw UnimplementedError();
   }
 
+  @override
+  FutureRequestResult<SignInModel> signInWithFacebook() {
+    // TODO: implement signInWithFacebook
+    throw UnimplementedError();
+  }
 
 }
 

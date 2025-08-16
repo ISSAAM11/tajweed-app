@@ -7,8 +7,6 @@ import '../widgets/sign_in_body.dart';
 
 
 final class SignInScreen extends Feature<SignInBloc, SignInState> {
-  static final path = "/sign-in";
-
   SignInScreen({super.key})
     : super(
         dependencies: SignInDependencies().inject,
