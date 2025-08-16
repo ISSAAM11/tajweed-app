@@ -49,6 +49,8 @@ class SignInBody extends SubWidget<SignInBloc> {
           hint: 'Enter your email',
           type: FormInputType.email,
           controller: bloc.emailController,
+          focusNode: bloc.emailFocusNode,
+          nextFocusNode: bloc.passwordFocusNode,
           validator: InputValidators.validateEmail,
           prefixIcon: const Icon(Icons.email_outlined),
           enableRealTimeValidation: true,

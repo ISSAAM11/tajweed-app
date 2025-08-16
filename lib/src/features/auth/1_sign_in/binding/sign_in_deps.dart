@@ -14,13 +14,6 @@ class SignInDependencies implements Dependencies {
       ),
     );
 
-    //? BlocFactory<SignInBloc>(() => SignInBloc(get()));
-    //? this means that the bloc will be created every time the widget is built
-    //? and the memory will be freed when the widget is disposed
-    //? and the bloc will be created again when the widget is built again
-    //? and the memory will be freed when the widget is disposed again
-    //? and the bloc will be created again when the widget is built again
-    //? it is the best way to create a bloc it is better than registerInstance
-    di.registerFactory<SignInBloc>(() => SignInBloc(get()));
+    di.registerInstance<SignInBloc>(SignInBloc(get()));
   }
 }

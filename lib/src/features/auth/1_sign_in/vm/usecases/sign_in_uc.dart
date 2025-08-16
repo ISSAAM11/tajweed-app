@@ -26,6 +26,7 @@ extension on SignInBloc {
 void _handleSignInSuccess(SignInModel response, Emitter<SignInState> emit)  {
   if (response.data != null) {
     emit(Success(response.message));
+    return;
     //! Dispatch NavigateToHome goRouter ( globalContext.push)
     //TODO: globalContext.go(HomeScreen.path);
   }
