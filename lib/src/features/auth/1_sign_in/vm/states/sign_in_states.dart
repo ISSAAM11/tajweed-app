@@ -22,9 +22,9 @@ final class Error extends SignInState implements Exception {
   final String message;
 
   Error._(this.message);
-  factory Error.from(Exception exception) => Error._(exception.toString().replaceAll('Exception: ', ''));
+  factory Error.from(Exception exception) =>
+      Error._(exception.toString().replaceAll('Exception: ', ''));
 
   @override
   List<Object> get props => [message];
-  
 }

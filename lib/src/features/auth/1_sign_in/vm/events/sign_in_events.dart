@@ -6,6 +6,7 @@ sealed class SignInEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 //- Sign In
 final class SignInWithEmailAndPassword extends SignInEvent {
   final String email;
@@ -28,5 +29,3 @@ final class SignInWithFacebook extends SignInEvent {
 final class ContinueAsGuest extends SignInEvent {
   const ContinueAsGuest();
 }
-
-
