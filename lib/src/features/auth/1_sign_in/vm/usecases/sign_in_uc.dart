@@ -28,7 +28,6 @@ void _handleSignInSuccess(SignInModel response, Emitter<SignInState> emit)  {
     emit(Success(response.message));
     //! Dispatch NavigateToHome goRouter ( globalContext.push)
     //TODO: globalContext.go(HomeScreen.path);
-    
   }
   throw Exception(response.message);
 }

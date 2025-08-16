@@ -1,9 +1,9 @@
-import 'package:cg_core_defs/cg_core_defs.dart';
+import 'package:cg_core_defs/cg_core_defs.dart' show InputControl;
 
+import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
 import 'package:tajweed_ai/src/utils/input_validator.dart';
 
 import '../../../../../base/bloc/exports.dart';
-import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
 import '../../data/models/sign_in_model.dart';
 import '../../datasource/sign_in_datasource.dart';
 import '../events/sign_in_events.dart';
@@ -21,7 +21,7 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   final formKey = GlobalKey<FormState>();
 
   //! Input Controllers
- late final List<InputControl> inputControllers;
+late final List<InputControl> inputControllers;
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
   late final FocusNode emailFocusNode;
@@ -44,7 +44,7 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   }
 
   //@ LIFECYCLE
-  @override
+    @override
   void onInit() {
     inputControllers=InputControl.generate(2);
     emailController=inputControllers[0].controller;
@@ -53,18 +53,12 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
     passwordFocusNode=inputControllers[1].node;
     super.onInit();
   }
-
-  //! FOCUS NODES
-  @override
-  void onReady() {
-    emailFocusNode.requestFocus();
-    super.onReady();
-  }
-
-  
   @override
   void onDispose() {
-    inputControllers.disposeAll();
+    emailController.dispose();
+    Debugger.red("onDispose emailController");
+    passwordController.dispose();
+    Debugger.red("onDispose passwordController");
     super.onDispose();
   }
   
