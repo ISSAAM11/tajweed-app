@@ -1,7 +1,7 @@
 import '../../../../../base/screens/exports.dart';
 
 class FailureSnackbar extends CommonSnackbar {
-  FailureSnackbar({required BuildContext context, required super.message})
+  FailureSnackbar({required super.message})
     : super(
         type: SnackbarType.error,
         actionTitle: 'Retry',

@@ -24,7 +24,7 @@ void _application() async {
     const AppWidget(
       showMaterialGrid: false,
       invertOversizedImages: true,
-      showPerformanceOverlay: false,
+      showPerformanceOverlay: false,  
     ),
   );
 }

@@ -14,7 +14,6 @@ class SignInDependencies implements Dependencies {
       ),
     );
 
-    //? Bloc
-    di.registerInstance(SignInBloc(get()));
+    di.registerInstance<SignInBloc>(SignInBloc(get()));
   }
 }

@@ -29,9 +29,20 @@ extension TextStyleExt on TextStyle {
   TextStyle withHeight(double height) => copyWith(height: height);
   TextStyle italic() => copyWith(fontStyle: FontStyle.italic);
 
+  // Color Extensions
   TextStyle white() => copyWith(color: Colors.white);
   TextStyle dark() => copyWith(color: AppColors.black);
   TextStyle primary() => copyWith(color: AppColors.primary);
   TextStyle secondary() => copyWith(color: AppColors.secondary);
   TextStyle tertiary() => copyWith(color: AppColors.tertiary);
+  TextStyle goldLight() => copyWith(color: AppColors.primaryLight);
+  TextStyle goldDark() => copyWith(color: AppColors.primaryDark);
+  TextStyle greyDark() => copyWith(color: AppColors.greyDark);
+  TextStyle greyMedium() => copyWith(color: AppColors.greyMedium);
+  TextStyle greyRegular() => copyWith(color: AppColors.greyRegular);
+  TextStyle greyLight() => copyWith(color: AppColors.greyLight);
+  TextStyle error() => copyWith(color: AppColors.error);
+  TextStyle warning() => copyWith(color: AppColors.warning);
+  TextStyle success() => copyWith(color: AppColors.success);
+  TextStyle info() => copyWith(color: AppColors.info);
 }

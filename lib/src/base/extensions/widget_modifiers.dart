@@ -473,6 +473,32 @@ extension WidgetModifier on Widget {
     triggerMode: triggerMode,
     child: this,
   );
+
+  /// Creates a beautiful gradient background
+  Container gradientBackground({
+    Key? key,
+    LinearGradient? gradient,
+    AlignmentGeometry? begin,
+    AlignmentGeometry? end,
+    List<Color>? colors,
+    List<double>? stops,
+  }) => Container(
+    key: key,
+    decoration: BoxDecoration(
+      gradient: gradient ?? LinearGradient(
+        begin: begin ?? Alignment.topLeft,
+        end: end ?? Alignment.bottomRight,
+        colors: colors ?? [
+          AppColors.secondary.withValues(alpha: 0.3),
+          AppColors.primaryLight.withValues(alpha: 0.1),
+          AppColors.primary.withValues(alpha: 0.05),
+          Colors.white,
+        ],
+        stops: stops ?? [0.0, 0.3, 0.7, 1.0],
+      ),
+    ),
+    child: this,
+  );
 }
 
 //! Extensions on List<Widget>

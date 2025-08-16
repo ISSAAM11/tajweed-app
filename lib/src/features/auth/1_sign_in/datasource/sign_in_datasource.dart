@@ -1,5 +1,5 @@
 import '../../../../base/datasource/exports.dart';
-import '../data/models/user.dart';
+import '../data/models/sign_in_model.dart';
 
 part 'mock/sign_in_mock.dart';
 
@@ -7,10 +7,14 @@ abstract interface class SignInDataSource {
   static const String endpoint = "sign-in";
 
   /// Calls the Sign In API endpoints.
-  FutureRequestResult<User> signIn(String email, String password);
+  FutureRequestResult<SignInModel> signInWithEmailAndPassword(String email, String password);
 
-  /// Calls the Forgot Password API endpoints.
-  FutureRequestResult<String> forgotPassword(String email);
+  /// Calls the Sign In API endpoints.
+  FutureRequestResult<SignInModel> signInWithGoogle();
+
+  /// Calls the Sign In API endpoints.
+  FutureRequestResult<SignInModel> signInWithFacebook();
+
 }
 
 final class SignInDataSourceImpl extends DataSource
@@ -21,44 +25,39 @@ final class SignInDataSourceImpl extends DataSource
     required super.connectivityMonitor,
   });
 
-  final responseMock = ResponseMock.success;
+  // final responseMock = ResponseMock.success;
 
   @override
-  FutureRequestResult<User> signIn(String email, String password) async =>
-      switch (responseMock) {
-        //! Failure
-        ResponseMock.failure => Future.delayed(
-          const Duration(milliseconds: 500),
-          () => Left(Exception('Failure')),
-        ),
-        //$ No internet
-        ResponseMock.noInternet => Future.delayed(
-          const Duration(milliseconds: 500),
-          () => Left(Exception('No internet connection')),
-        ),
-        //? No data
-        ResponseMock.noData => Future.delayed(
-          const Duration(milliseconds: 500),
-          () => Right(User.empty()),
-        ),
-        //+ Success
-        ResponseMock.success => await performDecodingRequest(
-          decodableModel: User.empty(),
+  FutureRequestResult<SignInModel> signInWithEmailAndPassword(String email, String password) async {
+    
+    if(!connectivityMonitor.isConnected) return Left(Exception('No internet connection'));
+
+    return  await performDecodingRequest(
+          decodableModel: SignInModel.empty(),
           method: RestfulMethods.post,
-          body: {"email": email, "password": password},
+          body: {
+            "language": "en",
+            "email": email,
+            "password": password,
+          },
           path: SignInDataSource.endpoint,
-          mockingData: _mockSignIn(),
+          mockingData: _mockSignInWithEmailAndPassword(),
           mockIt: true,
-        ),
-      };
+        );
+  }
 
   @override
-  FutureRequestResult<String> forgotPassword(String email) async {
-    return Future.delayed(
-      const Duration(milliseconds: 500),
-      () => Right('Success'),
-    );
+  FutureRequestResult<SignInModel> signInWithGoogle() {
+    // TODO: implement signInWithGoogle
+    throw UnimplementedError();
   }
+
+  @override
+  FutureRequestResult<SignInModel> signInWithFacebook() {
+    // TODO: implement signInWithFacebook
+    throw UnimplementedError();
+  }
+
 }
 
-enum ResponseMock { noInternet, noData, success, failure }
+// enum ResponseMock { noInternet, noData, success, failure }

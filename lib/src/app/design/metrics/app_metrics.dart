@@ -6,6 +6,7 @@ part 'parts/buttons.dart';
 part 'parts/components.dart';
 part 'parts/inputs.dart';
 part 'parts/scaffold.dart';
+part 'parts/spacing.dart';
 
 abstract final class AppMetrics {
   //$ Default Radius
@@ -25,6 +26,7 @@ abstract final class AppMetrics {
   static const snackBars = _SnackBars._();
   static const progressIndicators = _ProgressIndicators._();
   static final filePicking = _FilePicking._();
+  static const spacing = _Spacing._();
 
   static const mapDefaultCentralPoint = GeoCoordinates(
     35.501212354988134,

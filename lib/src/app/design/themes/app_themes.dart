@@ -13,43 +13,46 @@ final class AppThemes {
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       shadow: AppColors.shadow,
-      tertiary: AppColors.warning,
+      tertiary: AppColors.tertiary,
       error: AppColors.error,
+      onPrimary: Colors.white,
+      onSecondary: AppColors.greyDark,
+      onSurface: AppColors.greyDark,
     ),
     scaffoldBackgroundColor: AppColors.scaffold,
 
     //! Primary Icon
-    primaryIconTheme: const IconThemeData(color: AppColors.error),
+    primaryIconTheme: const IconThemeData(color: AppColors.primary),
     iconTheme: const IconThemeData(color: AppColors.primary),
 
     //! App Bar
     appBarTheme: AppBarTheme(
-      color: AppColors.primary,
+      backgroundColor: AppColors.primary,
       elevation: AppMetrics.topBar.elevation,
       toolbarHeight: AppMetrics.topBar.height,
       shadowColor: AppColors.shadow,
       centerTitle: true,
-      iconTheme: const IconThemeData(color: AppColors.primary),
+      iconTheme: const IconThemeData(color: Colors.white),
       titleTextStyle: AppFonts.nunito
           .semiBold()
           .withSize(FontSizes.headline2)
-          .withColor(AppColors.scaffold),
+          .withColor(Colors.white),
     ),
 
     //$ Elevated Button
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         elevation: AppMetrics.buttons.elevated.elevation,
-        shadowColor: AppColors.greyLight,
+        shadowColor: AppColors.shadow,
         minimumSize: Size.fromHeight(AppMetrics.buttons.elevated.height),
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppColors.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(AppMetrics.buttons.radius),
           ),
         ),
         textStyle: AppFonts.helvetica.bold().withSize(FontSizes.headline3),
-        foregroundColor: AppColors.scaffold,
+        foregroundColor: Colors.white,
       ),
     ),
 
@@ -57,7 +60,7 @@ final class AppThemes {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         elevation: AppMetrics.buttons.elevated.elevation,
-        shadowColor: AppColors.greyLight,
+        shadowColor: AppColors.shadow,
         minimumSize: Size.fromHeight(AppMetrics.buttons.text.height),
         backgroundColor: AppColors.scaffold,
         shape: RoundedRectangleBorder(
@@ -74,7 +77,7 @@ final class AppThemes {
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       elevation: AppMetrics.buttons.floating.elevation,
       backgroundColor: AppColors.primary,
-      foregroundColor: AppColors.scaffold,
+      foregroundColor: Colors.white,
       iconSize: AppMetrics.buttons.floating.iconSize,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -108,17 +111,11 @@ final class AppThemes {
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.secondary,
-          width: AppMetrics.inputs.borderWidth,
-        ),
+        borderSide: BorderSide(color: AppColors.inputBorder, width: AppMetrics.inputs.borderWidth),
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.secondary,
-          width: AppMetrics.inputs.borderWidth,
-        ),
+        borderSide: BorderSide(color: AppColors.primary, width: AppMetrics.inputs.borderWidth),
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       errorBorder: OutlineInputBorder(
@@ -129,11 +126,11 @@ final class AppThemes {
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.error,
-          width: AppMetrics.inputs.borderWidth,
-        ),
+        borderSide: BorderSide(color: AppColors.error, width: AppMetrics.inputs.borderWidth),
+        borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
+      filled: true,
+      fillColor: AppColors.greyBackground,
     ),
 
     dialogTheme: DialogThemeData(
@@ -158,7 +155,7 @@ final class AppThemes {
     //! List Tile
     listTileTheme: ListTileThemeData(
       iconColor: AppColors.primary,
-      textColor: Colors.black,
+      textColor: AppColors.greyDark,
       titleAlignment: ListTileTitleAlignment.top,
       titleTextStyle: AppFonts.helvetica.bold().withSize(FontSizes.headline3),
       subtitleTextStyle: AppFonts.helvetica
@@ -177,8 +174,8 @@ final class AppThemes {
 
     //! Checkbox
     checkboxTheme: CheckboxThemeData(
-      checkColor: WidgetStateProperty.all(AppColors.primary),
-      fillColor: WidgetStateProperty.all(AppColors.tertiary),
+      checkColor: WidgetStateProperty.all(Colors.white),
+      fillColor: WidgetStateProperty.all(AppColors.primary),
       side: const BorderSide(color: AppColors.primary),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -189,16 +186,16 @@ final class AppThemes {
     progressIndicatorTheme: ProgressIndicatorThemeData(
       linearMinHeight: AppMetrics.progressIndicators.linearMinHeight,
       strokeWidth: AppMetrics.progressIndicators.circularStrokeWidth,
-      color: AppColors.warning,
-      linearTrackColor: AppColors.success,
-      refreshBackgroundColor: AppColors.success,
-      circularTrackColor: AppColors.success,
+      color: AppColors.primary,
+      linearTrackColor: AppColors.secondary,
+      refreshBackgroundColor: AppColors.secondary,
+      circularTrackColor: AppColors.secondary,
     ),
 
     //! Tooltip
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
-        // color: AppColors.tertiaryShape,
+        color: AppColors.greyDark,
         borderRadius: BorderRadius.circular(AppMetrics.defaultRadius),
       ),
       enableFeedback: true,
@@ -225,7 +222,7 @@ final class AppThemes {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppMetrics.defaultRadius + 2),
       ),
-      side: const BorderSide(color: Color.fromARGB(255, 23, 63, 90)),
+      side: const BorderSide(color: AppColors.primary),
       shadowColor: AppColors.shadow,
       backgroundColor: AppColors.scaffold,
       labelStyle: AppFonts.helvetica.withSize(FontSizes.subtitle).semiBold(),
@@ -235,15 +232,18 @@ final class AppThemes {
 
   static final ThemeData dark = light.copyWith(
     colorScheme: const ColorScheme.dark(
-      surface: Colors.black54,
-      primary: Colors.pink,
+      surface: Color(0xFF1A1A1A),
+      primary: AppColors.primary,
       secondary: AppColors.secondary,
       shadow: AppColors.shadow,
+      onPrimary: Colors.white,
+      onSecondary: AppColors.greyDark,
+      onSurface: Colors.white,
     ),
-    scaffoldBackgroundColor: Colors.black45,
+    scaffoldBackgroundColor: const Color(0xFF1A1A1A),
     textTheme: const TextTheme(),
     appBarTheme: light.appBarTheme.copyWith(
-      color: AppColors.primary,
+      backgroundColor: AppColors.primary,
       titleTextStyle: light.appBarTheme.titleTextStyle,
       iconTheme: light.appBarTheme.iconTheme,
     ),
