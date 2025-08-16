@@ -1,4 +1,17 @@
 {
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnType": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.suggest.insertMode": "replace",
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+  },
+
   "better-comments.tags": [
     {
       "tag": "?",
