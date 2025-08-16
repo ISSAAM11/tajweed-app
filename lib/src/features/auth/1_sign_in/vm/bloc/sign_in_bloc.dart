@@ -1,9 +1,9 @@
 import 'package:cg_core_defs/cg_core_defs.dart';
 
+import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
 import 'package:tajweed_ai/src/utils/input_validator.dart';
 
 import '../../../../../base/bloc/exports.dart';
-import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
 import '../../data/models/sign_in_model.dart';
 import '../../datasource/sign_in_datasource.dart';
 import '../events/sign_in_events.dart';
@@ -44,6 +44,8 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   //@ LIFECYCLE
   @override
   void onDispose() {
+    inputControllers.clearAllTECs();
+    inputControllers.unfocusAllFocusNodes();
     inputControllers.disposeAll();
     super.onDispose();
   }
