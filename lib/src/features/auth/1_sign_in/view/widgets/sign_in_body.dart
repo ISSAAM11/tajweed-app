@@ -46,23 +46,24 @@ class SignInBody extends SubWidget<SignInBloc> {
         VerticalSpacing(AppMetrics.spacing.xl),
         //$ Inputs  
         FormInput(
-          type: FormInputType.email,
-          controller: bloc.emailController,
-          validator: InputValidators.validateEmail,
-          label: 'Email Address',
+          label: 'Email',
           hint: 'Enter your email',
-          prefixIcon: const Icon(Icons.email_outlined),
-          enableRealTimeValidation: true,
+          type: FormInputType.email,
+          validator: InputValidators.validateEmail,
+          controller: bloc.emailController,
+          focusNode: bloc.emailFocusNode,
+          nextFocusNode: bloc.passwordFocusNode,
+
         ),
         VerticalSpacing(AppMetrics.spacing.md),
         FormInput(
-          type: FormInputType.password,
-          controller: bloc.passwordController,
-          validator: InputValidators.validateLoginPassword,
           label: 'Password',
           hint: 'Enter your password',
-          prefixIcon: const Icon(Icons.lock_outline),
-          enableRealTimeValidation: true,
+          type: FormInputType.password,
+          validator: InputValidators.validateLoginPassword,
+          focusNode: bloc.passwordFocusNode,
+          controller: bloc.passwordController,
+          // onFieldSubmitted:bloc.signInWithEmailAndPassword,
         ),
         //$ Forgot Password Button
         ForgotPasswordButton(
