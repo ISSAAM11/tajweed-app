@@ -1,11 +1,11 @@
 import '../../../../../base/screens/exports.dart';
 import '../../../../common/widgets/custom_text_button.dart';
 
-class IsUserHaveAccount extends StatelessWidget {
+class DidUserHaveAnAccount extends StatelessWidget {
   final String firstText;
   final String secondText;
   final VoidCallback onTap;
-  const IsUserHaveAccount({super.key, required this.onTap, required this.firstText, required this.secondText});
+  const DidUserHaveAnAccount ({super.key, required this.onTap, required this.firstText, required this.secondText});
 
   @override
   Widget build(BuildContext context) =>  Row(

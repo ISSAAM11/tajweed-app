@@ -4,7 +4,7 @@ import '../../vm/states/sign_in_states.dart';
 
 
 //? Sub widgets needed imports
-import 'dont_have_an_account.dart';
+import 'did_user_have_an_account.dart';
 import 'forgot_password_button.dart';
 import 'social_login_buttons.dart';
 import '../../../../common/widgets/app_logo.dart';
@@ -92,7 +92,7 @@ class SignInBody extends SubWidget<SignInBloc> {
         ),
         VerticalSpacing(AppMetrics.spacing.sm),
       //$ Don't have an account? Create one
-        IsUserHaveAccount(
+        DidUserHaveAnAccount(
         firstText: "Don't have an Account? ",
         secondText: "create one",
         onTap: (){
