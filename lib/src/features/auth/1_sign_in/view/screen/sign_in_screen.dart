@@ -9,9 +9,11 @@ final class SignInScreen extends Feature<SignInBloc, SignInState> {
   SignInScreen({super.key})
     : super(
         dependencies: SignInDependencies().inject,
-        onUpdate: (context, state) =>switch (state) {
+        onUpdate: (context, state) => switch (state) {
           Success() => appMessenger.showSnackBar(SuccessSnackbar()),
-          Error() => appMessenger.showSnackBar(FailureSnackbar(message: state.message)),
+          Error() => appMessenger.showSnackBar(
+            FailureSnackbar(message: state.message),
+          ),
           _ => null,
         },
       );
@@ -20,9 +22,7 @@ final class SignInScreen extends Feature<SignInBloc, SignInState> {
   Widget build(BuildContext context, SignInState state) {
     return Scaffold(
       backgroundColor: AppColors.scaffold,
-      body:SignInBody(state),
-    );  
+      body: SignInBody(state),
+    );
   }
-
 }
-

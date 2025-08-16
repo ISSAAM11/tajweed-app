@@ -6,15 +6,14 @@ class ForgotPasswordButton extends StatelessWidget {
   const ForgotPasswordButton({super.key, required this.onTap});
 
   @override
-  Widget build(BuildContext context) => 
-    Row(
-      children: [
-        const Spacer(),
-        CustomTextButton(
-          title: 'Forgot Password?',
-          onTap: onTap,
-          textColor: AppColors.primary,
-        ),
-      ],
-    ).symmetricPadding(vertical: 8);
+  Widget build(BuildContext context) => Row(
+    children: [
+      const Spacer(),
+      CustomTextButton(
+        title: 'Forgot Password?',
+        onTap: onTap,
+        textColor: AppColors.primary,
+      ),
+    ],
+  ).symmetricPadding(vertical: 8);
 }
