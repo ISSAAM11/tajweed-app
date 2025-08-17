@@ -217,13 +217,13 @@ class _State extends State<FormInput> {
         fillColor: widget.fillColor ?? AppColors.greyBackground,
         filled: true,
         labelText: widget.label,
-        labelStyle: AppStyles.subtitle.withColor(AppColors.greyRegular),
+        labelStyle: AppStyles.indication.withColor(AppColors.greyRegular),
         floatingLabelBehavior: widget.centerLabel
             ? FloatingLabelBehavior.always
             : FloatingLabelBehavior.auto,
         alignLabelWithHint: widget.centerLabel,
         hintText: widget.hint ?? "",
-        hintStyle: AppStyles.subtitle.withColor(
+        hintStyle: AppStyles.indication.withColor(
           widget.hintColor ?? AppColors.hint,
         ),
         errorStyle: AppStyles.caption.withColor(AppColors.error),

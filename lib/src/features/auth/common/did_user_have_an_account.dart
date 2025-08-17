@@ -1,5 +1,5 @@
-import '../../../../../base/screens/exports.dart';
-import '../../../../common/widgets/custom_text_button.dart';
+import '../../../base/screens/exports.dart';
+import '../../common/widgets/custom_text_button.dart';
 
 class DidUserHaveAnAccount extends StatelessWidget {
   final String firstText;

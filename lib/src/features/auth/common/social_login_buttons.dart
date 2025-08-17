@@ -1,5 +1,5 @@
-import '../../../../../base/screens/exports.dart';
-import '../../../../common/widgets/social_login_button.dart';
+import '../../../base/screens/exports.dart';
+import '../../common/widgets/social_login_button.dart';
 
 class SocialLoginButtons extends StatelessWidget {
   final VoidCallback onGoogleTap;
