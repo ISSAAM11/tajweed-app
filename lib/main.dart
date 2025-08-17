@@ -3,9 +3,11 @@ import 'dart:async' show runZonedGuarded;
 import 'package:flutter/material.dart';
 
 import 'src/app/app_widget.dart';
+import 'src/app/config/app_config.dart';
 import 'src/app/binding/app_bindings.dart';
 import 'src/base/datasource/exports.dart';
 import 'src/core/api/requester_config.dart';
+import 'src/features/auth/export.dart';
 
 part 'error_handling.dart';
 
@@ -15,7 +17,7 @@ void _application() async {
   await AppBinding().all();
 
   AppEnvironment.setupEnvironment(Environment.dev);
-
+  AppConfig.setInitialRoute(signUpRoute.path);
   ConnectivityPlus.init();
 
   RequesterConfig.configure();
@@ -24,7 +26,7 @@ void _application() async {
     const AppWidget(
       showMaterialGrid: false,
       invertOversizedImages: true,
-      showPerformanceOverlay: false,  
+      showPerformanceOverlay: false,
     ),
   );
 }
