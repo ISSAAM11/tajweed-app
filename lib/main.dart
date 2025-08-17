@@ -17,7 +17,9 @@ void _application() async {
   await AppBinding().all();
 
   AppEnvironment.setupEnvironment(Environment.dev);
-  AppConfig.setInitialRoute(signUpRoute.path);
+
+  AppConfig.setInitialRoute();
+
   ConnectivityPlus.init();
 
   RequesterConfig.configure();
