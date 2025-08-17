@@ -19,6 +19,13 @@ extension on SignInBloc {
         );
   }
 
+  Future<void> _signInWithApple(
+    SignInWithApple event,
+    Emitter<SignInState> emit,
+  ) async {
+    //TODO: Implement sign in with apple
+  }
+
   Future<void> _signInWithGoogle(
     SignInWithGoogle event,
     Emitter<SignInState> emit,

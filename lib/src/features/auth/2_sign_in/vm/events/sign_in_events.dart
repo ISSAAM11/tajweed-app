@@ -26,6 +26,10 @@ final class SignInWithFacebook extends SignInEvent {
   const SignInWithFacebook();
 }
 
+final class SignInWithApple extends SignInEvent {
+  const SignInWithApple();
+}
+
 final class ContinueAsGuest extends SignInEvent {
   const ContinueAsGuest();
 }

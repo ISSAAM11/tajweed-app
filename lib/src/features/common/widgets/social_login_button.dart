@@ -13,31 +13,27 @@ class SocialLoginButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) =>    Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          size: 24,
-          color: platform == 'Google' ? Colors.red : Colors.blue,
-        ),
-        HorizontalSpacing(AppMetrics.spacing.xs),
-        Text(
-          platform,
-          style: AppStyles.subtitle.medium().withColor(AppColors.greyRegular),
-        ),
-      ],
-    )
-      .onTap(onTap)
-      .decorate(
-         height: 56,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.divider,
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(AppMetrics.defaultRadius),
-        ),
-
-      );
+  Widget build(BuildContext context) =>
+      Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: platform == 'Google'
+                    ? Colors.red
+                    : platform == "Apple"
+                    ? AppColors.greyMedium
+                    : Colors.blue,
+              ),
+            ],
+          )
+          .onTap(onTap)
+          .decorate(
+            height: AppMetrics.buttons.elevated.height,
+            width: AppMetrics.buttons.elevated.width - 20,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.divider, width: 1),
+              borderRadius: BorderRadius.circular(AppMetrics.defaultRadius),
+            ),
+          );
 }

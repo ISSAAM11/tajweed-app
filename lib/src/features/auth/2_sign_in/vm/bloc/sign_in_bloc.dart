@@ -33,12 +33,14 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   );
   Future<void> signInWithGoogle() async => add(SignInWithGoogle());
   Future<void> signInWithFacebook() async => add(SignInWithFacebook());
+  Future<void> signInWithApple() async => add(SignInWithApple());
   Future<void> continueAsGuest() async => add(ContinueAsGuest());
 
   SignInBloc(this._signInDataSource) : super(Idle(), debugginEnabled: true) {
     on<SignInWithEmailAndPassword>(_signInWithEmailAndPassword);
     on<SignInWithGoogle>(_signInWithGoogle);
     on<SignInWithFacebook>(_signInWithFacebook);
+    on<SignInWithApple>(_signInWithApple);
     on<ContinueAsGuest>(_continueAsGuest);
   }
 

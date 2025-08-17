@@ -15,22 +15,23 @@ class _ElevatedButtons {
   const _ElevatedButtons._();
   static const _applyElevation = false;
   final double elevation = _applyElevation ? AppMetrics.defaultElevation : 0;
-  final double height = 60;
+  final double height = 40;
+  final double width = 100;
 }
 
 class _TextButtons {
   const _TextButtons._();
   static const _applyElevation = false;
   final double elevation = _applyElevation ? AppMetrics.defaultElevation : 0;
-  final double height = 60;
+  final double height = 40;
 }
 
 class _IconButtons {
   const _IconButtons._();
   static const _applyElevation = false;
   final double elevation = _applyElevation ? AppMetrics.defaultElevation : 0;
-  final double side = 60;
-  final double radius = 60 / 2;
+  final double side = 40;
+  final double radius = 40 / 2;
 }
 
 class _FloatingActionButtons {

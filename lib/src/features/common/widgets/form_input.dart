@@ -94,36 +94,36 @@ class _State extends State<FormInput> {
   Widget build(BuildContext context) {
     return switch (widget.type) {
       FormInputType.normal => _contentInput(
-          onChanged: _handleOnChanged,
-          suffixIcon: widget.suffixIcon,
-        ),
+        onChanged: _handleOnChanged,
+        suffixIcon: widget.suffixIcon,
+      ),
       FormInputType.password => _contentInput(
-          onChanged: _handleOnChanged,
-          prefixIcon: const Icon(Icons.lock_outline),
-          isPassword: true,
-          obscure: _obscure,
-          suffixIcon: IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () => setState(() => _obscure = !_obscure),
-            icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility, size: 20),
-          ),
+        onChanged: _handleOnChanged,
+        prefixIcon: const Icon(Icons.lock_outline),
+        isPassword: true,
+        obscure: _obscure,
+        suffixIcon: IconButton(
+          padding: EdgeInsets.zero,
+          onPressed: () => setState(() => _obscure = !_obscure),
+          icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility),
         ),
+      ),
       FormInputType.email => _contentInput(
-          prefixIcon: const Icon(Icons.email_outlined),
-          onChanged: _handleOnChanged,
-          keyboardType: TextInputType.emailAddress,
-        ),
+        prefixIcon: const Icon(Icons.email_outlined),
+        onChanged: _handleOnChanged,
+        keyboardType: TextInputType.emailAddress,
+      ),
       FormInputType.phoneNumber => _contentInput(
-          onChanged: _handleOnChanged,
-          suffixIcon: Icon(Icons.phone),
-          keyboardType: TextInputType.phone,
-        ),
+        onChanged: _handleOnChanged,
+        suffixIcon: Icon(Icons.phone),
+        keyboardType: TextInputType.phone,
+      ),
     };
   }
 
   void _handleOnChanged(String value) {
     widget.onChanged?.call(value);
-    
+
     if (widget.enableRealTimeValidation && widget.validator != null) {
       final error = widget.validator!(value);
       if (error != _currentValidationError) {
@@ -141,7 +141,100 @@ class _State extends State<FormInput> {
     TextInputType? keyboardType,
     void Function(String)? onChanged,
   }) {
-    return Container(
+    return TextFormField(
+      cursorColor: lightTheme ? AppColors.primary : AppColors.scaffold,
+      enabled: widget.enabled,
+      initialValue: widget.initialValue,
+      expands: widget.expands,
+      textCapitalization: widget.textCapitalization,
+      enableInteractiveSelection: true,
+      controller: widget.controller,
+      style: widget.style ?? AppStyles.subtitle.withColor(AppColors.greyDark),
+      obscureText: obscure,
+      minLines: isPassword ? 1 : widget.minLines,
+      maxLines: isPassword ? 1 : widget.maxLines,
+      maxLength: isPassword
+          ? AppMetrics.inputs.passwordInputMaxLength
+          : widget.maxLength,
+      keyboardType:
+          keyboardType ??
+          (isPassword ? TextInputType.visiblePassword : widget.keyboardType),
+      validator: widget.validator,
+      autovalidateMode: widget.enableRealTimeValidation
+          ? AutovalidateMode.onUserInteraction
+          : AppMetrics.inputs.inputsAutovalidationMode,
+      focusNode: widget.focusNode,
+      onChanged: onChanged,
+      onFieldSubmitted: (_) => widget.onFieldSubmitted?.call(),
+      onEditingComplete: () {
+        widget.focusNode?.unfocus();
+        widget.nextFocusNode?.requestFocus();
+      },
+      buildCounter:
+          (_, {int? currentLength, int? maxLength, bool? isFocused}) =>
+              widget.displayCounter
+              ? Text(
+                  "$currentLength/$maxLength",
+                  style: AppStyles.indication.withColor(AppColors.greyRegular),
+                )
+              : null,
+      inputFormatters: widget.inputFormatters,
+      textAlign: widget.textAlign ?? TextAlign.start,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: AppMetrics.inputs.horizontalContentPadding,
+          vertical: AppMetrics.inputs.verticalContentPadding,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: AppColors.inputBorder,
+            width: AppMetrics.inputs.borderWidth,
+          ),
+          borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: AppColors.primary,
+            width: AppMetrics.inputs.borderWidth + 0.5,
+          ),
+          borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: AppColors.error,
+            width: AppMetrics.inputs.borderWidth,
+          ),
+          borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: AppColors.error,
+            width: AppMetrics.inputs.borderWidth + 0.5,
+          ),
+          borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+        ),
+        isDense: true,
+        fillColor: widget.fillColor ?? AppColors.greyBackground,
+        filled: true,
+        labelText: widget.label,
+        labelStyle: AppStyles.subtitle.withColor(AppColors.greyRegular),
+        floatingLabelBehavior: widget.centerLabel
+            ? FloatingLabelBehavior.always
+            : FloatingLabelBehavior.auto,
+        alignLabelWithHint: widget.centerLabel,
+        hintText: widget.hint ?? "",
+        hintStyle: AppStyles.subtitle.withColor(
+          widget.hintColor ?? AppColors.hint,
+        ),
+        errorStyle: AppStyles.caption.withColor(AppColors.error),
+        prefixIcon: prefixIcon ?? widget.prefixIcon,
+        prefixIconConstraints:
+            widget.prefixConstraints ?? AppMetrics.inputs.prefixIconConstraints,
+        prefixIconColor: AppColors.greyRegular,
+        suffixIcon: suffixIcon,
+        suffixIconColor: AppColors.greyRegular,
+      ),
+    ).decorate(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
         boxShadow: [
@@ -151,89 +244,6 @@ class _State extends State<FormInput> {
             offset: const Offset(0, 2),
           ),
         ],
-      ),
-      child: TextFormField(
-        cursorColor: lightTheme ? AppColors.primary : AppColors.scaffold,
-        enabled: widget.enabled,
-        initialValue: widget.initialValue,
-        expands: widget.expands,
-        textCapitalization: widget.textCapitalization,
-        enableInteractiveSelection: true,
-        controller: widget.controller,
-        style: widget.style ?? AppStyles.subtitle.withColor(AppColors.greyDark),
-        obscureText: obscure,
-        minLines: isPassword ? 1 : widget.minLines,
-        maxLines: isPassword ? 1 : widget.maxLines,
-        maxLength: isPassword ? AppMetrics.inputs.passwordInputMaxLength : widget.maxLength,
-        keyboardType: keyboardType ?? (isPassword ? TextInputType.visiblePassword : widget.keyboardType),
-        validator: widget.validator,
-        autovalidateMode: widget.enableRealTimeValidation 
-            ? AutovalidateMode.onUserInteraction 
-            : AppMetrics.inputs.inputsAutovalidationMode,
-        focusNode: widget.focusNode,
-        onChanged: onChanged,
-        onFieldSubmitted: (_) => widget.onFieldSubmitted?.call(),
-        onEditingComplete: () {
-          widget.focusNode?.unfocus();
-          widget.nextFocusNode?.requestFocus();
-        },
-        buildCounter: (_, {int? currentLength, int? maxLength, bool? isFocused}) => widget.displayCounter
-            ? Text(
-                "$currentLength/$maxLength",
-                style: AppStyles.indication.withColor(AppColors.greyRegular),
-              )
-            : null,
-        inputFormatters: widget.inputFormatters,
-        textAlign: widget.textAlign ?? TextAlign.start,
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.inputBorder,
-              width: AppMetrics.inputs.borderWidth,
-            ),
-            borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.primary,
-              width: AppMetrics.inputs.borderWidth + 0.5,
-            ),
-            borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.error,
-              width: AppMetrics.inputs.borderWidth,
-            ),
-            borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.error,
-              width: AppMetrics.inputs.borderWidth + 0.5,
-            ),
-            borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
-          ),
-          isDense: true,
-          fillColor: widget.fillColor ?? AppColors.greyBackground,
-          filled: true,
-          labelText: widget.label,
-          labelStyle: AppStyles.subtitle.withColor(AppColors.greyRegular),
-          floatingLabelBehavior: widget.centerLabel ? FloatingLabelBehavior.always : FloatingLabelBehavior.auto,
-          alignLabelWithHint: widget.centerLabel,
-          hintText: widget.hint ?? "",
-          hintStyle: AppStyles.subtitle.withColor(widget.hintColor ?? AppColors.hint),
-          errorStyle: AppStyles.caption.withColor(AppColors.error),
-          prefixIcon: prefixIcon ?? widget.prefixIcon,
-          prefixIconConstraints: widget.prefixConstraints ?? AppMetrics.inputs.prefixIconConstraints,
-          prefixIconColor: AppColors.greyRegular,
-          suffixIcon: suffixIcon,
-          suffixIconColor: AppColors.greyRegular,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: AppMetrics.inputs.horizontalContentPadding,
-            vertical: AppMetrics.inputs.verticalContentPadding,
-          ),
-        ),
       ),
     );
   }

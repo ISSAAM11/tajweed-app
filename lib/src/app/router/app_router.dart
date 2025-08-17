@@ -5,7 +5,7 @@ import '../../features/auth/export.dart';
 
 final router = GoRouter(
   navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'root'),
-  initialLocation: signUpRoute.path,
+  initialLocation: signInRoute.path,
   debugLogDiagnostics: true,
   routes: [signInRoute, signUpRoute],
 );

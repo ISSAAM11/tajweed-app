@@ -1,5 +1,6 @@
 //? Base needed imports
 import '../../../../../base/screens/exports.dart';
+import '../../../3_sign_up/router/sign_up_route.dart';
 import '../../vm/states/sign_in_states.dart';
 
 //? Sub widgets needed imports
@@ -9,7 +10,6 @@ import 'social_login_buttons.dart';
 import '../../../../common/widgets/app_logo.dart';
 import '../../../../common/widgets/form_input.dart';
 import '../../../../common/widgets/or_devider.dart';
-import '../../../../common/widgets/custom_text_button.dart';
 
 //? Utils needed imports
 import '../../../../../utils/input_validator.dart' show InputValidators;
@@ -23,19 +23,21 @@ class SignInBody extends SubWidget<SignInBloc> {
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.all(24),
+    padding: EdgeInsets.symmetric(
+      horizontal: AppMetrics.scaffold.horizontalBodyPadding,
+      vertical: AppMetrics.scaffold.topBodyPadding,
+    ),
     child: Form(
       key: bloc.formKey,
       child: Column(
         children: [
           //$ Header
           const AppLogo(),
-          VerticalSpacing(AppMetrics.spacing.sm),
           //$ App Info
           Text('Tajweed AI', style: AppStyles.headline1.bold().primary()),
           VerticalSpacing(AppMetrics.spacing.xs),
           Text(
-            'Learn Quran with AI',
+            'Your AI Quran Teacher',
             style: AppStyles.subtitle.medium().greyRegular(),
           ),
           VerticalSpacing(AppMetrics.spacing.xl),
@@ -48,8 +50,6 @@ class SignInBody extends SubWidget<SignInBloc> {
             focusNode: bloc.emailFocusNode,
             nextFocusNode: bloc.passwordFocusNode,
             validator: InputValidators.validateEmail,
-            prefixIcon: const Icon(Icons.email_outlined),
-            enableRealTimeValidation: true,
           ),
           VerticalSpacing(AppMetrics.spacing.md),
           FormInput(
@@ -67,6 +67,7 @@ class SignInBody extends SubWidget<SignInBloc> {
               // TODO: Navigate to forgot password
             },
           ),
+          VerticalSpacing(AppMetrics.spacing.lg),
           //$ Sign In Button
           LoadingButton(
             title: 'Sign In',
@@ -75,7 +76,6 @@ class SignInBody extends SubWidget<SignInBloc> {
             titleFontSize: FontSizes.title,
             height: AppMetrics.buttons.elevated.height,
             useGradient: true,
-            gradient: AppColors.primaryGradient,
           ),
           //$ Or Divider
           VerticalSpacing(AppMetrics.spacing.xs),
@@ -85,19 +85,19 @@ class SignInBody extends SubWidget<SignInBloc> {
           SocialLoginButtons(
             onGoogleTap: bloc.signInWithGoogle,
             onFacebookTap: bloc.signInWithFacebook,
+            onAppleTap: bloc.signInWithApple,
           ),
           VerticalSpacing(AppMetrics.spacing.sm),
           //$ Don't have an account? Create one
           DidUserHaveAnAccount(
             firstText: "Don't have an Account? ",
             secondText: "create one",
-            onTap: () {
-              //! Navigate to sign up
-            },
+            onTap: () => globalContext.go(signUpRoute.path),
           ),
           //$ Continue as Guest Button
-          CustomTextButton(
-            title: 'Continue as Guest',
+          DidUserHaveAnAccount(
+            firstText: "Or continue as ",
+            secondText: "Guest",
             onTap: bloc.continueAsGuest,
           ),
         ],
