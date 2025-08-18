@@ -7,7 +7,7 @@ abstract interface class SignUpDataSource {
   static const String endpoint = "sign-up";
 
   /// Calls the Sign In API endpoints.
-  FutureRequestResult<SignUpModel> signUpWithEmailAndPassword({
+  FutureRequestResult<SignUpModelResponse> signUpWithEmailAndPassword({
     required String firstNmae,
     required String lasttNmae,
     required String birthDate,
@@ -30,7 +30,7 @@ final class SignUpDataSourceImpl extends DataSource
   });
 
   @override
-  FutureRequestResult<SignUpModel> signUpWithEmailAndPassword({
+  FutureRequestResult<SignUpModelResponse> signUpWithEmailAndPassword({
     required String firstNmae,
     required String lasttNmae,
     required String birthDate,
@@ -43,7 +43,7 @@ final class SignUpDataSourceImpl extends DataSource
       return Left(Exception('No internet connection'));
     try {
       return await performDecodingRequest(
-        decodableModel: SignUpModel.empty(),
+        decodableModel: SignUpModelResponse.empty(),
         method: RestfulMethods.post,
         body: {
           "first_name": firstNmae,
@@ -55,7 +55,7 @@ final class SignUpDataSourceImpl extends DataSource
           "password": password,
         },
         path: SignUpDataSource.endpoint,
-        mockingData: _mockSignUpWithEmailAndPassword(),
+        mockingData: _mockSignUpSuccess(),
         mockIt: true,
       );
     } catch (e) {

@@ -1,49 +1,84 @@
 import 'package:cg_core_defs/cg_core_defs.dart';
-// import 'package:go_router/go_router.dart';
-// import 'package:tajweed_ai/src/utils/input_validator.dart';
-
+import 'package:country_picker/country_picker.dart';
+import 'package:tajweed_ai/src/base/extensions/date_time_ext.dart';
+import 'package:tajweed_ai/src/utils/input_validator.dart';
 import '../../../../../base/bloc/exports.dart';
-import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
+import '../../../../../base/screens/exports.dart'
+    show GlobalKey, FormState, PageController, Curves;
+
+//$ DATA SOURCES
 import '../../datasource/sign_up_datasource.dart';
+
+//$ EVENTS
 import '../events/sign_up_events.dart';
 import '../states/sign_up_states.dart';
 
 //$ USE CASES
-// part '../usecases/sign_up_uc.dart'  ;
-// part '../usecases/sign_up_navigation_uc.dart'  ;
-// part '../usecases/continue_as_guest_uc.dart'  ;
+part '../usecases/sign_up_uc.dart';
+part '../usecases/steps_uc.dart';
 
-class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
+base class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
   //! Data Sources
   final SignUpDataSource _signUpDataSource;
 
   //! Keys
-  final formKey = GlobalKey<FormState>();
+  final firstStepFormKey = GlobalKey<FormState>();
+  final secondStepFormKey = GlobalKey<FormState>();
+
+  //!Page controller
+  final pageController = PageController();
+  final _currentIndex = Observable<int>(0);
+  Observable<int> get currentIndex => _currentIndex;
 
   //! Input Controllers
-  final inputControllers = InputControl.generate(2);
-  late final emailController = inputControllers[0].controller;
-  late final passwordController = inputControllers[1].controller;
+  late final List<InputControl> inputControllers;
+  late final InputControl firstNmae;
+  late final InputControl lasttNmae;
+  late final InputControl email;
+  late final InputControl password;
+  late final InputControl confirmPassword;
+
+  //!observables
+  final countryObs = Observable<Country>(
+    Country(
+      phoneCode: "216",
+      countryCode: "TN",
+      e164Sc: 0,
+      geographic: true,
+      level: 1,
+      name: "Tunisia",
+      example: "20123456",
+      displayName: "Tunisia (TN) [+216]",
+      displayNameNoCountryCode: "Tunisia (TN)",
+      e164Key: "216-TN-0",
+    ),
+  );
+  final birthDateObs = Observable<DateTime>(DateTime(DateTime.now().year - 5));
+  final genderObs = Observable<String>("M");
+  final acceptedTerms = Observable(false);
 
   //! Event Callers
-  // Future<void> signUpWithEmailAndPassword() async =>
-  //   add(SignUpWithEmailAndPassword(emailController.text, passwordController.text));
-  // Future<void> signUpWithGoogle() async => add(SignUpWithGoogle());
-  // Future<void> signUpWithFacebook() async => add(SignUpWithFacebook());
-  // Future<void> continueAsGuest() async => add(ContinueAsGuest());
-  // Future<void> navigateToSignIn() async => add(NavigateToSignIn());
-  // Future<void> navigateToForgotPassword() async => add(NavigateToForgotPassword());
+  void next() => add(NextStep(_currentIndex));
+  void previous() => add(PreviousStep(_currentIndex));
 
   SignUpBloc(this._signUpDataSource) : super(Idle(), debugginEnabled: true) {
-    // on<SignUpWithEmailAndPassword>(_signUpWithEmailAndPassword);
-    // on<SignUpWithGoogle>(_signUpWithGoogle);
-    // on<SignUpWithFacebook>(_signUpWithFacebook);
-    // on<ContinueAsGuest>(_continueAsGuest);
-    // on<NavigateToForgotPassword>(_navigateToForgotPassword);
-    // on<NavigateToSignIn>(_navigateToSignIn);
+    on<SignUpWithEmailAndPassword>(_signUpWithEmailAndPassword);
+    on<NextStep>(_next);
+    on<PreviousStep>(_previous);
   }
 
   //@ LIFECYCLE
+  @override
+  void onInit() {
+    inputControllers = InputControl.generate(6);
+    email = inputControllers[0];
+    password = inputControllers[1];
+    confirmPassword = inputControllers[2];
+    firstNmae = inputControllers[3];
+    lasttNmae = inputControllers[4];
+    super.onInit();
+  }
+
   @override
   void onDispose() {
     inputControllers.disposeAll();

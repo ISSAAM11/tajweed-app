@@ -31,47 +31,26 @@ class InputValidators {
   // Password validation with comprehensive requirements
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return 'Password is required';
     }
 
     if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
+      return 'Password must be at least 8 characters';
     }
 
-    if (value.length > 128) {
-      return 'Password must be less than 128 characters';
-    }
-
-    // Check for at least one uppercase letter
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'Password must contain at least one uppercase letter';
+      return 'Add at least one uppercase letter (A-Z)';
     }
 
-    // Check for at least one lowercase letter
-    if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return 'Password must contain at least one lowercase letter';
-    }
-
-    // Check for at least one digit
     if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return 'Password must contain at least one number';
+      return 'Add at least one number (0-9)';
     }
 
-    // Check for at least one special character
-    if (!RegExp(r'[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>/?]').hasMatch(value)) {
-      return 'Password must contain at least one special character (!@#\$%^&*()_+-=[]{}|;:,.<>?)';
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+      return 'Add at least one special character (!@#...)';
     }
 
-    // Check for common weak patterns
-    if (RegExp(r'(.)\1{2,}').hasMatch(value)) {
-      return 'Password cannot contain repeated characters (e.g., aaa, 111)';
-    }
-
-    if (RegExp(r'(123|abc|qwe|password|admin)').hasMatch(value.toLowerCase())) {
-      return 'Password cannot contain common sequences';
-    }
-
-    return null;
+    return null; // ✅ Valid password
   }
 
   // Login password validation (less strict for login)
@@ -124,6 +103,27 @@ class InputValidators {
     if (score <= 4) return 'Fair';
     if (score <= 5) return 'Good';
     return 'Strong';
+  }
+
+  static String? validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Name is required';
+    }
+
+    // Allow only letters, spaces, hyphens, and apostrophes
+    if (!RegExp(r"^[a-zA-ZÀ-ÿ' -]+$").hasMatch(value)) {
+      return 'Name can only contain letters, spaces, hyphens, or apostrophes';
+    }
+
+    if (value.trim().length < 2) {
+      return 'Name must be at least 2 characters long';
+    }
+
+    if (value.trim().length > 50) {
+      return 'Name must be less than 50 characters';
+    }
+
+    return null; // ✅ Valid name
   }
 }
 
