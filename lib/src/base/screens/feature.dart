@@ -1,5 +1,6 @@
 import '../bloc/base_bloc.dart';
 import '../dependencies/dependencies.dart';
+
 import 'exports.dart';
 
 /// A base widget for providing a Bloc to its child widget tree. It allows you to inject
@@ -105,6 +106,7 @@ class _State<B extends BaseBloc<dynamic, S>, S> extends State<Feature<B, S>> {
   @override
   void dispose() {
     bloc.onDispose();
+    di.unregister<B>();
     widget._state = null;
     super.dispose();
   }
