@@ -64,10 +64,9 @@ class AuthBody extends StatelessWidget {
           "Master Qur'an Recitation with AI Guidance.",
           style: AppStyles.subtitle.medium().greyRegular(),
         ),
-        VerticalSpacing(AppMetrics.spacing.xl),
+        VerticalSpacing(AppMetrics.spacing.md),
         //$ Form
         child,
-        VerticalSpacing(AppMetrics.spacing.md),
         //$ Main Button
         if (onButtonTap != null)
           LoadingButton(

@@ -7,16 +7,18 @@ abstract interface class SignUpDataSource {
   static const String endpoint = "sign-up";
 
   /// Calls the Sign In API endpoints.
-  FutureRequestResult<void> signUpWithEmailAndPassword(
-    String email,
-    String password,
-  );
+  FutureRequestResult<SignUpModel> signUpWithEmailAndPassword({
+    required String firstNmae,
+    required String lasttNmae,
+    required String birthDate,
+    required String email,
+    required String password,
+    required String gender,
+    required String country,
+  });
 
   /// Calls the Forgot Password API endpoints.
-  FutureRequestResult<String> signUpWithGoogle(String email, String password);
-
-  /// Calls the Forgot Password API endpoints.
-  FutureRequestResult<String> signUpWithFacebook(String email, String password);
+  FutureRequestResult<String> verifyEmail(String email);
 }
 
 final class SignUpDataSourceImpl extends DataSource
@@ -27,47 +29,45 @@ final class SignUpDataSourceImpl extends DataSource
     required super.connectivityMonitor,
   });
 
-  // final responseMock = ResponseMock.success;
-
   @override
-  FutureRequestResult<void> signUpWithEmailAndPassword(
-    String email,
-    String password,
-  ) async {
+  FutureRequestResult<SignUpModel> signUpWithEmailAndPassword({
+    required String firstNmae,
+    required String lasttNmae,
+    required String birthDate,
+    required String gender,
+    required String country,
+    required String email,
+    required String password,
+  }) async {
     if (!connectivityMonitor.isConnected)
       return Left(Exception('No internet connection'));
-
-    return await performDecodingRequest(
-      decodableModel: SignUpModel.empty(),
-      method: RestfulMethods.post,
-      body: {"language": "en", "email": email, "password": password},
-      path: SignUpDataSource.endpoint,
-      mockingData: _mockSignUpWithEmailAndPassword(),
-      mockIt: true,
-    );
+    try {
+      return await performDecodingRequest(
+        decodableModel: SignUpModel.empty(),
+        method: RestfulMethods.post,
+        body: {
+          "first_name": firstNmae,
+          "last_name": lasttNmae,
+          "birthday": birthDate,
+          "gender": gender,
+          "country": country,
+          "email": email,
+          "password": password,
+        },
+        path: SignUpDataSource.endpoint,
+        mockingData: _mockSignUpWithEmailAndPassword(),
+        mockIt: true,
+      );
+    } catch (e) {
+      return Left(Exception(e.toString()));
+    }
   }
 
   @override
-  FutureRequestResult<String> signUpWithGoogle(
-    String email,
-    String password,
-  ) async {
-    return Future.delayed(
-      const Duration(milliseconds: 500),
-      () => Right('Success'),
-    );
-  }
-
-  @override
-  FutureRequestResult<String> signUpWithFacebook(
-    String email,
-    String password,
-  ) async {
+  FutureRequestResult<String> verifyEmail(String emai) async {
     return Future.delayed(
       const Duration(milliseconds: 500),
       () => Right('Success'),
     );
   }
 }
-
-// enum ResponseMock { noInternet, noData, success, failure }

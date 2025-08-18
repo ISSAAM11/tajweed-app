@@ -30,7 +30,7 @@ class SocialLoginButton extends StatelessWidget {
           .onTap(onTap)
           .decorate(
             height: AppMetrics.buttons.elevated.height,
-            width: AppMetrics.buttons.elevated.width - 20,
+            width: (MediaQuery.sizeOf(context).width / 4),
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.divider, width: 1),
               borderRadius: BorderRadius.circular(AppMetrics.defaultRadius),

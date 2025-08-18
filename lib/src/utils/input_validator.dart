@@ -80,7 +80,7 @@ class InputValidators {
       return 'Please enter your password';
     }
 
-    if (value.length < 1) {
+    if (value.isEmpty) {
       return 'Password cannot be empty';
     }
 
@@ -111,13 +111,14 @@ class InputValidators {
   // Password strength checker
   static String getPasswordStrength(String password) {
     int score = 0;
-    
+
     if (password.length >= 8) score++;
     if (password.length >= 12) score++;
     if (RegExp(r'[A-Z]').hasMatch(password)) score++;
     if (RegExp(r'[a-z]').hasMatch(password)) score++;
     if (RegExp(r'[0-9]').hasMatch(password)) score++;
-    if (RegExp(r'[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>/?]').hasMatch(password)) score++;
+    if (RegExp(r'[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>/?]').hasMatch(password))
+      score++;
 
     if (score <= 2) return 'Weak';
     if (score <= 4) return 'Fair';
