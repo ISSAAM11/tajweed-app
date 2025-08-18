@@ -1,6 +1,7 @@
 import 'package:cg_core_defs/cg_core_defs.dart' show InputControl;
 
-import '../../../../../base/screens/exports.dart' show GlobalKey, FormState;
+import '../../../../../base/screens/exports.dart'
+    show FormState, GlobalKey, InputControlsListDisposer;
 import 'package:tajweed_ai/src/utils/input_validator.dart';
 
 import '../../../../../base/bloc/exports.dart';
@@ -22,14 +23,12 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
 
   //! Input Controllers
   late final List<InputControl> inputControllers;
-  late final TextEditingController emailController;
-  late final TextEditingController passwordController;
-  late final FocusNode emailFocusNode;
-  late final FocusNode passwordFocusNode;
+  late final InputControl email;
+  late final InputControl password;
 
   //! Event Callers
   Future<void> signInWithEmailAndPassword() async => add(
-    SignInWithEmailAndPassword(emailController.text, passwordController.text),
+    SignInWithEmailAndPassword(email.controller.text, password.controller.text),
   );
   Future<void> signInWithGoogle() async => add(SignInWithGoogle());
   Future<void> signInWithFacebook() async => add(SignInWithFacebook());
@@ -48,19 +47,14 @@ class SignInBloc extends BaseBloc<SignInEvent, SignInState> {
   @override
   void onInit() {
     inputControllers = InputControl.generate(2);
-    emailController = inputControllers[0].controller;
-    passwordController = inputControllers[1].controller;
-    emailFocusNode = inputControllers[0].node;
-    passwordFocusNode = inputControllers[1].node;
+    email = inputControllers[0];
+    password = inputControllers[1];
     super.onInit();
   }
 
   @override
   void onDispose() {
-    emailController.dispose();
-    Debugger.red("onDispose emailController");
-    passwordController.dispose();
-    Debugger.red("onDispose passwordController");
+    inputControllers.disposeAll();
     super.onDispose();
   }
 }

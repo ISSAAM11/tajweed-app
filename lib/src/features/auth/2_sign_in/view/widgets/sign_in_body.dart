@@ -35,10 +35,10 @@ class SignInBody extends SubWidget<SignInBloc> {
     onAppleTap: bloc.signInWithApple,
     child: SignInForm(
       formKey: bloc.formKey,
-      emailController: bloc.emailController,
-      emailFocusNode: bloc.emailFocusNode,
-      passwordController: bloc.passwordController,
-      passwordFocusNode: bloc.passwordFocusNode,
+      emailController: bloc.email.controller,
+      emailFocusNode: bloc.email.node,
+      passwordController: bloc.password.controller,
+      passwordFocusNode: bloc.password.node,
       onForgotPassword: () {
         //TODO: Go to forgot password
       },
