@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' show WidgetsFlutterBinding;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:generic_requester/generic_requester.dart' show Dio;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tajweed_ai/src/database/app_database.dart';
 
 import '../../core/dependency/get_it_container.dart';
 import '../../core/managers/cache/cache_manager_impl.dart';
@@ -29,7 +30,7 @@ final class AppBinding extends AppBindings {
     //? Managers
     di.registerLazySingleton(() => FlutterSecureStorage());
     di.registerLazySingleton<CacheManager>(() => CacheManagerImpl());
-
+    di.registerLazySingleton<AppDatabase>(() => AppDatabase());
     //& Packages
     di.registerLazySingleton(() => Dio());
     di.registerLazySingleton<ConnectivityMonitor>(
