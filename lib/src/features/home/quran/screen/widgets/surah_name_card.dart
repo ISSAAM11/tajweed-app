@@ -35,11 +35,9 @@ class SurahNameCard extends StatelessWidget {
           text: TextSpan(
             text:
                 "$orderNumber ${String.fromCharCode(int.parse(glyph, radix: 16))}",
-            style: const TextStyle(
+            style: AppStyles.headline2.bold().copyWith(
               fontFamily: 'SurahNameV4',
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-              color: AppColors.primaryLight,
+              color: AppColors.primary,
             ),
           ),
         ),

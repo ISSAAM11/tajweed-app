@@ -15,7 +15,7 @@ extension on QuranBloc {
   }
 
   void _quranSurahSelectedEvent(
-    QuranSurahSelectedEvent event,
+    SelectSurahEvent event,
     Emitter<QuranState> emit,
   ) {
     Debugger.green('Surah selected: ${event.surahId}');

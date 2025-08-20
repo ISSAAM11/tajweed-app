@@ -1,9 +1,9 @@
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/features/quran/quran_deps.dart';
-import 'package:tajweed_ai/src/features/quran/vm/quran_bloc.dart';
-import 'package:tajweed_ai/src/features/quran/vm/quran_state.dart';
+import 'package:tajweed_ai/src/features/home/quran/binding/quran_deps.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_state.dart';
 
-import '../widgets/surah_listing_body.dart';
+import 'widgets/surah_listing_body.dart';
 
 final class SurahListingScreen extends Feature<QuranBloc, QuranState> {
   SurahListingScreen({super.key})

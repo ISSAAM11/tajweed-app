@@ -9,10 +9,10 @@ sealed class QuranEvent extends Equatable {
 
 final class LoadChaptersEvent extends QuranEvent {}
 
-final class QuranSurahSelectedEvent extends QuranEvent {
+final class SelectSurahEvent extends QuranEvent {
   final int surahId;
 
-  const QuranSurahSelectedEvent(this.surahId);
+  const SelectSurahEvent(this.surahId);
 
   @override
   List<Object> get props => [surahId];

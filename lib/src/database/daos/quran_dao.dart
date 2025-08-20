@@ -11,7 +11,7 @@ part 'quran_dao.g.dart';
 
 @DriftAccessor(tables: [Words, Hizbs, Juzs, Rukus, Chapters])
 class QuranDao extends DatabaseAccessor<AppDatabase> with _$QuranDaoMixin {
-  QuranDao(AppDatabase db) : super(db);
+  QuranDao(super.db);
 
   /// Get all chapters
   Future<List<Chapter>> getChapters() {

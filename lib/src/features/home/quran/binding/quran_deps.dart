@@ -1,8 +1,8 @@
 import 'package:tajweed_ai/src/base/dependencies/dependencies.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_dao.dart';
-import 'package:tajweed_ai/src/features/quran/datasource/quran_datasource.dart';
-import 'package:tajweed_ai/src/features/quran/vm/quran_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/quran_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_bloc.dart';
 
 class QuranDependencies implements Dependencies {
   @override
