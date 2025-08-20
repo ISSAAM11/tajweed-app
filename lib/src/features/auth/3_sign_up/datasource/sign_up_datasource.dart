@@ -4,7 +4,7 @@ import '../data/models/sign_up_model.dart';
 part 'mock/sign_up_mock.dart';
 
 abstract interface class SignUpDataSource {
-  static const String endpoint = "sign-up";
+  static const String endpoint = "auth/register/";
 
   /// Calls the Sign In API endpoints.
   FutureRequestResult<SignUpModelResponse> signUpWithEmailAndPassword({
@@ -46,17 +46,17 @@ final class SignUpDataSourceImpl extends DataSource
         decodableModel: SignUpModelResponse.empty(),
         method: RestfulMethods.post,
         body: {
-          "first_name": firstNmae,
-          "last_name": lasttNmae,
-          "birthday": birthDate,
-          "gender": gender,
-          "country": country,
-          "email": email,
-          "password": password,
+          "email": "innocent21@powerscrews.com",
+          "password": "password",
+          "first_name": "aaa",
+          "last_name": "bbb",
+          "country_code": "TN",
+          "birthday": "2000-01-01",
+          "gender": "M",
         },
         path: SignUpDataSource.endpoint,
         mockingData: _mockSignUpSuccess(),
-        mockIt: true,
+        mockIt: false,
       );
     } catch (e) {
       return Left(Exception(e.toString()));

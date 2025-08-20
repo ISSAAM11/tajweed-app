@@ -23,10 +23,10 @@ extension on SignUpBloc {
           country: countryObs.value.countryCode,
         )
         .then(
-          (response) => response.fold(
-            (exception) => emit(Error.from(exception)),
-            (data) => emit(Success("Yess")),
-          ),
+          (response) =>
+              response.fold((exception) => emit(Error.from(exception)), (data) {
+                emit(Success("Yess"));
+              }),
         );
   }
 }
