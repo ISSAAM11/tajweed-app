@@ -10,7 +10,7 @@ class Chapters extends Table {
   TextColumn get revelationPlace => text().named('revelation_place')();
   IntColumn get versesCount => integer().named('verses_count')();
   IntColumn get bismillahPre => integer().named('bismillah_pre')();
-  IntColumn get nameGlyph => integer().named('name_glyph')();
+  TextColumn get nameGlyph => text().named('name_glyph')();
 
   @override
   Set<Column> get primaryKey => {id};

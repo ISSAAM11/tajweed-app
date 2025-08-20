@@ -482,6 +482,17 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameGlyphMeta = const VerificationMeta(
+    'nameGlyph',
+  );
+  @override
+  late final GeneratedColumn<String> nameGlyph = GeneratedColumn<String>(
+    'name_glyph',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -492,6 +503,7 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
     revelationPlace,
     versesCount,
     bismillahPre,
+    nameGlyph,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -576,6 +588,14 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
     } else if (isInserting) {
       context.missing(_bismillahPreMeta);
     }
+    if (data.containsKey('name_glyph')) {
+      context.handle(
+        _nameGlyphMeta,
+        nameGlyph.isAcceptableOrUnknown(data['name_glyph']!, _nameGlyphMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameGlyphMeta);
+    }
     return context;
   }
 
@@ -617,6 +637,10 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
         DriftSqlType.int,
         data['${effectivePrefix}bismillah_pre'],
       )!,
+      nameGlyph: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_glyph'],
+      )!,
     );
   }
 
@@ -635,6 +659,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
   final String revelationPlace;
   final int versesCount;
   final int bismillahPre;
+  final String nameGlyph;
   const Chapter({
     required this.id,
     required this.name,
@@ -644,6 +669,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
     required this.revelationPlace,
     required this.versesCount,
     required this.bismillahPre,
+    required this.nameGlyph,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -656,6 +682,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
     map['revelation_place'] = Variable<String>(revelationPlace);
     map['verses_count'] = Variable<int>(versesCount);
     map['bismillah_pre'] = Variable<int>(bismillahPre);
+    map['name_glyph'] = Variable<String>(nameGlyph);
     return map;
   }
 
@@ -669,6 +696,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
       revelationPlace: Value(revelationPlace),
       versesCount: Value(versesCount),
       bismillahPre: Value(bismillahPre),
+      nameGlyph: Value(nameGlyph),
     );
   }
 
@@ -686,6 +714,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
       revelationPlace: serializer.fromJson<String>(json['revelationPlace']),
       versesCount: serializer.fromJson<int>(json['versesCount']),
       bismillahPre: serializer.fromJson<int>(json['bismillahPre']),
+      nameGlyph: serializer.fromJson<String>(json['nameGlyph']),
     );
   }
   @override
@@ -700,6 +729,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
       'revelationPlace': serializer.toJson<String>(revelationPlace),
       'versesCount': serializer.toJson<int>(versesCount),
       'bismillahPre': serializer.toJson<int>(bismillahPre),
+      'nameGlyph': serializer.toJson<String>(nameGlyph),
     };
   }
 
@@ -712,6 +742,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
     String? revelationPlace,
     int? versesCount,
     int? bismillahPre,
+    String? nameGlyph,
   }) => Chapter(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -721,6 +752,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
     revelationPlace: revelationPlace ?? this.revelationPlace,
     versesCount: versesCount ?? this.versesCount,
     bismillahPre: bismillahPre ?? this.bismillahPre,
+    nameGlyph: nameGlyph ?? this.nameGlyph,
   );
   Chapter copyWithCompanion(ChaptersCompanion data) {
     return Chapter(
@@ -744,6 +776,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
       bismillahPre: data.bismillahPre.present
           ? data.bismillahPre.value
           : this.bismillahPre,
+      nameGlyph: data.nameGlyph.present ? data.nameGlyph.value : this.nameGlyph,
     );
   }
 
@@ -757,7 +790,8 @@ class Chapter extends DataClass implements Insertable<Chapter> {
           ..write('revelationOrder: $revelationOrder, ')
           ..write('revelationPlace: $revelationPlace, ')
           ..write('versesCount: $versesCount, ')
-          ..write('bismillahPre: $bismillahPre')
+          ..write('bismillahPre: $bismillahPre, ')
+          ..write('nameGlyph: $nameGlyph')
           ..write(')'))
         .toString();
   }
@@ -772,6 +806,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
     revelationPlace,
     versesCount,
     bismillahPre,
+    nameGlyph,
   );
   @override
   bool operator ==(Object other) =>
@@ -784,7 +819,8 @@ class Chapter extends DataClass implements Insertable<Chapter> {
           other.revelationOrder == this.revelationOrder &&
           other.revelationPlace == this.revelationPlace &&
           other.versesCount == this.versesCount &&
-          other.bismillahPre == this.bismillahPre);
+          other.bismillahPre == this.bismillahPre &&
+          other.nameGlyph == this.nameGlyph);
 }
 
 class ChaptersCompanion extends UpdateCompanion<Chapter> {
@@ -796,6 +832,7 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
   final Value<String> revelationPlace;
   final Value<int> versesCount;
   final Value<int> bismillahPre;
+  final Value<String> nameGlyph;
   const ChaptersCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -805,6 +842,7 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
     this.revelationPlace = const Value.absent(),
     this.versesCount = const Value.absent(),
     this.bismillahPre = const Value.absent(),
+    this.nameGlyph = const Value.absent(),
   });
   ChaptersCompanion.insert({
     this.id = const Value.absent(),
@@ -815,13 +853,15 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
     required String revelationPlace,
     required int versesCount,
     required int bismillahPre,
+    required String nameGlyph,
   }) : name = Value(name),
        nameSimple = Value(nameSimple),
        nameArabic = Value(nameArabic),
        revelationOrder = Value(revelationOrder),
        revelationPlace = Value(revelationPlace),
        versesCount = Value(versesCount),
-       bismillahPre = Value(bismillahPre);
+       bismillahPre = Value(bismillahPre),
+       nameGlyph = Value(nameGlyph);
   static Insertable<Chapter> custom({
     Expression<int>? id,
     Expression<String>? name,
@@ -831,6 +871,7 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
     Expression<String>? revelationPlace,
     Expression<int>? versesCount,
     Expression<int>? bismillahPre,
+    Expression<String>? nameGlyph,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -841,6 +882,7 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
       if (revelationPlace != null) 'revelation_place': revelationPlace,
       if (versesCount != null) 'verses_count': versesCount,
       if (bismillahPre != null) 'bismillah_pre': bismillahPre,
+      if (nameGlyph != null) 'name_glyph': nameGlyph,
     });
   }
 
@@ -853,6 +895,7 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
     Value<String>? revelationPlace,
     Value<int>? versesCount,
     Value<int>? bismillahPre,
+    Value<String>? nameGlyph,
   }) {
     return ChaptersCompanion(
       id: id ?? this.id,
@@ -863,6 +906,7 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
       revelationPlace: revelationPlace ?? this.revelationPlace,
       versesCount: versesCount ?? this.versesCount,
       bismillahPre: bismillahPre ?? this.bismillahPre,
+      nameGlyph: nameGlyph ?? this.nameGlyph,
     );
   }
 
@@ -893,6 +937,9 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
     if (bismillahPre.present) {
       map['bismillah_pre'] = Variable<int>(bismillahPre.value);
     }
+    if (nameGlyph.present) {
+      map['name_glyph'] = Variable<String>(nameGlyph.value);
+    }
     return map;
   }
 
@@ -906,7 +953,8 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
           ..write('revelationOrder: $revelationOrder, ')
           ..write('revelationPlace: $revelationPlace, ')
           ..write('versesCount: $versesCount, ')
-          ..write('bismillahPre: $bismillahPre')
+          ..write('bismillahPre: $bismillahPre, ')
+          ..write('nameGlyph: $nameGlyph')
           ..write(')'))
         .toString();
   }
@@ -2610,6 +2658,7 @@ typedef $$ChaptersTableCreateCompanionBuilder =
       required String revelationPlace,
       required int versesCount,
       required int bismillahPre,
+      required String nameGlyph,
     });
 typedef $$ChaptersTableUpdateCompanionBuilder =
     ChaptersCompanion Function({
@@ -2621,6 +2670,7 @@ typedef $$ChaptersTableUpdateCompanionBuilder =
       Value<String> revelationPlace,
       Value<int> versesCount,
       Value<int> bismillahPre,
+      Value<String> nameGlyph,
     });
 
 class $$ChaptersTableFilterComposer
@@ -2669,6 +2719,11 @@ class $$ChaptersTableFilterComposer
 
   ColumnFilters<int> get bismillahPre => $composableBuilder(
     column: $table.bismillahPre,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameGlyph => $composableBuilder(
+    column: $table.nameGlyph,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2721,6 +2776,11 @@ class $$ChaptersTableOrderingComposer
     column: $table.bismillahPre,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get nameGlyph => $composableBuilder(
+    column: $table.nameGlyph,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ChaptersTableAnnotationComposer
@@ -2767,6 +2827,9 @@ class $$ChaptersTableAnnotationComposer
     column: $table.bismillahPre,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get nameGlyph =>
+      $composableBuilder(column: $table.nameGlyph, builder: (column) => column);
 }
 
 class $$ChaptersTableTableManager
@@ -2805,6 +2868,7 @@ class $$ChaptersTableTableManager
                 Value<String> revelationPlace = const Value.absent(),
                 Value<int> versesCount = const Value.absent(),
                 Value<int> bismillahPre = const Value.absent(),
+                Value<String> nameGlyph = const Value.absent(),
               }) => ChaptersCompanion(
                 id: id,
                 name: name,
@@ -2814,6 +2878,7 @@ class $$ChaptersTableTableManager
                 revelationPlace: revelationPlace,
                 versesCount: versesCount,
                 bismillahPre: bismillahPre,
+                nameGlyph: nameGlyph,
               ),
           createCompanionCallback:
               ({
@@ -2825,6 +2890,7 @@ class $$ChaptersTableTableManager
                 required String revelationPlace,
                 required int versesCount,
                 required int bismillahPre,
+                required String nameGlyph,
               }) => ChaptersCompanion.insert(
                 id: id,
                 name: name,
@@ -2834,6 +2900,7 @@ class $$ChaptersTableTableManager
                 revelationPlace: revelationPlace,
                 versesCount: versesCount,
                 bismillahPre: bismillahPre,
+                nameGlyph: nameGlyph,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
