@@ -27,6 +27,15 @@ final class PreviousStep extends SignUpEvent {
   List<Object> get props => [current];
 }
 
+final class ResendPin extends SignUpEvent {
+  final String email;
+
+  const ResendPin(this.email);
+
+  @override
+  List<Object> get props => [email];
+}
+
 //- Sign Up
 final class SignUpWithEmailAndPassword extends SignUpEvent {
   const SignUpWithEmailAndPassword();

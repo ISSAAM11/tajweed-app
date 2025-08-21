@@ -37,6 +37,8 @@ base class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
   late final InputControl email;
   late final InputControl password;
   late final InputControl confirmPassword;
+  late final TextEditingController pinController;
+  late final FocusNode pinFocusNode;
 
   //!observables
   final countryObs = Observable<Country>(
@@ -60,11 +62,13 @@ base class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
   //! Event Callers
   void next() => add(NextStep(_currentIndex));
   void previous() => add(PreviousStep(_currentIndex));
+  void resendPin() => add(ResendPin(email.controller.text));
 
   SignUpBloc(this._signUpDataSource) : super(Idle(), debugginEnabled: true) {
     on<SignUpWithEmailAndPassword>(_signUpWithEmailAndPassword);
     on<NextStep>(_next);
     on<PreviousStep>(_previous);
+    on<ResendPin>(_resendPin);
   }
 
   //@ LIFECYCLE
@@ -76,6 +80,8 @@ base class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
     confirmPassword = inputControllers[2];
     firstNmae = inputControllers[3];
     lasttNmae = inputControllers[4];
+    pinController = inputControllers[5].controller;
+    pinFocusNode = inputControllers[5].node;
     super.onInit();
   }
 

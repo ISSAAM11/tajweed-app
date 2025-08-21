@@ -1,5 +1,6 @@
 import 'dart:async' show runZonedGuarded;
 import 'package:flutter/material.dart';
+import 'package:tajweed_ai/src/features/auth/export.dart';
 import 'src/app/app_widget.dart';
 import 'src/app/config/app_config.dart';
 import 'src/app/binding/app_bindings.dart';
@@ -14,7 +15,7 @@ void _application() async {
 
   AppEnvironment.setupEnvironment(Environment.dev);
 
-  AppConfig.setInitialRoute();
+  AppConfig.setInitialRoute(signUpRoute.path);
 
   ConnectivityPlus.init();
 

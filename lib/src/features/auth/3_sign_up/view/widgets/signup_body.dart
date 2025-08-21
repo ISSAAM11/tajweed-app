@@ -40,6 +40,9 @@ class SignupBody extends SubWidget<SignUpBloc> {
       country: bloc.countryObs,
       selectedGenderObs: bloc.genderObs,
       isLoading: state is Loading,
+      pinController: bloc.pinController,
+      pinFocusNode: bloc.pinFocusNode,
+      resnedPin: bloc.resendPin,
     ),
   );
 }

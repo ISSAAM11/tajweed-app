@@ -1,6 +1,8 @@
 import 'package:country_picker/country_picker.dart';
+import 'package:pinput/pinput.dart';
 import 'package:tajweed_ai/src/features/auth/3_sign_up/view/widgets/birth_field_picker.dart';
 import 'package:tajweed_ai/src/features/auth/3_sign_up/view/widgets/country_field_picker.dart';
+import 'package:tajweed_ai/src/features/common/widgets/custom_text_button.dart';
 
 import '../../../../../base/screens/exports.dart';
 import '../../../../../utils/input_validator.dart';
@@ -31,6 +33,10 @@ class SignUpForm extends StatelessWidget {
   final bool isLoading;
   final void Function() nextAction;
   final void Function()? previousActions;
+  final TextEditingController pinController;
+  final FocusNode pinFocusNode;
+  final void Function(String)? onPinSubmitted;
+  final void Function() resnedPin;
   const SignUpForm({
     super.key,
     required this.firstStepFormKey,
@@ -49,6 +55,10 @@ class SignUpForm extends StatelessWidget {
     required this.country,
     required this.selectedGenderObs,
     required this.isLoading,
+    required this.pinController,
+    required this.pinFocusNode,
+    this.onPinSubmitted,
+    required this.resnedPin,
   });
 
   @override
@@ -75,7 +85,12 @@ class SignUpForm extends StatelessWidget {
             country: country,
             selectedGenderObs: selectedGenderObs,
           ),
-          _Step3(),
+          _Step3(
+            pinController: pinController,
+            pinFocusNode: pinFocusNode,
+            onCompleted: onPinSubmitted,
+            resend: resnedPin,
+          ),
         ],
       ),
       _TermsOfUse(isChecked: acceptedTerms),

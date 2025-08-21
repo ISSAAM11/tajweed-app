@@ -29,4 +29,8 @@ extension on SignUpBloc {
               }),
         );
   }
+
+  Future<void> _resendPin(ResendPin event, Emitter<SignUpState> emit) async {
+    //TODO Implement resend Pin
+  }
 }
