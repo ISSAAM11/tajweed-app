@@ -15,13 +15,13 @@ class QuranBloc extends BaseBloc<QuranEvent, QuranState> {
     : super(QuranInitialState(), debugginEnabled: true) {
     on<LoadChaptersEvent>(_loadChapters);
     on<SelectSurahEvent>(_quranSurahSelectedEvent);
-    add(LoadChaptersEvent());
   }
 
   //@ LIFECYCLE
   @override
   void onInit() {
     Debugger.green('init quran bloc');
+    add(LoadChaptersEvent());
     super.onInit();
   }
 }
