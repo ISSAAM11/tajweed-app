@@ -13,7 +13,7 @@ final class QuranInitialState extends QuranState {}
 final class QuranLoadingState extends QuranState {}
 
 final class QuranLoadedState extends QuranState {
-  final List<Chapter> chapters;
+  final List<ChapterRow> chapters;
 
   const QuranLoadedState(this.chapters);
 

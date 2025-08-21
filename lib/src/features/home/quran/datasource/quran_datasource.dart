@@ -1,13 +1,11 @@
-// import 'package:tajweed_ai/src/base/datasource/exports.dart';
+import 'package:tajweed_ai/src/base/datasource/exports.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_dao.dart';
-
-import '../../../../base/datasource/exports.dart';
 
 // part 'quran_datasource_mock.dart';
 
 abstract interface class QuranDatasource {
-  Future<List<Chapter>> getChapters();
+  Future<List<ChapterRow>> getChapters();
 }
 
 final class QuranDatasourceImpl extends DataSource implements QuranDatasource {
@@ -21,8 +19,8 @@ final class QuranDatasourceImpl extends DataSource implements QuranDatasource {
   });
 
   @override
-  Future<List<Chapter>> getChapters() {
-    return dao.getChapters();
+  Future<List<ChapterRow>> getChapters() {
+    return dao.getAllChapters();
   }
 
   // final responseMock = ResponseMock.success;

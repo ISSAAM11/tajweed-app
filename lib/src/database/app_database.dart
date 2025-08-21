@@ -5,21 +5,24 @@ import 'package:drift/native.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:tajweed_ai/src/database/daos/ayah_meta_dao.dart';
+import 'package:tajweed_ai/src/database/tables/quran/ayah_metas.dart';
 
 import 'daos/quran_dao.dart';
 import 'migrations/migrations.dart';
 import 'tables/quran/chapters.dart';
-import 'tables/quran/hizb.dart';
-import 'tables/quran/juz.dart';
-import 'tables/quran/ruku.dart';
-import 'tables/quran/sajdah.dart';
-import 'tables/quran/word.dart';
+import 'tables/quran/converters.dart';
+import 'tables/quran/hizbs.dart';
+import 'tables/quran/juzs.dart';
+import 'tables/quran/rukus.dart';
+import 'tables/quran/sajdahs.dart';
+import 'tables/quran/words.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [Words, Chapters, Hizbs, Juzs, Rukus, Sajdahs],
-  daos: [QuranDao],
+  tables: [Words, Chapters, Hizbs, Juzs, Rukus, Sajdahs, AyahMetas],
+  daos: [QuranDao, AyahMetaDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());

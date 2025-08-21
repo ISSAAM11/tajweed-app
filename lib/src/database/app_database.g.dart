@@ -3,7 +3,7 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
-class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
+class $WordsTable extends Words with TableInfo<$WordsTable, WordRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -17,17 +17,15 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _locationMeta = const VerificationMeta(
-    'location',
-  );
   @override
-  late final GeneratedColumn<String> location = GeneratedColumn<String>(
-    'location',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<WordLocation, String> location =
+      GeneratedColumn<String>(
+        'location',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<WordLocation>($WordsTable.$converterlocation);
   static const VerificationMeta _surahMeta = const VerificationMeta('surah');
   @override
   late final GeneratedColumn<int> surah = GeneratedColumn<int>(
@@ -55,11 +53,9 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _textContentMeta = const VerificationMeta(
-    'textContent',
-  );
+  static const VerificationMeta _text_Meta = const VerificationMeta('text_');
   @override
-  late final GeneratedColumn<String> textContent = GeneratedColumn<String>(
+  late final GeneratedColumn<String> text_ = GeneratedColumn<String>(
     'text',
     aliasedName,
     false,
@@ -73,7 +69,7 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
     surah,
     ayah,
     word,
-    textContent,
+    text_,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -82,21 +78,13 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
   static const String $name = 'words';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Word> instance, {
+    Insertable<WordRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('location')) {
-      context.handle(
-        _locationMeta,
-        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_locationMeta);
     }
     if (data.containsKey('surah')) {
       context.handle(
@@ -124,11 +112,11 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
     }
     if (data.containsKey('text')) {
       context.handle(
-        _textContentMeta,
-        textContent.isAcceptableOrUnknown(data['text']!, _textContentMeta),
+        _text_Meta,
+        text_.isAcceptableOrUnknown(data['text']!, _text_Meta),
       );
     } else if (isInserting) {
-      context.missing(_textContentMeta);
+      context.missing(_text_Meta);
     }
     return context;
   }
@@ -136,17 +124,19 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Word map(Map<String, dynamic> data, {String? tablePrefix}) {
+  WordRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Word(
+    return WordRow(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      location: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}location'],
-      )!,
+      location: $WordsTable.$converterlocation.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}location'],
+        )!,
+      ),
       surah: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}surah'],
@@ -159,7 +149,7 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
         DriftSqlType.int,
         data['${effectivePrefix}word'],
       )!,
-      textContent: attachedDatabase.typeMapping.read(
+      text_: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}text'],
       )!,
@@ -170,32 +160,39 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
   $WordsTable createAlias(String alias) {
     return $WordsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<WordLocation, String> $converterlocation =
+      const WordLocationConverter();
 }
 
-class Word extends DataClass implements Insertable<Word> {
+class WordRow extends DataClass implements Insertable<WordRow> {
   final int id;
-  final String location;
+  final WordLocation location;
   final int surah;
   final int ayah;
   final int word;
-  final String textContent;
-  const Word({
+  final String text_;
+  const WordRow({
     required this.id,
     required this.location,
     required this.surah,
     required this.ayah,
     required this.word,
-    required this.textContent,
+    required this.text_,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['location'] = Variable<String>(location);
+    {
+      map['location'] = Variable<String>(
+        $WordsTable.$converterlocation.toSql(location),
+      );
+    }
     map['surah'] = Variable<int>(surah);
     map['ayah'] = Variable<int>(ayah);
     map['word'] = Variable<int>(word);
-    map['text'] = Variable<String>(textContent);
+    map['text'] = Variable<String>(text_);
     return map;
   }
 
@@ -206,22 +203,22 @@ class Word extends DataClass implements Insertable<Word> {
       surah: Value(surah),
       ayah: Value(ayah),
       word: Value(word),
-      textContent: Value(textContent),
+      text_: Value(text_),
     );
   }
 
-  factory Word.fromJson(
+  factory WordRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Word(
+    return WordRow(
       id: serializer.fromJson<int>(json['id']),
-      location: serializer.fromJson<String>(json['location']),
+      location: serializer.fromJson<WordLocation>(json['location']),
       surah: serializer.fromJson<int>(json['surah']),
       ayah: serializer.fromJson<int>(json['ayah']),
       word: serializer.fromJson<int>(json['word']),
-      textContent: serializer.fromJson<String>(json['textContent']),
+      text_: serializer.fromJson<String>(json['text_']),
     );
   }
   @override
@@ -229,103 +226,101 @@ class Word extends DataClass implements Insertable<Word> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'location': serializer.toJson<String>(location),
+      'location': serializer.toJson<WordLocation>(location),
       'surah': serializer.toJson<int>(surah),
       'ayah': serializer.toJson<int>(ayah),
       'word': serializer.toJson<int>(word),
-      'textContent': serializer.toJson<String>(textContent),
+      'text_': serializer.toJson<String>(text_),
     };
   }
 
-  Word copyWith({
+  WordRow copyWith({
     int? id,
-    String? location,
+    WordLocation? location,
     int? surah,
     int? ayah,
     int? word,
-    String? textContent,
-  }) => Word(
+    String? text_,
+  }) => WordRow(
     id: id ?? this.id,
     location: location ?? this.location,
     surah: surah ?? this.surah,
     ayah: ayah ?? this.ayah,
     word: word ?? this.word,
-    textContent: textContent ?? this.textContent,
+    text_: text_ ?? this.text_,
   );
-  Word copyWithCompanion(WordsCompanion data) {
-    return Word(
+  WordRow copyWithCompanion(WordsCompanion data) {
+    return WordRow(
       id: data.id.present ? data.id.value : this.id,
       location: data.location.present ? data.location.value : this.location,
       surah: data.surah.present ? data.surah.value : this.surah,
       ayah: data.ayah.present ? data.ayah.value : this.ayah,
       word: data.word.present ? data.word.value : this.word,
-      textContent: data.textContent.present
-          ? data.textContent.value
-          : this.textContent,
+      text_: data.text_.present ? data.text_.value : this.text_,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('Word(')
+    return (StringBuffer('WordRow(')
           ..write('id: $id, ')
           ..write('location: $location, ')
           ..write('surah: $surah, ')
           ..write('ayah: $ayah, ')
           ..write('word: $word, ')
-          ..write('textContent: $textContent')
+          ..write('text_: $text_')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, location, surah, ayah, word, textContent);
+  int get hashCode => Object.hash(id, location, surah, ayah, word, text_);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Word &&
+      (other is WordRow &&
           other.id == this.id &&
           other.location == this.location &&
           other.surah == this.surah &&
           other.ayah == this.ayah &&
           other.word == this.word &&
-          other.textContent == this.textContent);
+          other.text_ == this.text_);
 }
 
-class WordsCompanion extends UpdateCompanion<Word> {
+class WordsCompanion extends UpdateCompanion<WordRow> {
   final Value<int> id;
-  final Value<String> location;
+  final Value<WordLocation> location;
   final Value<int> surah;
   final Value<int> ayah;
   final Value<int> word;
-  final Value<String> textContent;
+  final Value<String> text_;
   const WordsCompanion({
     this.id = const Value.absent(),
     this.location = const Value.absent(),
     this.surah = const Value.absent(),
     this.ayah = const Value.absent(),
     this.word = const Value.absent(),
-    this.textContent = const Value.absent(),
+    this.text_ = const Value.absent(),
   });
   WordsCompanion.insert({
     this.id = const Value.absent(),
-    required String location,
+    required WordLocation location,
     required int surah,
     required int ayah,
     required int word,
-    required String textContent,
+    required String text_,
   }) : location = Value(location),
        surah = Value(surah),
        ayah = Value(ayah),
        word = Value(word),
-       textContent = Value(textContent);
-  static Insertable<Word> custom({
+       text_ = Value(text_);
+  static Insertable<WordRow> custom({
     Expression<int>? id,
     Expression<String>? location,
     Expression<int>? surah,
     Expression<int>? ayah,
     Expression<int>? word,
-    Expression<String>? textContent,
+    Expression<String>? text_,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -333,17 +328,17 @@ class WordsCompanion extends UpdateCompanion<Word> {
       if (surah != null) 'surah': surah,
       if (ayah != null) 'ayah': ayah,
       if (word != null) 'word': word,
-      if (textContent != null) 'text': textContent,
+      if (text_ != null) 'text': text_,
     });
   }
 
   WordsCompanion copyWith({
     Value<int>? id,
-    Value<String>? location,
+    Value<WordLocation>? location,
     Value<int>? surah,
     Value<int>? ayah,
     Value<int>? word,
-    Value<String>? textContent,
+    Value<String>? text_,
   }) {
     return WordsCompanion(
       id: id ?? this.id,
@@ -351,7 +346,7 @@ class WordsCompanion extends UpdateCompanion<Word> {
       surah: surah ?? this.surah,
       ayah: ayah ?? this.ayah,
       word: word ?? this.word,
-      textContent: textContent ?? this.textContent,
+      text_: text_ ?? this.text_,
     );
   }
 
@@ -362,7 +357,9 @@ class WordsCompanion extends UpdateCompanion<Word> {
       map['id'] = Variable<int>(id.value);
     }
     if (location.present) {
-      map['location'] = Variable<String>(location.value);
+      map['location'] = Variable<String>(
+        $WordsTable.$converterlocation.toSql(location.value),
+      );
     }
     if (surah.present) {
       map['surah'] = Variable<int>(surah.value);
@@ -373,8 +370,8 @@ class WordsCompanion extends UpdateCompanion<Word> {
     if (word.present) {
       map['word'] = Variable<int>(word.value);
     }
-    if (textContent.present) {
-      map['text'] = Variable<String>(textContent.value);
+    if (text_.present) {
+      map['text'] = Variable<String>(text_.value);
     }
     return map;
   }
@@ -387,13 +384,14 @@ class WordsCompanion extends UpdateCompanion<Word> {
           ..write('surah: $surah, ')
           ..write('ayah: $ayah, ')
           ..write('word: $word, ')
-          ..write('textContent: $textContent')
+          ..write('text_: $text_')
           ..write(')'))
         .toString();
   }
 }
 
-class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
+class $ChaptersTable extends Chapters
+    with TableInfo<$ChaptersTable, ChapterRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -449,17 +447,15 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _revelationPlaceMeta = const VerificationMeta(
-    'revelationPlace',
-  );
   @override
-  late final GeneratedColumn<String> revelationPlace = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<RevelationPlace, String>
+  revelationPlace = GeneratedColumn<String>(
     'revelation_place',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
+  ).withConverter<RevelationPlace>($ChaptersTable.$converterrevelationPlace);
   static const VerificationMeta _versesCountMeta = const VerificationMeta(
     'versesCount',
   );
@@ -471,17 +467,15 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _bismillahPreMeta = const VerificationMeta(
-    'bismillahPre',
-  );
   @override
-  late final GeneratedColumn<int> bismillahPre = GeneratedColumn<int>(
-    'bismillah_pre',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<bool, int> bismillahPre =
+      GeneratedColumn<int>(
+        'bismillah_pre',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<bool>($ChaptersTable.$converterbismillahPre);
   static const VerificationMeta _nameGlyphMeta = const VerificationMeta(
     'nameGlyph',
   );
@@ -512,7 +506,7 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
   static const String $name = 'chapters';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Chapter> instance, {
+    Insertable<ChapterRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -555,17 +549,6 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
     } else if (isInserting) {
       context.missing(_revelationOrderMeta);
     }
-    if (data.containsKey('revelation_place')) {
-      context.handle(
-        _revelationPlaceMeta,
-        revelationPlace.isAcceptableOrUnknown(
-          data['revelation_place']!,
-          _revelationPlaceMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_revelationPlaceMeta);
-    }
     if (data.containsKey('verses_count')) {
       context.handle(
         _versesCountMeta,
@@ -576,17 +559,6 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
       );
     } else if (isInserting) {
       context.missing(_versesCountMeta);
-    }
-    if (data.containsKey('bismillah_pre')) {
-      context.handle(
-        _bismillahPreMeta,
-        bismillahPre.isAcceptableOrUnknown(
-          data['bismillah_pre']!,
-          _bismillahPreMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_bismillahPreMeta);
     }
     if (data.containsKey('name_glyph')) {
       context.handle(
@@ -602,9 +574,9 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Chapter map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ChapterRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Chapter(
+    return ChapterRow(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -625,18 +597,22 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
         DriftSqlType.int,
         data['${effectivePrefix}revelation_order'],
       )!,
-      revelationPlace: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}revelation_place'],
-      )!,
+      revelationPlace: $ChaptersTable.$converterrevelationPlace.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}revelation_place'],
+        )!,
+      ),
       versesCount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}verses_count'],
       )!,
-      bismillahPre: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}bismillah_pre'],
-      )!,
+      bismillahPre: $ChaptersTable.$converterbismillahPre.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}bismillah_pre'],
+        )!,
+      ),
       nameGlyph: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name_glyph'],
@@ -648,19 +624,24 @@ class $ChaptersTable extends Chapters with TableInfo<$ChaptersTable, Chapter> {
   $ChaptersTable createAlias(String alias) {
     return $ChaptersTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<RevelationPlace, String> $converterrevelationPlace =
+      const RevelationPlaceConverter();
+  static TypeConverter<bool, int> $converterbismillahPre =
+      const BoolIntConverter();
 }
 
-class Chapter extends DataClass implements Insertable<Chapter> {
+class ChapterRow extends DataClass implements Insertable<ChapterRow> {
   final int id;
   final String name;
   final String nameSimple;
   final String nameArabic;
   final int revelationOrder;
-  final String revelationPlace;
+  final RevelationPlace revelationPlace;
   final int versesCount;
-  final int bismillahPre;
+  final bool bismillahPre;
   final String nameGlyph;
-  const Chapter({
+  const ChapterRow({
     required this.id,
     required this.name,
     required this.nameSimple,
@@ -679,9 +660,17 @@ class Chapter extends DataClass implements Insertable<Chapter> {
     map['name_simple'] = Variable<String>(nameSimple);
     map['name_arabic'] = Variable<String>(nameArabic);
     map['revelation_order'] = Variable<int>(revelationOrder);
-    map['revelation_place'] = Variable<String>(revelationPlace);
+    {
+      map['revelation_place'] = Variable<String>(
+        $ChaptersTable.$converterrevelationPlace.toSql(revelationPlace),
+      );
+    }
     map['verses_count'] = Variable<int>(versesCount);
-    map['bismillah_pre'] = Variable<int>(bismillahPre);
+    {
+      map['bismillah_pre'] = Variable<int>(
+        $ChaptersTable.$converterbismillahPre.toSql(bismillahPre),
+      );
+    }
     map['name_glyph'] = Variable<String>(nameGlyph);
     return map;
   }
@@ -700,20 +689,22 @@ class Chapter extends DataClass implements Insertable<Chapter> {
     );
   }
 
-  factory Chapter.fromJson(
+  factory ChapterRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Chapter(
+    return ChapterRow(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       nameSimple: serializer.fromJson<String>(json['nameSimple']),
       nameArabic: serializer.fromJson<String>(json['nameArabic']),
       revelationOrder: serializer.fromJson<int>(json['revelationOrder']),
-      revelationPlace: serializer.fromJson<String>(json['revelationPlace']),
+      revelationPlace: serializer.fromJson<RevelationPlace>(
+        json['revelationPlace'],
+      ),
       versesCount: serializer.fromJson<int>(json['versesCount']),
-      bismillahPre: serializer.fromJson<int>(json['bismillahPre']),
+      bismillahPre: serializer.fromJson<bool>(json['bismillahPre']),
       nameGlyph: serializer.fromJson<String>(json['nameGlyph']),
     );
   }
@@ -726,24 +717,24 @@ class Chapter extends DataClass implements Insertable<Chapter> {
       'nameSimple': serializer.toJson<String>(nameSimple),
       'nameArabic': serializer.toJson<String>(nameArabic),
       'revelationOrder': serializer.toJson<int>(revelationOrder),
-      'revelationPlace': serializer.toJson<String>(revelationPlace),
+      'revelationPlace': serializer.toJson<RevelationPlace>(revelationPlace),
       'versesCount': serializer.toJson<int>(versesCount),
-      'bismillahPre': serializer.toJson<int>(bismillahPre),
+      'bismillahPre': serializer.toJson<bool>(bismillahPre),
       'nameGlyph': serializer.toJson<String>(nameGlyph),
     };
   }
 
-  Chapter copyWith({
+  ChapterRow copyWith({
     int? id,
     String? name,
     String? nameSimple,
     String? nameArabic,
     int? revelationOrder,
-    String? revelationPlace,
+    RevelationPlace? revelationPlace,
     int? versesCount,
-    int? bismillahPre,
+    bool? bismillahPre,
     String? nameGlyph,
-  }) => Chapter(
+  }) => ChapterRow(
     id: id ?? this.id,
     name: name ?? this.name,
     nameSimple: nameSimple ?? this.nameSimple,
@@ -754,8 +745,8 @@ class Chapter extends DataClass implements Insertable<Chapter> {
     bismillahPre: bismillahPre ?? this.bismillahPre,
     nameGlyph: nameGlyph ?? this.nameGlyph,
   );
-  Chapter copyWithCompanion(ChaptersCompanion data) {
-    return Chapter(
+  ChapterRow copyWithCompanion(ChaptersCompanion data) {
+    return ChapterRow(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       nameSimple: data.nameSimple.present
@@ -782,7 +773,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
 
   @override
   String toString() {
-    return (StringBuffer('Chapter(')
+    return (StringBuffer('ChapterRow(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('nameSimple: $nameSimple, ')
@@ -811,7 +802,7 @@ class Chapter extends DataClass implements Insertable<Chapter> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Chapter &&
+      (other is ChapterRow &&
           other.id == this.id &&
           other.name == this.name &&
           other.nameSimple == this.nameSimple &&
@@ -823,15 +814,15 @@ class Chapter extends DataClass implements Insertable<Chapter> {
           other.nameGlyph == this.nameGlyph);
 }
 
-class ChaptersCompanion extends UpdateCompanion<Chapter> {
+class ChaptersCompanion extends UpdateCompanion<ChapterRow> {
   final Value<int> id;
   final Value<String> name;
   final Value<String> nameSimple;
   final Value<String> nameArabic;
   final Value<int> revelationOrder;
-  final Value<String> revelationPlace;
+  final Value<RevelationPlace> revelationPlace;
   final Value<int> versesCount;
-  final Value<int> bismillahPre;
+  final Value<bool> bismillahPre;
   final Value<String> nameGlyph;
   const ChaptersCompanion({
     this.id = const Value.absent(),
@@ -850,9 +841,9 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
     required String nameSimple,
     required String nameArabic,
     required int revelationOrder,
-    required String revelationPlace,
+    required RevelationPlace revelationPlace,
     required int versesCount,
-    required int bismillahPre,
+    required bool bismillahPre,
     required String nameGlyph,
   }) : name = Value(name),
        nameSimple = Value(nameSimple),
@@ -862,7 +853,7 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
        versesCount = Value(versesCount),
        bismillahPre = Value(bismillahPre),
        nameGlyph = Value(nameGlyph);
-  static Insertable<Chapter> custom({
+  static Insertable<ChapterRow> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? nameSimple,
@@ -892,9 +883,9 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
     Value<String>? nameSimple,
     Value<String>? nameArabic,
     Value<int>? revelationOrder,
-    Value<String>? revelationPlace,
+    Value<RevelationPlace>? revelationPlace,
     Value<int>? versesCount,
-    Value<int>? bismillahPre,
+    Value<bool>? bismillahPre,
     Value<String>? nameGlyph,
   }) {
     return ChaptersCompanion(
@@ -929,13 +920,17 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
       map['revelation_order'] = Variable<int>(revelationOrder.value);
     }
     if (revelationPlace.present) {
-      map['revelation_place'] = Variable<String>(revelationPlace.value);
+      map['revelation_place'] = Variable<String>(
+        $ChaptersTable.$converterrevelationPlace.toSql(revelationPlace.value),
+      );
     }
     if (versesCount.present) {
       map['verses_count'] = Variable<int>(versesCount.value);
     }
     if (bismillahPre.present) {
-      map['bismillah_pre'] = Variable<int>(bismillahPre.value);
+      map['bismillah_pre'] = Variable<int>(
+        $ChaptersTable.$converterbismillahPre.toSql(bismillahPre.value),
+      );
     }
     if (nameGlyph.present) {
       map['name_glyph'] = Variable<String>(nameGlyph.value);
@@ -960,7 +955,7 @@ class ChaptersCompanion extends UpdateCompanion<Chapter> {
   }
 }
 
-class $HizbsTable extends Hizbs with TableInfo<$HizbsTable, Hizb> {
+class $HizbsTable extends Hizbs with TableInfo<$HizbsTable, HizbRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -983,43 +978,37 @@ class $HizbsTable extends Hizbs with TableInfo<$HizbsTable, Hizb> {
   late final GeneratedColumn<int> versesCount = GeneratedColumn<int>(
     'verses_count',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _firstVerseKeyMeta = const VerificationMeta(
-    'firstVerseKey',
+    requiredDuringInsert: true,
   );
   @override
-  late final GeneratedColumn<String> firstVerseKey = GeneratedColumn<String>(
-    'first_verse_key',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _lastVerseKeyMeta = const VerificationMeta(
-    'lastVerseKey',
-  );
+  late final GeneratedColumnWithTypeConverter<VerseKey, String> firstVerseKey =
+      GeneratedColumn<String>(
+        'first_verse_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<VerseKey>($HizbsTable.$converterfirstVerseKey);
   @override
-  late final GeneratedColumn<String> lastVerseKey = GeneratedColumn<String>(
-    'last_verse_key',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _verseMappingMeta = const VerificationMeta(
-    'verseMapping',
-  );
+  late final GeneratedColumnWithTypeConverter<VerseKey, String> lastVerseKey =
+      GeneratedColumn<String>(
+        'last_verse_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<VerseKey>($HizbsTable.$converterlastVerseKey);
   @override
-  late final GeneratedColumn<String> verseMapping = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<SurahRanges, String>
+  verseMapping = GeneratedColumn<String>(
     'verse_mapping',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+    requiredDuringInsert: true,
+  ).withConverter<SurahRanges>($HizbsTable.$converterverseMapping);
   @override
   List<GeneratedColumn> get $columns => [
     hizbNumber,
@@ -1035,7 +1024,7 @@ class $HizbsTable extends Hizbs with TableInfo<$HizbsTable, Hizb> {
   static const String $name = 'hizbs';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Hizb> instance, {
+    Insertable<HizbRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1054,33 +1043,8 @@ class $HizbsTable extends Hizbs with TableInfo<$HizbsTable, Hizb> {
           _versesCountMeta,
         ),
       );
-    }
-    if (data.containsKey('first_verse_key')) {
-      context.handle(
-        _firstVerseKeyMeta,
-        firstVerseKey.isAcceptableOrUnknown(
-          data['first_verse_key']!,
-          _firstVerseKeyMeta,
-        ),
-      );
-    }
-    if (data.containsKey('last_verse_key')) {
-      context.handle(
-        _lastVerseKeyMeta,
-        lastVerseKey.isAcceptableOrUnknown(
-          data['last_verse_key']!,
-          _lastVerseKeyMeta,
-        ),
-      );
-    }
-    if (data.containsKey('verse_mapping')) {
-      context.handle(
-        _verseMappingMeta,
-        verseMapping.isAcceptableOrUnknown(
-          data['verse_mapping']!,
-          _verseMappingMeta,
-        ),
-      );
+    } else if (isInserting) {
+      context.missing(_versesCountMeta);
     }
     return context;
   }
@@ -1088,9 +1052,9 @@ class $HizbsTable extends Hizbs with TableInfo<$HizbsTable, Hizb> {
   @override
   Set<GeneratedColumn> get $primaryKey => {hizbNumber};
   @override
-  Hizb map(Map<String, dynamic> data, {String? tablePrefix}) {
+  HizbRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Hizb(
+    return HizbRow(
       hizbNumber: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}hizb_number'],
@@ -1098,18 +1062,24 @@ class $HizbsTable extends Hizbs with TableInfo<$HizbsTable, Hizb> {
       versesCount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}verses_count'],
+      )!,
+      firstVerseKey: $HizbsTable.$converterfirstVerseKey.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}first_verse_key'],
+        )!,
       ),
-      firstVerseKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}first_verse_key'],
+      lastVerseKey: $HizbsTable.$converterlastVerseKey.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}last_verse_key'],
+        )!,
       ),
-      lastVerseKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}last_verse_key'],
-      ),
-      verseMapping: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}verse_mapping'],
+      verseMapping: $HizbsTable.$converterverseMapping.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}verse_mapping'],
+        )!,
       ),
     );
   }
@@ -1118,36 +1088,47 @@ class $HizbsTable extends Hizbs with TableInfo<$HizbsTable, Hizb> {
   $HizbsTable createAlias(String alias) {
     return $HizbsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<VerseKey, String> $converterfirstVerseKey =
+      const VerseKeyConverter();
+  static TypeConverter<VerseKey, String> $converterlastVerseKey =
+      const VerseKeyConverter();
+  static TypeConverter<SurahRanges, String> $converterverseMapping =
+      const SurahRangesConverter();
 }
 
-class Hizb extends DataClass implements Insertable<Hizb> {
+class HizbRow extends DataClass implements Insertable<HizbRow> {
   final int hizbNumber;
-  final int? versesCount;
-  final String? firstVerseKey;
-  final String? lastVerseKey;
-  final String? verseMapping;
-  const Hizb({
+  final int versesCount;
+  final VerseKey firstVerseKey;
+  final VerseKey lastVerseKey;
+  final SurahRanges verseMapping;
+  const HizbRow({
     required this.hizbNumber,
-    this.versesCount,
-    this.firstVerseKey,
-    this.lastVerseKey,
-    this.verseMapping,
+    required this.versesCount,
+    required this.firstVerseKey,
+    required this.lastVerseKey,
+    required this.verseMapping,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['hizb_number'] = Variable<int>(hizbNumber);
-    if (!nullToAbsent || versesCount != null) {
-      map['verses_count'] = Variable<int>(versesCount);
+    map['verses_count'] = Variable<int>(versesCount);
+    {
+      map['first_verse_key'] = Variable<String>(
+        $HizbsTable.$converterfirstVerseKey.toSql(firstVerseKey),
+      );
     }
-    if (!nullToAbsent || firstVerseKey != null) {
-      map['first_verse_key'] = Variable<String>(firstVerseKey);
+    {
+      map['last_verse_key'] = Variable<String>(
+        $HizbsTable.$converterlastVerseKey.toSql(lastVerseKey),
+      );
     }
-    if (!nullToAbsent || lastVerseKey != null) {
-      map['last_verse_key'] = Variable<String>(lastVerseKey);
-    }
-    if (!nullToAbsent || verseMapping != null) {
-      map['verse_mapping'] = Variable<String>(verseMapping);
+    {
+      map['verse_mapping'] = Variable<String>(
+        $HizbsTable.$converterverseMapping.toSql(verseMapping),
+      );
     }
     return map;
   }
@@ -1155,32 +1136,24 @@ class Hizb extends DataClass implements Insertable<Hizb> {
   HizbsCompanion toCompanion(bool nullToAbsent) {
     return HizbsCompanion(
       hizbNumber: Value(hizbNumber),
-      versesCount: versesCount == null && nullToAbsent
-          ? const Value.absent()
-          : Value(versesCount),
-      firstVerseKey: firstVerseKey == null && nullToAbsent
-          ? const Value.absent()
-          : Value(firstVerseKey),
-      lastVerseKey: lastVerseKey == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastVerseKey),
-      verseMapping: verseMapping == null && nullToAbsent
-          ? const Value.absent()
-          : Value(verseMapping),
+      versesCount: Value(versesCount),
+      firstVerseKey: Value(firstVerseKey),
+      lastVerseKey: Value(lastVerseKey),
+      verseMapping: Value(verseMapping),
     );
   }
 
-  factory Hizb.fromJson(
+  factory HizbRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Hizb(
+    return HizbRow(
       hizbNumber: serializer.fromJson<int>(json['hizbNumber']),
-      versesCount: serializer.fromJson<int?>(json['versesCount']),
-      firstVerseKey: serializer.fromJson<String?>(json['firstVerseKey']),
-      lastVerseKey: serializer.fromJson<String?>(json['lastVerseKey']),
-      verseMapping: serializer.fromJson<String?>(json['verseMapping']),
+      versesCount: serializer.fromJson<int>(json['versesCount']),
+      firstVerseKey: serializer.fromJson<VerseKey>(json['firstVerseKey']),
+      lastVerseKey: serializer.fromJson<VerseKey>(json['lastVerseKey']),
+      verseMapping: serializer.fromJson<SurahRanges>(json['verseMapping']),
     );
   }
   @override
@@ -1188,30 +1161,28 @@ class Hizb extends DataClass implements Insertable<Hizb> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'hizbNumber': serializer.toJson<int>(hizbNumber),
-      'versesCount': serializer.toJson<int?>(versesCount),
-      'firstVerseKey': serializer.toJson<String?>(firstVerseKey),
-      'lastVerseKey': serializer.toJson<String?>(lastVerseKey),
-      'verseMapping': serializer.toJson<String?>(verseMapping),
+      'versesCount': serializer.toJson<int>(versesCount),
+      'firstVerseKey': serializer.toJson<VerseKey>(firstVerseKey),
+      'lastVerseKey': serializer.toJson<VerseKey>(lastVerseKey),
+      'verseMapping': serializer.toJson<SurahRanges>(verseMapping),
     };
   }
 
-  Hizb copyWith({
+  HizbRow copyWith({
     int? hizbNumber,
-    Value<int?> versesCount = const Value.absent(),
-    Value<String?> firstVerseKey = const Value.absent(),
-    Value<String?> lastVerseKey = const Value.absent(),
-    Value<String?> verseMapping = const Value.absent(),
-  }) => Hizb(
+    int? versesCount,
+    VerseKey? firstVerseKey,
+    VerseKey? lastVerseKey,
+    SurahRanges? verseMapping,
+  }) => HizbRow(
     hizbNumber: hizbNumber ?? this.hizbNumber,
-    versesCount: versesCount.present ? versesCount.value : this.versesCount,
-    firstVerseKey: firstVerseKey.present
-        ? firstVerseKey.value
-        : this.firstVerseKey,
-    lastVerseKey: lastVerseKey.present ? lastVerseKey.value : this.lastVerseKey,
-    verseMapping: verseMapping.present ? verseMapping.value : this.verseMapping,
+    versesCount: versesCount ?? this.versesCount,
+    firstVerseKey: firstVerseKey ?? this.firstVerseKey,
+    lastVerseKey: lastVerseKey ?? this.lastVerseKey,
+    verseMapping: verseMapping ?? this.verseMapping,
   );
-  Hizb copyWithCompanion(HizbsCompanion data) {
-    return Hizb(
+  HizbRow copyWithCompanion(HizbsCompanion data) {
+    return HizbRow(
       hizbNumber: data.hizbNumber.present
           ? data.hizbNumber.value
           : this.hizbNumber,
@@ -1232,7 +1203,7 @@ class Hizb extends DataClass implements Insertable<Hizb> {
 
   @override
   String toString() {
-    return (StringBuffer('Hizb(')
+    return (StringBuffer('HizbRow(')
           ..write('hizbNumber: $hizbNumber, ')
           ..write('versesCount: $versesCount, ')
           ..write('firstVerseKey: $firstVerseKey, ')
@@ -1253,7 +1224,7 @@ class Hizb extends DataClass implements Insertable<Hizb> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Hizb &&
+      (other is HizbRow &&
           other.hizbNumber == this.hizbNumber &&
           other.versesCount == this.versesCount &&
           other.firstVerseKey == this.firstVerseKey &&
@@ -1261,12 +1232,12 @@ class Hizb extends DataClass implements Insertable<Hizb> {
           other.verseMapping == this.verseMapping);
 }
 
-class HizbsCompanion extends UpdateCompanion<Hizb> {
+class HizbsCompanion extends UpdateCompanion<HizbRow> {
   final Value<int> hizbNumber;
-  final Value<int?> versesCount;
-  final Value<String?> firstVerseKey;
-  final Value<String?> lastVerseKey;
-  final Value<String?> verseMapping;
+  final Value<int> versesCount;
+  final Value<VerseKey> firstVerseKey;
+  final Value<VerseKey> lastVerseKey;
+  final Value<SurahRanges> verseMapping;
   const HizbsCompanion({
     this.hizbNumber = const Value.absent(),
     this.versesCount = const Value.absent(),
@@ -1276,12 +1247,15 @@ class HizbsCompanion extends UpdateCompanion<Hizb> {
   });
   HizbsCompanion.insert({
     this.hizbNumber = const Value.absent(),
-    this.versesCount = const Value.absent(),
-    this.firstVerseKey = const Value.absent(),
-    this.lastVerseKey = const Value.absent(),
-    this.verseMapping = const Value.absent(),
-  });
-  static Insertable<Hizb> custom({
+    required int versesCount,
+    required VerseKey firstVerseKey,
+    required VerseKey lastVerseKey,
+    required SurahRanges verseMapping,
+  }) : versesCount = Value(versesCount),
+       firstVerseKey = Value(firstVerseKey),
+       lastVerseKey = Value(lastVerseKey),
+       verseMapping = Value(verseMapping);
+  static Insertable<HizbRow> custom({
     Expression<int>? hizbNumber,
     Expression<int>? versesCount,
     Expression<String>? firstVerseKey,
@@ -1299,10 +1273,10 @@ class HizbsCompanion extends UpdateCompanion<Hizb> {
 
   HizbsCompanion copyWith({
     Value<int>? hizbNumber,
-    Value<int?>? versesCount,
-    Value<String?>? firstVerseKey,
-    Value<String?>? lastVerseKey,
-    Value<String?>? verseMapping,
+    Value<int>? versesCount,
+    Value<VerseKey>? firstVerseKey,
+    Value<VerseKey>? lastVerseKey,
+    Value<SurahRanges>? verseMapping,
   }) {
     return HizbsCompanion(
       hizbNumber: hizbNumber ?? this.hizbNumber,
@@ -1323,13 +1297,19 @@ class HizbsCompanion extends UpdateCompanion<Hizb> {
       map['verses_count'] = Variable<int>(versesCount.value);
     }
     if (firstVerseKey.present) {
-      map['first_verse_key'] = Variable<String>(firstVerseKey.value);
+      map['first_verse_key'] = Variable<String>(
+        $HizbsTable.$converterfirstVerseKey.toSql(firstVerseKey.value),
+      );
     }
     if (lastVerseKey.present) {
-      map['last_verse_key'] = Variable<String>(lastVerseKey.value);
+      map['last_verse_key'] = Variable<String>(
+        $HizbsTable.$converterlastVerseKey.toSql(lastVerseKey.value),
+      );
     }
     if (verseMapping.present) {
-      map['verse_mapping'] = Variable<String>(verseMapping.value);
+      map['verse_mapping'] = Variable<String>(
+        $HizbsTable.$converterverseMapping.toSql(verseMapping.value),
+      );
     }
     return map;
   }
@@ -1347,7 +1327,7 @@ class HizbsCompanion extends UpdateCompanion<Hizb> {
   }
 }
 
-class $JuzsTable extends Juzs with TableInfo<$JuzsTable, Juz> {
+class $JuzsTable extends Juzs with TableInfo<$JuzsTable, JuzRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1374,39 +1354,33 @@ class $JuzsTable extends Juzs with TableInfo<$JuzsTable, Juz> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _firstVerseKeyMeta = const VerificationMeta(
-    'firstVerseKey',
-  );
   @override
-  late final GeneratedColumn<String> firstVerseKey = GeneratedColumn<String>(
-    'first_verse_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _lastVerseKeyMeta = const VerificationMeta(
-    'lastVerseKey',
-  );
+  late final GeneratedColumnWithTypeConverter<VerseKey, String> firstVerseKey =
+      GeneratedColumn<String>(
+        'first_verse_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<VerseKey>($JuzsTable.$converterfirstVerseKey);
   @override
-  late final GeneratedColumn<String> lastVerseKey = GeneratedColumn<String>(
-    'last_verse_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _verseMappingMeta = const VerificationMeta(
-    'verseMapping',
-  );
+  late final GeneratedColumnWithTypeConverter<VerseKey, String> lastVerseKey =
+      GeneratedColumn<String>(
+        'last_verse_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<VerseKey>($JuzsTable.$converterlastVerseKey);
   @override
-  late final GeneratedColumn<String> verseMapping = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<SurahRanges, String>
+  verseMapping = GeneratedColumn<String>(
     'verse_mapping',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
+  ).withConverter<SurahRanges>($JuzsTable.$converterverseMapping);
   @override
   List<GeneratedColumn> get $columns => [
     juzNumber,
@@ -1422,7 +1396,7 @@ class $JuzsTable extends Juzs with TableInfo<$JuzsTable, Juz> {
   static const String $name = 'juzs';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Juz> instance, {
+    Insertable<JuzRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1444,48 +1418,15 @@ class $JuzsTable extends Juzs with TableInfo<$JuzsTable, Juz> {
     } else if (isInserting) {
       context.missing(_versesCountMeta);
     }
-    if (data.containsKey('first_verse_key')) {
-      context.handle(
-        _firstVerseKeyMeta,
-        firstVerseKey.isAcceptableOrUnknown(
-          data['first_verse_key']!,
-          _firstVerseKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_firstVerseKeyMeta);
-    }
-    if (data.containsKey('last_verse_key')) {
-      context.handle(
-        _lastVerseKeyMeta,
-        lastVerseKey.isAcceptableOrUnknown(
-          data['last_verse_key']!,
-          _lastVerseKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_lastVerseKeyMeta);
-    }
-    if (data.containsKey('verse_mapping')) {
-      context.handle(
-        _verseMappingMeta,
-        verseMapping.isAcceptableOrUnknown(
-          data['verse_mapping']!,
-          _verseMappingMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_verseMappingMeta);
-    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {juzNumber};
   @override
-  Juz map(Map<String, dynamic> data, {String? tablePrefix}) {
+  JuzRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Juz(
+    return JuzRow(
       juzNumber: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}juz_number'],
@@ -1494,18 +1435,24 @@ class $JuzsTable extends Juzs with TableInfo<$JuzsTable, Juz> {
         DriftSqlType.int,
         data['${effectivePrefix}verses_count'],
       )!,
-      firstVerseKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}first_verse_key'],
-      )!,
-      lastVerseKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}last_verse_key'],
-      )!,
-      verseMapping: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}verse_mapping'],
-      )!,
+      firstVerseKey: $JuzsTable.$converterfirstVerseKey.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}first_verse_key'],
+        )!,
+      ),
+      lastVerseKey: $JuzsTable.$converterlastVerseKey.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}last_verse_key'],
+        )!,
+      ),
+      verseMapping: $JuzsTable.$converterverseMapping.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}verse_mapping'],
+        )!,
+      ),
     );
   }
 
@@ -1513,15 +1460,22 @@ class $JuzsTable extends Juzs with TableInfo<$JuzsTable, Juz> {
   $JuzsTable createAlias(String alias) {
     return $JuzsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<VerseKey, String> $converterfirstVerseKey =
+      const VerseKeyConverter();
+  static TypeConverter<VerseKey, String> $converterlastVerseKey =
+      const VerseKeyConverter();
+  static TypeConverter<SurahRanges, String> $converterverseMapping =
+      const SurahRangesConverter();
 }
 
-class Juz extends DataClass implements Insertable<Juz> {
+class JuzRow extends DataClass implements Insertable<JuzRow> {
   final int juzNumber;
   final int versesCount;
-  final String firstVerseKey;
-  final String lastVerseKey;
-  final String verseMapping;
-  const Juz({
+  final VerseKey firstVerseKey;
+  final VerseKey lastVerseKey;
+  final SurahRanges verseMapping;
+  const JuzRow({
     required this.juzNumber,
     required this.versesCount,
     required this.firstVerseKey,
@@ -1533,9 +1487,21 @@ class Juz extends DataClass implements Insertable<Juz> {
     final map = <String, Expression>{};
     map['juz_number'] = Variable<int>(juzNumber);
     map['verses_count'] = Variable<int>(versesCount);
-    map['first_verse_key'] = Variable<String>(firstVerseKey);
-    map['last_verse_key'] = Variable<String>(lastVerseKey);
-    map['verse_mapping'] = Variable<String>(verseMapping);
+    {
+      map['first_verse_key'] = Variable<String>(
+        $JuzsTable.$converterfirstVerseKey.toSql(firstVerseKey),
+      );
+    }
+    {
+      map['last_verse_key'] = Variable<String>(
+        $JuzsTable.$converterlastVerseKey.toSql(lastVerseKey),
+      );
+    }
+    {
+      map['verse_mapping'] = Variable<String>(
+        $JuzsTable.$converterverseMapping.toSql(verseMapping),
+      );
+    }
     return map;
   }
 
@@ -1549,17 +1515,17 @@ class Juz extends DataClass implements Insertable<Juz> {
     );
   }
 
-  factory Juz.fromJson(
+  factory JuzRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Juz(
+    return JuzRow(
       juzNumber: serializer.fromJson<int>(json['juzNumber']),
       versesCount: serializer.fromJson<int>(json['versesCount']),
-      firstVerseKey: serializer.fromJson<String>(json['firstVerseKey']),
-      lastVerseKey: serializer.fromJson<String>(json['lastVerseKey']),
-      verseMapping: serializer.fromJson<String>(json['verseMapping']),
+      firstVerseKey: serializer.fromJson<VerseKey>(json['firstVerseKey']),
+      lastVerseKey: serializer.fromJson<VerseKey>(json['lastVerseKey']),
+      verseMapping: serializer.fromJson<SurahRanges>(json['verseMapping']),
     );
   }
   @override
@@ -1568,27 +1534,27 @@ class Juz extends DataClass implements Insertable<Juz> {
     return <String, dynamic>{
       'juzNumber': serializer.toJson<int>(juzNumber),
       'versesCount': serializer.toJson<int>(versesCount),
-      'firstVerseKey': serializer.toJson<String>(firstVerseKey),
-      'lastVerseKey': serializer.toJson<String>(lastVerseKey),
-      'verseMapping': serializer.toJson<String>(verseMapping),
+      'firstVerseKey': serializer.toJson<VerseKey>(firstVerseKey),
+      'lastVerseKey': serializer.toJson<VerseKey>(lastVerseKey),
+      'verseMapping': serializer.toJson<SurahRanges>(verseMapping),
     };
   }
 
-  Juz copyWith({
+  JuzRow copyWith({
     int? juzNumber,
     int? versesCount,
-    String? firstVerseKey,
-    String? lastVerseKey,
-    String? verseMapping,
-  }) => Juz(
+    VerseKey? firstVerseKey,
+    VerseKey? lastVerseKey,
+    SurahRanges? verseMapping,
+  }) => JuzRow(
     juzNumber: juzNumber ?? this.juzNumber,
     versesCount: versesCount ?? this.versesCount,
     firstVerseKey: firstVerseKey ?? this.firstVerseKey,
     lastVerseKey: lastVerseKey ?? this.lastVerseKey,
     verseMapping: verseMapping ?? this.verseMapping,
   );
-  Juz copyWithCompanion(JuzsCompanion data) {
-    return Juz(
+  JuzRow copyWithCompanion(JuzsCompanion data) {
+    return JuzRow(
       juzNumber: data.juzNumber.present ? data.juzNumber.value : this.juzNumber,
       versesCount: data.versesCount.present
           ? data.versesCount.value
@@ -1607,7 +1573,7 @@ class Juz extends DataClass implements Insertable<Juz> {
 
   @override
   String toString() {
-    return (StringBuffer('Juz(')
+    return (StringBuffer('JuzRow(')
           ..write('juzNumber: $juzNumber, ')
           ..write('versesCount: $versesCount, ')
           ..write('firstVerseKey: $firstVerseKey, ')
@@ -1628,7 +1594,7 @@ class Juz extends DataClass implements Insertable<Juz> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Juz &&
+      (other is JuzRow &&
           other.juzNumber == this.juzNumber &&
           other.versesCount == this.versesCount &&
           other.firstVerseKey == this.firstVerseKey &&
@@ -1636,12 +1602,12 @@ class Juz extends DataClass implements Insertable<Juz> {
           other.verseMapping == this.verseMapping);
 }
 
-class JuzsCompanion extends UpdateCompanion<Juz> {
+class JuzsCompanion extends UpdateCompanion<JuzRow> {
   final Value<int> juzNumber;
   final Value<int> versesCount;
-  final Value<String> firstVerseKey;
-  final Value<String> lastVerseKey;
-  final Value<String> verseMapping;
+  final Value<VerseKey> firstVerseKey;
+  final Value<VerseKey> lastVerseKey;
+  final Value<SurahRanges> verseMapping;
   const JuzsCompanion({
     this.juzNumber = const Value.absent(),
     this.versesCount = const Value.absent(),
@@ -1652,14 +1618,14 @@ class JuzsCompanion extends UpdateCompanion<Juz> {
   JuzsCompanion.insert({
     this.juzNumber = const Value.absent(),
     required int versesCount,
-    required String firstVerseKey,
-    required String lastVerseKey,
-    required String verseMapping,
+    required VerseKey firstVerseKey,
+    required VerseKey lastVerseKey,
+    required SurahRanges verseMapping,
   }) : versesCount = Value(versesCount),
        firstVerseKey = Value(firstVerseKey),
        lastVerseKey = Value(lastVerseKey),
        verseMapping = Value(verseMapping);
-  static Insertable<Juz> custom({
+  static Insertable<JuzRow> custom({
     Expression<int>? juzNumber,
     Expression<int>? versesCount,
     Expression<String>? firstVerseKey,
@@ -1678,9 +1644,9 @@ class JuzsCompanion extends UpdateCompanion<Juz> {
   JuzsCompanion copyWith({
     Value<int>? juzNumber,
     Value<int>? versesCount,
-    Value<String>? firstVerseKey,
-    Value<String>? lastVerseKey,
-    Value<String>? verseMapping,
+    Value<VerseKey>? firstVerseKey,
+    Value<VerseKey>? lastVerseKey,
+    Value<SurahRanges>? verseMapping,
   }) {
     return JuzsCompanion(
       juzNumber: juzNumber ?? this.juzNumber,
@@ -1701,13 +1667,19 @@ class JuzsCompanion extends UpdateCompanion<Juz> {
       map['verses_count'] = Variable<int>(versesCount.value);
     }
     if (firstVerseKey.present) {
-      map['first_verse_key'] = Variable<String>(firstVerseKey.value);
+      map['first_verse_key'] = Variable<String>(
+        $JuzsTable.$converterfirstVerseKey.toSql(firstVerseKey.value),
+      );
     }
     if (lastVerseKey.present) {
-      map['last_verse_key'] = Variable<String>(lastVerseKey.value);
+      map['last_verse_key'] = Variable<String>(
+        $JuzsTable.$converterlastVerseKey.toSql(lastVerseKey.value),
+      );
     }
     if (verseMapping.present) {
-      map['verse_mapping'] = Variable<String>(verseMapping.value);
+      map['verse_mapping'] = Variable<String>(
+        $JuzsTable.$converterverseMapping.toSql(verseMapping.value),
+      );
     }
     return map;
   }
@@ -1725,7 +1697,7 @@ class JuzsCompanion extends UpdateCompanion<Juz> {
   }
 }
 
-class $RukusTable extends Rukus with TableInfo<$RukusTable, Ruku> {
+class $RukusTable extends Rukus with TableInfo<$RukusTable, RukuRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1763,39 +1735,33 @@ class $RukusTable extends Rukus with TableInfo<$RukusTable, Ruku> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _firstVerseKeyMeta = const VerificationMeta(
-    'firstVerseKey',
-  );
   @override
-  late final GeneratedColumn<String> firstVerseKey = GeneratedColumn<String>(
-    'first_verse_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _lastVerseKeyMeta = const VerificationMeta(
-    'lastVerseKey',
-  );
+  late final GeneratedColumnWithTypeConverter<VerseKey, String> firstVerseKey =
+      GeneratedColumn<String>(
+        'first_verse_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<VerseKey>($RukusTable.$converterfirstVerseKey);
   @override
-  late final GeneratedColumn<String> lastVerseKey = GeneratedColumn<String>(
-    'last_verse_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _verseMappingMeta = const VerificationMeta(
-    'verseMapping',
-  );
+  late final GeneratedColumnWithTypeConverter<VerseKey, String> lastVerseKey =
+      GeneratedColumn<String>(
+        'last_verse_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<VerseKey>($RukusTable.$converterlastVerseKey);
   @override
-  late final GeneratedColumn<String> verseMapping = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<SurahRanges, String>
+  verseMapping = GeneratedColumn<String>(
     'verse_mapping',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
+  ).withConverter<SurahRanges>($RukusTable.$converterverseMapping);
   @override
   List<GeneratedColumn> get $columns => [
     rukuNumber,
@@ -1812,7 +1778,7 @@ class $RukusTable extends Rukus with TableInfo<$RukusTable, Ruku> {
   static const String $name = 'rukus';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Ruku> instance, {
+    Insertable<RukuRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1845,48 +1811,15 @@ class $RukusTable extends Rukus with TableInfo<$RukusTable, Ruku> {
     } else if (isInserting) {
       context.missing(_versesCountMeta);
     }
-    if (data.containsKey('first_verse_key')) {
-      context.handle(
-        _firstVerseKeyMeta,
-        firstVerseKey.isAcceptableOrUnknown(
-          data['first_verse_key']!,
-          _firstVerseKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_firstVerseKeyMeta);
-    }
-    if (data.containsKey('last_verse_key')) {
-      context.handle(
-        _lastVerseKeyMeta,
-        lastVerseKey.isAcceptableOrUnknown(
-          data['last_verse_key']!,
-          _lastVerseKeyMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_lastVerseKeyMeta);
-    }
-    if (data.containsKey('verse_mapping')) {
-      context.handle(
-        _verseMappingMeta,
-        verseMapping.isAcceptableOrUnknown(
-          data['verse_mapping']!,
-          _verseMappingMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_verseMappingMeta);
-    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {rukuNumber};
   @override
-  Ruku map(Map<String, dynamic> data, {String? tablePrefix}) {
+  RukuRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Ruku(
+    return RukuRow(
       rukuNumber: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}ruku_number'],
@@ -1899,18 +1832,24 @@ class $RukusTable extends Rukus with TableInfo<$RukusTable, Ruku> {
         DriftSqlType.int,
         data['${effectivePrefix}verses_count'],
       )!,
-      firstVerseKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}first_verse_key'],
-      )!,
-      lastVerseKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}last_verse_key'],
-      )!,
-      verseMapping: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}verse_mapping'],
-      )!,
+      firstVerseKey: $RukusTable.$converterfirstVerseKey.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}first_verse_key'],
+        )!,
+      ),
+      lastVerseKey: $RukusTable.$converterlastVerseKey.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}last_verse_key'],
+        )!,
+      ),
+      verseMapping: $RukusTable.$converterverseMapping.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}verse_mapping'],
+        )!,
+      ),
     );
   }
 
@@ -1918,16 +1857,23 @@ class $RukusTable extends Rukus with TableInfo<$RukusTable, Ruku> {
   $RukusTable createAlias(String alias) {
     return $RukusTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<VerseKey, String> $converterfirstVerseKey =
+      const VerseKeyConverter();
+  static TypeConverter<VerseKey, String> $converterlastVerseKey =
+      const VerseKeyConverter();
+  static TypeConverter<SurahRanges, String> $converterverseMapping =
+      const SurahRangesConverter();
 }
 
-class Ruku extends DataClass implements Insertable<Ruku> {
+class RukuRow extends DataClass implements Insertable<RukuRow> {
   final int rukuNumber;
   final int surahRukuNumber;
   final int versesCount;
-  final String firstVerseKey;
-  final String lastVerseKey;
-  final String verseMapping;
-  const Ruku({
+  final VerseKey firstVerseKey;
+  final VerseKey lastVerseKey;
+  final SurahRanges verseMapping;
+  const RukuRow({
     required this.rukuNumber,
     required this.surahRukuNumber,
     required this.versesCount,
@@ -1941,9 +1887,21 @@ class Ruku extends DataClass implements Insertable<Ruku> {
     map['ruku_number'] = Variable<int>(rukuNumber);
     map['surah_ruku_number'] = Variable<int>(surahRukuNumber);
     map['verses_count'] = Variable<int>(versesCount);
-    map['first_verse_key'] = Variable<String>(firstVerseKey);
-    map['last_verse_key'] = Variable<String>(lastVerseKey);
-    map['verse_mapping'] = Variable<String>(verseMapping);
+    {
+      map['first_verse_key'] = Variable<String>(
+        $RukusTable.$converterfirstVerseKey.toSql(firstVerseKey),
+      );
+    }
+    {
+      map['last_verse_key'] = Variable<String>(
+        $RukusTable.$converterlastVerseKey.toSql(lastVerseKey),
+      );
+    }
+    {
+      map['verse_mapping'] = Variable<String>(
+        $RukusTable.$converterverseMapping.toSql(verseMapping),
+      );
+    }
     return map;
   }
 
@@ -1958,18 +1916,18 @@ class Ruku extends DataClass implements Insertable<Ruku> {
     );
   }
 
-  factory Ruku.fromJson(
+  factory RukuRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Ruku(
+    return RukuRow(
       rukuNumber: serializer.fromJson<int>(json['rukuNumber']),
       surahRukuNumber: serializer.fromJson<int>(json['surahRukuNumber']),
       versesCount: serializer.fromJson<int>(json['versesCount']),
-      firstVerseKey: serializer.fromJson<String>(json['firstVerseKey']),
-      lastVerseKey: serializer.fromJson<String>(json['lastVerseKey']),
-      verseMapping: serializer.fromJson<String>(json['verseMapping']),
+      firstVerseKey: serializer.fromJson<VerseKey>(json['firstVerseKey']),
+      lastVerseKey: serializer.fromJson<VerseKey>(json['lastVerseKey']),
+      verseMapping: serializer.fromJson<SurahRanges>(json['verseMapping']),
     );
   }
   @override
@@ -1979,20 +1937,20 @@ class Ruku extends DataClass implements Insertable<Ruku> {
       'rukuNumber': serializer.toJson<int>(rukuNumber),
       'surahRukuNumber': serializer.toJson<int>(surahRukuNumber),
       'versesCount': serializer.toJson<int>(versesCount),
-      'firstVerseKey': serializer.toJson<String>(firstVerseKey),
-      'lastVerseKey': serializer.toJson<String>(lastVerseKey),
-      'verseMapping': serializer.toJson<String>(verseMapping),
+      'firstVerseKey': serializer.toJson<VerseKey>(firstVerseKey),
+      'lastVerseKey': serializer.toJson<VerseKey>(lastVerseKey),
+      'verseMapping': serializer.toJson<SurahRanges>(verseMapping),
     };
   }
 
-  Ruku copyWith({
+  RukuRow copyWith({
     int? rukuNumber,
     int? surahRukuNumber,
     int? versesCount,
-    String? firstVerseKey,
-    String? lastVerseKey,
-    String? verseMapping,
-  }) => Ruku(
+    VerseKey? firstVerseKey,
+    VerseKey? lastVerseKey,
+    SurahRanges? verseMapping,
+  }) => RukuRow(
     rukuNumber: rukuNumber ?? this.rukuNumber,
     surahRukuNumber: surahRukuNumber ?? this.surahRukuNumber,
     versesCount: versesCount ?? this.versesCount,
@@ -2000,8 +1958,8 @@ class Ruku extends DataClass implements Insertable<Ruku> {
     lastVerseKey: lastVerseKey ?? this.lastVerseKey,
     verseMapping: verseMapping ?? this.verseMapping,
   );
-  Ruku copyWithCompanion(RukusCompanion data) {
-    return Ruku(
+  RukuRow copyWithCompanion(RukusCompanion data) {
+    return RukuRow(
       rukuNumber: data.rukuNumber.present
           ? data.rukuNumber.value
           : this.rukuNumber,
@@ -2025,7 +1983,7 @@ class Ruku extends DataClass implements Insertable<Ruku> {
 
   @override
   String toString() {
-    return (StringBuffer('Ruku(')
+    return (StringBuffer('RukuRow(')
           ..write('rukuNumber: $rukuNumber, ')
           ..write('surahRukuNumber: $surahRukuNumber, ')
           ..write('versesCount: $versesCount, ')
@@ -2048,7 +2006,7 @@ class Ruku extends DataClass implements Insertable<Ruku> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Ruku &&
+      (other is RukuRow &&
           other.rukuNumber == this.rukuNumber &&
           other.surahRukuNumber == this.surahRukuNumber &&
           other.versesCount == this.versesCount &&
@@ -2057,13 +2015,13 @@ class Ruku extends DataClass implements Insertable<Ruku> {
           other.verseMapping == this.verseMapping);
 }
 
-class RukusCompanion extends UpdateCompanion<Ruku> {
+class RukusCompanion extends UpdateCompanion<RukuRow> {
   final Value<int> rukuNumber;
   final Value<int> surahRukuNumber;
   final Value<int> versesCount;
-  final Value<String> firstVerseKey;
-  final Value<String> lastVerseKey;
-  final Value<String> verseMapping;
+  final Value<VerseKey> firstVerseKey;
+  final Value<VerseKey> lastVerseKey;
+  final Value<SurahRanges> verseMapping;
   const RukusCompanion({
     this.rukuNumber = const Value.absent(),
     this.surahRukuNumber = const Value.absent(),
@@ -2076,15 +2034,15 @@ class RukusCompanion extends UpdateCompanion<Ruku> {
     this.rukuNumber = const Value.absent(),
     required int surahRukuNumber,
     required int versesCount,
-    required String firstVerseKey,
-    required String lastVerseKey,
-    required String verseMapping,
+    required VerseKey firstVerseKey,
+    required VerseKey lastVerseKey,
+    required SurahRanges verseMapping,
   }) : surahRukuNumber = Value(surahRukuNumber),
        versesCount = Value(versesCount),
        firstVerseKey = Value(firstVerseKey),
        lastVerseKey = Value(lastVerseKey),
        verseMapping = Value(verseMapping);
-  static Insertable<Ruku> custom({
+  static Insertable<RukuRow> custom({
     Expression<int>? rukuNumber,
     Expression<int>? surahRukuNumber,
     Expression<int>? versesCount,
@@ -2106,9 +2064,9 @@ class RukusCompanion extends UpdateCompanion<Ruku> {
     Value<int>? rukuNumber,
     Value<int>? surahRukuNumber,
     Value<int>? versesCount,
-    Value<String>? firstVerseKey,
-    Value<String>? lastVerseKey,
-    Value<String>? verseMapping,
+    Value<VerseKey>? firstVerseKey,
+    Value<VerseKey>? lastVerseKey,
+    Value<SurahRanges>? verseMapping,
   }) {
     return RukusCompanion(
       rukuNumber: rukuNumber ?? this.rukuNumber,
@@ -2133,13 +2091,19 @@ class RukusCompanion extends UpdateCompanion<Ruku> {
       map['verses_count'] = Variable<int>(versesCount.value);
     }
     if (firstVerseKey.present) {
-      map['first_verse_key'] = Variable<String>(firstVerseKey.value);
+      map['first_verse_key'] = Variable<String>(
+        $RukusTable.$converterfirstVerseKey.toSql(firstVerseKey.value),
+      );
     }
     if (lastVerseKey.present) {
-      map['last_verse_key'] = Variable<String>(lastVerseKey.value);
+      map['last_verse_key'] = Variable<String>(
+        $RukusTable.$converterlastVerseKey.toSql(lastVerseKey.value),
+      );
     }
     if (verseMapping.present) {
-      map['verse_mapping'] = Variable<String>(verseMapping.value);
+      map['verse_mapping'] = Variable<String>(
+        $RukusTable.$converterverseMapping.toSql(verseMapping.value),
+      );
     }
     return map;
   }
@@ -2158,7 +2122,7 @@ class RukusCompanion extends UpdateCompanion<Ruku> {
   }
 }
 
-class $SajdahsTable extends Sajdahs with TableInfo<$SajdahsTable, Sajdah> {
+class $SajdahsTable extends Sajdahs with TableInfo<$SajdahsTable, SajdahRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2174,28 +2138,24 @@ class $SajdahsTable extends Sajdahs with TableInfo<$SajdahsTable, Sajdah> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _verseKeyMeta = const VerificationMeta(
-    'verseKey',
-  );
   @override
-  late final GeneratedColumn<String> verseKey = GeneratedColumn<String>(
-    'verse_key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _sajdahTypeMeta = const VerificationMeta(
-    'sajdahType',
-  );
+  late final GeneratedColumnWithTypeConverter<VerseKey, String> verseKey =
+      GeneratedColumn<String>(
+        'verse_key',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<VerseKey>($SajdahsTable.$converterverseKey);
   @override
-  late final GeneratedColumn<String> sajdahType = GeneratedColumn<String>(
-    'sajdah_type',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<SajdahType, String> sajdahType =
+      GeneratedColumn<String>(
+        'sajdah_type',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<SajdahType>($SajdahsTable.$convertersajdahType);
   @override
   List<GeneratedColumn> get $columns => [sajdahNumber, verseKey, sajdahType];
   @override
@@ -2205,7 +2165,7 @@ class $SajdahsTable extends Sajdahs with TableInfo<$SajdahsTable, Sajdah> {
   static const String $name = 'sajdahs';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Sajdah> instance, {
+    Insertable<SajdahRow> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2219,43 +2179,31 @@ class $SajdahsTable extends Sajdahs with TableInfo<$SajdahsTable, Sajdah> {
         ),
       );
     }
-    if (data.containsKey('verse_key')) {
-      context.handle(
-        _verseKeyMeta,
-        verseKey.isAcceptableOrUnknown(data['verse_key']!, _verseKeyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_verseKeyMeta);
-    }
-    if (data.containsKey('sajdah_type')) {
-      context.handle(
-        _sajdahTypeMeta,
-        sajdahType.isAcceptableOrUnknown(data['sajdah_type']!, _sajdahTypeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_sajdahTypeMeta);
-    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {sajdahNumber};
   @override
-  Sajdah map(Map<String, dynamic> data, {String? tablePrefix}) {
+  SajdahRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Sajdah(
+    return SajdahRow(
       sajdahNumber: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}sajdah_number'],
       )!,
-      verseKey: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}verse_key'],
-      )!,
-      sajdahType: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}sajdah_type'],
-      )!,
+      verseKey: $SajdahsTable.$converterverseKey.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}verse_key'],
+        )!,
+      ),
+      sajdahType: $SajdahsTable.$convertersajdahType.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}sajdah_type'],
+        )!,
+      ),
     );
   }
 
@@ -2263,13 +2211,18 @@ class $SajdahsTable extends Sajdahs with TableInfo<$SajdahsTable, Sajdah> {
   $SajdahsTable createAlias(String alias) {
     return $SajdahsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<VerseKey, String> $converterverseKey =
+      const VerseKeyConverter();
+  static TypeConverter<SajdahType, String> $convertersajdahType =
+      const SajdahTypeConverter();
 }
 
-class Sajdah extends DataClass implements Insertable<Sajdah> {
+class SajdahRow extends DataClass implements Insertable<SajdahRow> {
   final int sajdahNumber;
-  final String verseKey;
-  final String sajdahType;
-  const Sajdah({
+  final VerseKey verseKey;
+  final SajdahType sajdahType;
+  const SajdahRow({
     required this.sajdahNumber,
     required this.verseKey,
     required this.sajdahType,
@@ -2278,8 +2231,16 @@ class Sajdah extends DataClass implements Insertable<Sajdah> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['sajdah_number'] = Variable<int>(sajdahNumber);
-    map['verse_key'] = Variable<String>(verseKey);
-    map['sajdah_type'] = Variable<String>(sajdahType);
+    {
+      map['verse_key'] = Variable<String>(
+        $SajdahsTable.$converterverseKey.toSql(verseKey),
+      );
+    }
+    {
+      map['sajdah_type'] = Variable<String>(
+        $SajdahsTable.$convertersajdahType.toSql(sajdahType),
+      );
+    }
     return map;
   }
 
@@ -2291,15 +2252,15 @@ class Sajdah extends DataClass implements Insertable<Sajdah> {
     );
   }
 
-  factory Sajdah.fromJson(
+  factory SajdahRow.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Sajdah(
+    return SajdahRow(
       sajdahNumber: serializer.fromJson<int>(json['sajdahNumber']),
-      verseKey: serializer.fromJson<String>(json['verseKey']),
-      sajdahType: serializer.fromJson<String>(json['sajdahType']),
+      verseKey: serializer.fromJson<VerseKey>(json['verseKey']),
+      sajdahType: serializer.fromJson<SajdahType>(json['sajdahType']),
     );
   }
   @override
@@ -2307,19 +2268,22 @@ class Sajdah extends DataClass implements Insertable<Sajdah> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'sajdahNumber': serializer.toJson<int>(sajdahNumber),
-      'verseKey': serializer.toJson<String>(verseKey),
-      'sajdahType': serializer.toJson<String>(sajdahType),
+      'verseKey': serializer.toJson<VerseKey>(verseKey),
+      'sajdahType': serializer.toJson<SajdahType>(sajdahType),
     };
   }
 
-  Sajdah copyWith({int? sajdahNumber, String? verseKey, String? sajdahType}) =>
-      Sajdah(
-        sajdahNumber: sajdahNumber ?? this.sajdahNumber,
-        verseKey: verseKey ?? this.verseKey,
-        sajdahType: sajdahType ?? this.sajdahType,
-      );
-  Sajdah copyWithCompanion(SajdahsCompanion data) {
-    return Sajdah(
+  SajdahRow copyWith({
+    int? sajdahNumber,
+    VerseKey? verseKey,
+    SajdahType? sajdahType,
+  }) => SajdahRow(
+    sajdahNumber: sajdahNumber ?? this.sajdahNumber,
+    verseKey: verseKey ?? this.verseKey,
+    sajdahType: sajdahType ?? this.sajdahType,
+  );
+  SajdahRow copyWithCompanion(SajdahsCompanion data) {
+    return SajdahRow(
       sajdahNumber: data.sajdahNumber.present
           ? data.sajdahNumber.value
           : this.sajdahNumber,
@@ -2332,7 +2296,7 @@ class Sajdah extends DataClass implements Insertable<Sajdah> {
 
   @override
   String toString() {
-    return (StringBuffer('Sajdah(')
+    return (StringBuffer('SajdahRow(')
           ..write('sajdahNumber: $sajdahNumber, ')
           ..write('verseKey: $verseKey, ')
           ..write('sajdahType: $sajdahType')
@@ -2345,16 +2309,16 @@ class Sajdah extends DataClass implements Insertable<Sajdah> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Sajdah &&
+      (other is SajdahRow &&
           other.sajdahNumber == this.sajdahNumber &&
           other.verseKey == this.verseKey &&
           other.sajdahType == this.sajdahType);
 }
 
-class SajdahsCompanion extends UpdateCompanion<Sajdah> {
+class SajdahsCompanion extends UpdateCompanion<SajdahRow> {
   final Value<int> sajdahNumber;
-  final Value<String> verseKey;
-  final Value<String> sajdahType;
+  final Value<VerseKey> verseKey;
+  final Value<SajdahType> sajdahType;
   const SajdahsCompanion({
     this.sajdahNumber = const Value.absent(),
     this.verseKey = const Value.absent(),
@@ -2362,11 +2326,11 @@ class SajdahsCompanion extends UpdateCompanion<Sajdah> {
   });
   SajdahsCompanion.insert({
     this.sajdahNumber = const Value.absent(),
-    required String verseKey,
-    required String sajdahType,
+    required VerseKey verseKey,
+    required SajdahType sajdahType,
   }) : verseKey = Value(verseKey),
        sajdahType = Value(sajdahType);
-  static Insertable<Sajdah> custom({
+  static Insertable<SajdahRow> custom({
     Expression<int>? sajdahNumber,
     Expression<String>? verseKey,
     Expression<String>? sajdahType,
@@ -2380,8 +2344,8 @@ class SajdahsCompanion extends UpdateCompanion<Sajdah> {
 
   SajdahsCompanion copyWith({
     Value<int>? sajdahNumber,
-    Value<String>? verseKey,
-    Value<String>? sajdahType,
+    Value<VerseKey>? verseKey,
+    Value<SajdahType>? sajdahType,
   }) {
     return SajdahsCompanion(
       sajdahNumber: sajdahNumber ?? this.sajdahNumber,
@@ -2397,10 +2361,14 @@ class SajdahsCompanion extends UpdateCompanion<Sajdah> {
       map['sajdah_number'] = Variable<int>(sajdahNumber.value);
     }
     if (verseKey.present) {
-      map['verse_key'] = Variable<String>(verseKey.value);
+      map['verse_key'] = Variable<String>(
+        $SajdahsTable.$converterverseKey.toSql(verseKey.value),
+      );
     }
     if (sajdahType.present) {
-      map['sajdah_type'] = Variable<String>(sajdahType.value);
+      map['sajdah_type'] = Variable<String>(
+        $SajdahsTable.$convertersajdahType.toSql(sajdahType.value),
+      );
     }
     return map;
   }
@@ -2416,6 +2384,552 @@ class SajdahsCompanion extends UpdateCompanion<Sajdah> {
   }
 }
 
+class $AyahMetasTable extends AyahMetas
+    with TableInfo<$AyahMetasTable, AyahMetaRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AyahMetasTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _surahMeta = const VerificationMeta('surah');
+  @override
+  late final GeneratedColumn<int> surah = GeneratedColumn<int>(
+    'surah',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ayahMeta = const VerificationMeta('ayah');
+  @override
+  late final GeneratedColumn<int> ayah = GeneratedColumn<int>(
+    'ayah',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _globalIndexMeta = const VerificationMeta(
+    'globalIndex',
+  );
+  @override
+  late final GeneratedColumn<int> globalIndex = GeneratedColumn<int>(
+    'global_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _pageNoMeta = const VerificationMeta('pageNo');
+  @override
+  late final GeneratedColumn<int> pageNo = GeneratedColumn<int>(
+    'page_no',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _juzNoMeta = const VerificationMeta('juzNo');
+  @override
+  late final GeneratedColumn<int> juzNo = GeneratedColumn<int>(
+    'juz_no',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _hizbNoMeta = const VerificationMeta('hizbNo');
+  @override
+  late final GeneratedColumn<int> hizbNo = GeneratedColumn<int>(
+    'hizb_no',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _rukuNoMeta = const VerificationMeta('rukuNo');
+  @override
+  late final GeneratedColumn<int> rukuNo = GeneratedColumn<int>(
+    'ruku_no',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<HizbFraction, int> hizbFraction =
+      GeneratedColumn<int>(
+        'hizb_fraction',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<HizbFraction>($AyahMetasTable.$converterhizbFraction);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    surah,
+    ayah,
+    globalIndex,
+    pageNo,
+    juzNo,
+    hizbNo,
+    rukuNo,
+    hizbFraction,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'ayah_metas';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AyahMetaRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('surah')) {
+      context.handle(
+        _surahMeta,
+        surah.isAcceptableOrUnknown(data['surah']!, _surahMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_surahMeta);
+    }
+    if (data.containsKey('ayah')) {
+      context.handle(
+        _ayahMeta,
+        ayah.isAcceptableOrUnknown(data['ayah']!, _ayahMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ayahMeta);
+    }
+    if (data.containsKey('global_index')) {
+      context.handle(
+        _globalIndexMeta,
+        globalIndex.isAcceptableOrUnknown(
+          data['global_index']!,
+          _globalIndexMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_globalIndexMeta);
+    }
+    if (data.containsKey('page_no')) {
+      context.handle(
+        _pageNoMeta,
+        pageNo.isAcceptableOrUnknown(data['page_no']!, _pageNoMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_pageNoMeta);
+    }
+    if (data.containsKey('juz_no')) {
+      context.handle(
+        _juzNoMeta,
+        juzNo.isAcceptableOrUnknown(data['juz_no']!, _juzNoMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_juzNoMeta);
+    }
+    if (data.containsKey('hizb_no')) {
+      context.handle(
+        _hizbNoMeta,
+        hizbNo.isAcceptableOrUnknown(data['hizb_no']!, _hizbNoMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_hizbNoMeta);
+    }
+    if (data.containsKey('ruku_no')) {
+      context.handle(
+        _rukuNoMeta,
+        rukuNo.isAcceptableOrUnknown(data['ruku_no']!, _rukuNoMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_rukuNoMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AyahMetaRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AyahMetaRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      surah: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}surah'],
+      )!,
+      ayah: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}ayah'],
+      )!,
+      globalIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}global_index'],
+      )!,
+      pageNo: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}page_no'],
+      )!,
+      juzNo: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}juz_no'],
+      )!,
+      hizbNo: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hizb_no'],
+      )!,
+      rukuNo: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}ruku_no'],
+      )!,
+      hizbFraction: $AyahMetasTable.$converterhizbFraction.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}hizb_fraction'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $AyahMetasTable createAlias(String alias) {
+    return $AyahMetasTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<HizbFraction, int> $converterhizbFraction =
+      const HizbFractionConverter();
+}
+
+class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
+  final int id;
+  final int surah;
+  final int ayah;
+  final int globalIndex;
+  final int pageNo;
+  final int juzNo;
+  final int hizbNo;
+  final int rukuNo;
+  final HizbFraction hizbFraction;
+  const AyahMetaRow({
+    required this.id,
+    required this.surah,
+    required this.ayah,
+    required this.globalIndex,
+    required this.pageNo,
+    required this.juzNo,
+    required this.hizbNo,
+    required this.rukuNo,
+    required this.hizbFraction,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['surah'] = Variable<int>(surah);
+    map['ayah'] = Variable<int>(ayah);
+    map['global_index'] = Variable<int>(globalIndex);
+    map['page_no'] = Variable<int>(pageNo);
+    map['juz_no'] = Variable<int>(juzNo);
+    map['hizb_no'] = Variable<int>(hizbNo);
+    map['ruku_no'] = Variable<int>(rukuNo);
+    {
+      map['hizb_fraction'] = Variable<int>(
+        $AyahMetasTable.$converterhizbFraction.toSql(hizbFraction),
+      );
+    }
+    return map;
+  }
+
+  AyahMetasCompanion toCompanion(bool nullToAbsent) {
+    return AyahMetasCompanion(
+      id: Value(id),
+      surah: Value(surah),
+      ayah: Value(ayah),
+      globalIndex: Value(globalIndex),
+      pageNo: Value(pageNo),
+      juzNo: Value(juzNo),
+      hizbNo: Value(hizbNo),
+      rukuNo: Value(rukuNo),
+      hizbFraction: Value(hizbFraction),
+    );
+  }
+
+  factory AyahMetaRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AyahMetaRow(
+      id: serializer.fromJson<int>(json['id']),
+      surah: serializer.fromJson<int>(json['surah']),
+      ayah: serializer.fromJson<int>(json['ayah']),
+      globalIndex: serializer.fromJson<int>(json['globalIndex']),
+      pageNo: serializer.fromJson<int>(json['pageNo']),
+      juzNo: serializer.fromJson<int>(json['juzNo']),
+      hizbNo: serializer.fromJson<int>(json['hizbNo']),
+      rukuNo: serializer.fromJson<int>(json['rukuNo']),
+      hizbFraction: serializer.fromJson<HizbFraction>(json['hizbFraction']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'surah': serializer.toJson<int>(surah),
+      'ayah': serializer.toJson<int>(ayah),
+      'globalIndex': serializer.toJson<int>(globalIndex),
+      'pageNo': serializer.toJson<int>(pageNo),
+      'juzNo': serializer.toJson<int>(juzNo),
+      'hizbNo': serializer.toJson<int>(hizbNo),
+      'rukuNo': serializer.toJson<int>(rukuNo),
+      'hizbFraction': serializer.toJson<HizbFraction>(hizbFraction),
+    };
+  }
+
+  AyahMetaRow copyWith({
+    int? id,
+    int? surah,
+    int? ayah,
+    int? globalIndex,
+    int? pageNo,
+    int? juzNo,
+    int? hizbNo,
+    int? rukuNo,
+    HizbFraction? hizbFraction,
+  }) => AyahMetaRow(
+    id: id ?? this.id,
+    surah: surah ?? this.surah,
+    ayah: ayah ?? this.ayah,
+    globalIndex: globalIndex ?? this.globalIndex,
+    pageNo: pageNo ?? this.pageNo,
+    juzNo: juzNo ?? this.juzNo,
+    hizbNo: hizbNo ?? this.hizbNo,
+    rukuNo: rukuNo ?? this.rukuNo,
+    hizbFraction: hizbFraction ?? this.hizbFraction,
+  );
+  AyahMetaRow copyWithCompanion(AyahMetasCompanion data) {
+    return AyahMetaRow(
+      id: data.id.present ? data.id.value : this.id,
+      surah: data.surah.present ? data.surah.value : this.surah,
+      ayah: data.ayah.present ? data.ayah.value : this.ayah,
+      globalIndex: data.globalIndex.present
+          ? data.globalIndex.value
+          : this.globalIndex,
+      pageNo: data.pageNo.present ? data.pageNo.value : this.pageNo,
+      juzNo: data.juzNo.present ? data.juzNo.value : this.juzNo,
+      hizbNo: data.hizbNo.present ? data.hizbNo.value : this.hizbNo,
+      rukuNo: data.rukuNo.present ? data.rukuNo.value : this.rukuNo,
+      hizbFraction: data.hizbFraction.present
+          ? data.hizbFraction.value
+          : this.hizbFraction,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AyahMetaRow(')
+          ..write('id: $id, ')
+          ..write('surah: $surah, ')
+          ..write('ayah: $ayah, ')
+          ..write('globalIndex: $globalIndex, ')
+          ..write('pageNo: $pageNo, ')
+          ..write('juzNo: $juzNo, ')
+          ..write('hizbNo: $hizbNo, ')
+          ..write('rukuNo: $rukuNo, ')
+          ..write('hizbFraction: $hizbFraction')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    surah,
+    ayah,
+    globalIndex,
+    pageNo,
+    juzNo,
+    hizbNo,
+    rukuNo,
+    hizbFraction,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AyahMetaRow &&
+          other.id == this.id &&
+          other.surah == this.surah &&
+          other.ayah == this.ayah &&
+          other.globalIndex == this.globalIndex &&
+          other.pageNo == this.pageNo &&
+          other.juzNo == this.juzNo &&
+          other.hizbNo == this.hizbNo &&
+          other.rukuNo == this.rukuNo &&
+          other.hizbFraction == this.hizbFraction);
+}
+
+class AyahMetasCompanion extends UpdateCompanion<AyahMetaRow> {
+  final Value<int> id;
+  final Value<int> surah;
+  final Value<int> ayah;
+  final Value<int> globalIndex;
+  final Value<int> pageNo;
+  final Value<int> juzNo;
+  final Value<int> hizbNo;
+  final Value<int> rukuNo;
+  final Value<HizbFraction> hizbFraction;
+  const AyahMetasCompanion({
+    this.id = const Value.absent(),
+    this.surah = const Value.absent(),
+    this.ayah = const Value.absent(),
+    this.globalIndex = const Value.absent(),
+    this.pageNo = const Value.absent(),
+    this.juzNo = const Value.absent(),
+    this.hizbNo = const Value.absent(),
+    this.rukuNo = const Value.absent(),
+    this.hizbFraction = const Value.absent(),
+  });
+  AyahMetasCompanion.insert({
+    this.id = const Value.absent(),
+    required int surah,
+    required int ayah,
+    required int globalIndex,
+    required int pageNo,
+    required int juzNo,
+    required int hizbNo,
+    required int rukuNo,
+    required HizbFraction hizbFraction,
+  }) : surah = Value(surah),
+       ayah = Value(ayah),
+       globalIndex = Value(globalIndex),
+       pageNo = Value(pageNo),
+       juzNo = Value(juzNo),
+       hizbNo = Value(hizbNo),
+       rukuNo = Value(rukuNo),
+       hizbFraction = Value(hizbFraction);
+  static Insertable<AyahMetaRow> custom({
+    Expression<int>? id,
+    Expression<int>? surah,
+    Expression<int>? ayah,
+    Expression<int>? globalIndex,
+    Expression<int>? pageNo,
+    Expression<int>? juzNo,
+    Expression<int>? hizbNo,
+    Expression<int>? rukuNo,
+    Expression<int>? hizbFraction,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (surah != null) 'surah': surah,
+      if (ayah != null) 'ayah': ayah,
+      if (globalIndex != null) 'global_index': globalIndex,
+      if (pageNo != null) 'page_no': pageNo,
+      if (juzNo != null) 'juz_no': juzNo,
+      if (hizbNo != null) 'hizb_no': hizbNo,
+      if (rukuNo != null) 'ruku_no': rukuNo,
+      if (hizbFraction != null) 'hizb_fraction': hizbFraction,
+    });
+  }
+
+  AyahMetasCompanion copyWith({
+    Value<int>? id,
+    Value<int>? surah,
+    Value<int>? ayah,
+    Value<int>? globalIndex,
+    Value<int>? pageNo,
+    Value<int>? juzNo,
+    Value<int>? hizbNo,
+    Value<int>? rukuNo,
+    Value<HizbFraction>? hizbFraction,
+  }) {
+    return AyahMetasCompanion(
+      id: id ?? this.id,
+      surah: surah ?? this.surah,
+      ayah: ayah ?? this.ayah,
+      globalIndex: globalIndex ?? this.globalIndex,
+      pageNo: pageNo ?? this.pageNo,
+      juzNo: juzNo ?? this.juzNo,
+      hizbNo: hizbNo ?? this.hizbNo,
+      rukuNo: rukuNo ?? this.rukuNo,
+      hizbFraction: hizbFraction ?? this.hizbFraction,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (surah.present) {
+      map['surah'] = Variable<int>(surah.value);
+    }
+    if (ayah.present) {
+      map['ayah'] = Variable<int>(ayah.value);
+    }
+    if (globalIndex.present) {
+      map['global_index'] = Variable<int>(globalIndex.value);
+    }
+    if (pageNo.present) {
+      map['page_no'] = Variable<int>(pageNo.value);
+    }
+    if (juzNo.present) {
+      map['juz_no'] = Variable<int>(juzNo.value);
+    }
+    if (hizbNo.present) {
+      map['hizb_no'] = Variable<int>(hizbNo.value);
+    }
+    if (rukuNo.present) {
+      map['ruku_no'] = Variable<int>(rukuNo.value);
+    }
+    if (hizbFraction.present) {
+      map['hizb_fraction'] = Variable<int>(
+        $AyahMetasTable.$converterhizbFraction.toSql(hizbFraction.value),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AyahMetasCompanion(')
+          ..write('id: $id, ')
+          ..write('surah: $surah, ')
+          ..write('ayah: $ayah, ')
+          ..write('globalIndex: $globalIndex, ')
+          ..write('pageNo: $pageNo, ')
+          ..write('juzNo: $juzNo, ')
+          ..write('hizbNo: $hizbNo, ')
+          ..write('rukuNo: $rukuNo, ')
+          ..write('hizbFraction: $hizbFraction')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2425,7 +2939,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $JuzsTable juzs = $JuzsTable(this);
   late final $RukusTable rukus = $RukusTable(this);
   late final $SajdahsTable sajdahs = $SajdahsTable(this);
+  late final $AyahMetasTable ayahMetas = $AyahMetasTable(this);
   late final QuranDao quranDao = QuranDao(this as AppDatabase);
+  late final AyahMetaDao ayahMetaDao = AyahMetaDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2437,26 +2953,27 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     juzs,
     rukus,
     sajdahs,
+    ayahMetas,
   ];
 }
 
 typedef $$WordsTableCreateCompanionBuilder =
     WordsCompanion Function({
       Value<int> id,
-      required String location,
+      required WordLocation location,
       required int surah,
       required int ayah,
       required int word,
-      required String textContent,
+      required String text_,
     });
 typedef $$WordsTableUpdateCompanionBuilder =
     WordsCompanion Function({
       Value<int> id,
-      Value<String> location,
+      Value<WordLocation> location,
       Value<int> surah,
       Value<int> ayah,
       Value<int> word,
-      Value<String> textContent,
+      Value<String> text_,
     });
 
 class $$WordsTableFilterComposer extends Composer<_$AppDatabase, $WordsTable> {
@@ -2472,9 +2989,10 @@ class $$WordsTableFilterComposer extends Composer<_$AppDatabase, $WordsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get location => $composableBuilder(
+  ColumnWithTypeConverterFilters<WordLocation, WordLocation, String>
+  get location => $composableBuilder(
     column: $table.location,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<int> get surah => $composableBuilder(
@@ -2492,8 +3010,8 @@ class $$WordsTableFilterComposer extends Composer<_$AppDatabase, $WordsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get textContent => $composableBuilder(
-    column: $table.textContent,
+  ColumnFilters<String> get text_ => $composableBuilder(
+    column: $table.text_,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2532,8 +3050,8 @@ class $$WordsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get textContent => $composableBuilder(
-    column: $table.textContent,
+  ColumnOrderings<String> get text_ => $composableBuilder(
+    column: $table.text_,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -2550,7 +3068,7 @@ class $$WordsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get location =>
+  GeneratedColumnWithTypeConverter<WordLocation, String> get location =>
       $composableBuilder(column: $table.location, builder: (column) => column);
 
   GeneratedColumn<int> get surah =>
@@ -2562,10 +3080,8 @@ class $$WordsTableAnnotationComposer
   GeneratedColumn<int> get word =>
       $composableBuilder(column: $table.word, builder: (column) => column);
 
-  GeneratedColumn<String> get textContent => $composableBuilder(
-    column: $table.textContent,
-    builder: (column) => column,
-  );
+  GeneratedColumn<String> get text_ =>
+      $composableBuilder(column: $table.text_, builder: (column) => column);
 }
 
 class $$WordsTableTableManager
@@ -2573,14 +3089,14 @@ class $$WordsTableTableManager
         RootTableManager<
           _$AppDatabase,
           $WordsTable,
-          Word,
+          WordRow,
           $$WordsTableFilterComposer,
           $$WordsTableOrderingComposer,
           $$WordsTableAnnotationComposer,
           $$WordsTableCreateCompanionBuilder,
           $$WordsTableUpdateCompanionBuilder,
-          (Word, BaseReferences<_$AppDatabase, $WordsTable, Word>),
-          Word,
+          (WordRow, BaseReferences<_$AppDatabase, $WordsTable, WordRow>),
+          WordRow,
           PrefetchHooks Function()
         > {
   $$WordsTableTableManager(_$AppDatabase db, $WordsTable table)
@@ -2597,34 +3113,34 @@ class $$WordsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String> location = const Value.absent(),
+                Value<WordLocation> location = const Value.absent(),
                 Value<int> surah = const Value.absent(),
                 Value<int> ayah = const Value.absent(),
                 Value<int> word = const Value.absent(),
-                Value<String> textContent = const Value.absent(),
+                Value<String> text_ = const Value.absent(),
               }) => WordsCompanion(
                 id: id,
                 location: location,
                 surah: surah,
                 ayah: ayah,
                 word: word,
-                textContent: textContent,
+                text_: text_,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required String location,
+                required WordLocation location,
                 required int surah,
                 required int ayah,
                 required int word,
-                required String textContent,
+                required String text_,
               }) => WordsCompanion.insert(
                 id: id,
                 location: location,
                 surah: surah,
                 ayah: ayah,
                 word: word,
-                textContent: textContent,
+                text_: text_,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -2638,14 +3154,14 @@ typedef $$WordsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $WordsTable,
-      Word,
+      WordRow,
       $$WordsTableFilterComposer,
       $$WordsTableOrderingComposer,
       $$WordsTableAnnotationComposer,
       $$WordsTableCreateCompanionBuilder,
       $$WordsTableUpdateCompanionBuilder,
-      (Word, BaseReferences<_$AppDatabase, $WordsTable, Word>),
-      Word,
+      (WordRow, BaseReferences<_$AppDatabase, $WordsTable, WordRow>),
+      WordRow,
       PrefetchHooks Function()
     >;
 typedef $$ChaptersTableCreateCompanionBuilder =
@@ -2655,9 +3171,9 @@ typedef $$ChaptersTableCreateCompanionBuilder =
       required String nameSimple,
       required String nameArabic,
       required int revelationOrder,
-      required String revelationPlace,
+      required RevelationPlace revelationPlace,
       required int versesCount,
-      required int bismillahPre,
+      required bool bismillahPre,
       required String nameGlyph,
     });
 typedef $$ChaptersTableUpdateCompanionBuilder =
@@ -2667,9 +3183,9 @@ typedef $$ChaptersTableUpdateCompanionBuilder =
       Value<String> nameSimple,
       Value<String> nameArabic,
       Value<int> revelationOrder,
-      Value<String> revelationPlace,
+      Value<RevelationPlace> revelationPlace,
       Value<int> versesCount,
-      Value<int> bismillahPre,
+      Value<bool> bismillahPre,
       Value<String> nameGlyph,
     });
 
@@ -2707,9 +3223,10 @@ class $$ChaptersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get revelationPlace => $composableBuilder(
+  ColumnWithTypeConverterFilters<RevelationPlace, RevelationPlace, String>
+  get revelationPlace => $composableBuilder(
     column: $table.revelationPlace,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<int> get versesCount => $composableBuilder(
@@ -2717,10 +3234,11 @@ class $$ChaptersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get bismillahPre => $composableBuilder(
-    column: $table.bismillahPre,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<bool, bool, int> get bismillahPre =>
+      $composableBuilder(
+        column: $table.bismillahPre,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get nameGlyph => $composableBuilder(
     column: $table.nameGlyph,
@@ -2813,7 +3331,8 @@ class $$ChaptersTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get revelationPlace => $composableBuilder(
+  GeneratedColumnWithTypeConverter<RevelationPlace, String>
+  get revelationPlace => $composableBuilder(
     column: $table.revelationPlace,
     builder: (column) => column,
   );
@@ -2823,10 +3342,11 @@ class $$ChaptersTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get bismillahPre => $composableBuilder(
-    column: $table.bismillahPre,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<bool, int> get bismillahPre =>
+      $composableBuilder(
+        column: $table.bismillahPre,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get nameGlyph =>
       $composableBuilder(column: $table.nameGlyph, builder: (column) => column);
@@ -2837,14 +3357,17 @@ class $$ChaptersTableTableManager
         RootTableManager<
           _$AppDatabase,
           $ChaptersTable,
-          Chapter,
+          ChapterRow,
           $$ChaptersTableFilterComposer,
           $$ChaptersTableOrderingComposer,
           $$ChaptersTableAnnotationComposer,
           $$ChaptersTableCreateCompanionBuilder,
           $$ChaptersTableUpdateCompanionBuilder,
-          (Chapter, BaseReferences<_$AppDatabase, $ChaptersTable, Chapter>),
-          Chapter,
+          (
+            ChapterRow,
+            BaseReferences<_$AppDatabase, $ChaptersTable, ChapterRow>,
+          ),
+          ChapterRow,
           PrefetchHooks Function()
         > {
   $$ChaptersTableTableManager(_$AppDatabase db, $ChaptersTable table)
@@ -2865,9 +3388,9 @@ class $$ChaptersTableTableManager
                 Value<String> nameSimple = const Value.absent(),
                 Value<String> nameArabic = const Value.absent(),
                 Value<int> revelationOrder = const Value.absent(),
-                Value<String> revelationPlace = const Value.absent(),
+                Value<RevelationPlace> revelationPlace = const Value.absent(),
                 Value<int> versesCount = const Value.absent(),
-                Value<int> bismillahPre = const Value.absent(),
+                Value<bool> bismillahPre = const Value.absent(),
                 Value<String> nameGlyph = const Value.absent(),
               }) => ChaptersCompanion(
                 id: id,
@@ -2887,9 +3410,9 @@ class $$ChaptersTableTableManager
                 required String nameSimple,
                 required String nameArabic,
                 required int revelationOrder,
-                required String revelationPlace,
+                required RevelationPlace revelationPlace,
                 required int versesCount,
-                required int bismillahPre,
+                required bool bismillahPre,
                 required String nameGlyph,
               }) => ChaptersCompanion.insert(
                 id: id,
@@ -2914,31 +3437,31 @@ typedef $$ChaptersTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $ChaptersTable,
-      Chapter,
+      ChapterRow,
       $$ChaptersTableFilterComposer,
       $$ChaptersTableOrderingComposer,
       $$ChaptersTableAnnotationComposer,
       $$ChaptersTableCreateCompanionBuilder,
       $$ChaptersTableUpdateCompanionBuilder,
-      (Chapter, BaseReferences<_$AppDatabase, $ChaptersTable, Chapter>),
-      Chapter,
+      (ChapterRow, BaseReferences<_$AppDatabase, $ChaptersTable, ChapterRow>),
+      ChapterRow,
       PrefetchHooks Function()
     >;
 typedef $$HizbsTableCreateCompanionBuilder =
     HizbsCompanion Function({
       Value<int> hizbNumber,
-      Value<int?> versesCount,
-      Value<String?> firstVerseKey,
-      Value<String?> lastVerseKey,
-      Value<String?> verseMapping,
+      required int versesCount,
+      required VerseKey firstVerseKey,
+      required VerseKey lastVerseKey,
+      required SurahRanges verseMapping,
     });
 typedef $$HizbsTableUpdateCompanionBuilder =
     HizbsCompanion Function({
       Value<int> hizbNumber,
-      Value<int?> versesCount,
-      Value<String?> firstVerseKey,
-      Value<String?> lastVerseKey,
-      Value<String?> verseMapping,
+      Value<int> versesCount,
+      Value<VerseKey> firstVerseKey,
+      Value<VerseKey> lastVerseKey,
+      Value<SurahRanges> verseMapping,
     });
 
 class $$HizbsTableFilterComposer extends Composer<_$AppDatabase, $HizbsTable> {
@@ -2959,19 +3482,22 @@ class $$HizbsTableFilterComposer extends Composer<_$AppDatabase, $HizbsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get firstVerseKey => $composableBuilder(
+  ColumnWithTypeConverterFilters<VerseKey, VerseKey, String>
+  get firstVerseKey => $composableBuilder(
     column: $table.firstVerseKey,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get lastVerseKey => $composableBuilder(
-    column: $table.lastVerseKey,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<VerseKey, VerseKey, String> get lastVerseKey =>
+      $composableBuilder(
+        column: $table.lastVerseKey,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get verseMapping => $composableBuilder(
+  ColumnWithTypeConverterFilters<SurahRanges, SurahRanges, String>
+  get verseMapping => $composableBuilder(
     column: $table.verseMapping,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 }
 
@@ -3029,20 +3555,23 @@ class $$HizbsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get firstVerseKey => $composableBuilder(
-    column: $table.firstVerseKey,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<VerseKey, String> get firstVerseKey =>
+      $composableBuilder(
+        column: $table.firstVerseKey,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get lastVerseKey => $composableBuilder(
-    column: $table.lastVerseKey,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<VerseKey, String> get lastVerseKey =>
+      $composableBuilder(
+        column: $table.lastVerseKey,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get verseMapping => $composableBuilder(
-    column: $table.verseMapping,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<SurahRanges, String> get verseMapping =>
+      $composableBuilder(
+        column: $table.verseMapping,
+        builder: (column) => column,
+      );
 }
 
 class $$HizbsTableTableManager
@@ -3050,14 +3579,14 @@ class $$HizbsTableTableManager
         RootTableManager<
           _$AppDatabase,
           $HizbsTable,
-          Hizb,
+          HizbRow,
           $$HizbsTableFilterComposer,
           $$HizbsTableOrderingComposer,
           $$HizbsTableAnnotationComposer,
           $$HizbsTableCreateCompanionBuilder,
           $$HizbsTableUpdateCompanionBuilder,
-          (Hizb, BaseReferences<_$AppDatabase, $HizbsTable, Hizb>),
-          Hizb,
+          (HizbRow, BaseReferences<_$AppDatabase, $HizbsTable, HizbRow>),
+          HizbRow,
           PrefetchHooks Function()
         > {
   $$HizbsTableTableManager(_$AppDatabase db, $HizbsTable table)
@@ -3074,10 +3603,10 @@ class $$HizbsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> hizbNumber = const Value.absent(),
-                Value<int?> versesCount = const Value.absent(),
-                Value<String?> firstVerseKey = const Value.absent(),
-                Value<String?> lastVerseKey = const Value.absent(),
-                Value<String?> verseMapping = const Value.absent(),
+                Value<int> versesCount = const Value.absent(),
+                Value<VerseKey> firstVerseKey = const Value.absent(),
+                Value<VerseKey> lastVerseKey = const Value.absent(),
+                Value<SurahRanges> verseMapping = const Value.absent(),
               }) => HizbsCompanion(
                 hizbNumber: hizbNumber,
                 versesCount: versesCount,
@@ -3088,10 +3617,10 @@ class $$HizbsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> hizbNumber = const Value.absent(),
-                Value<int?> versesCount = const Value.absent(),
-                Value<String?> firstVerseKey = const Value.absent(),
-                Value<String?> lastVerseKey = const Value.absent(),
-                Value<String?> verseMapping = const Value.absent(),
+                required int versesCount,
+                required VerseKey firstVerseKey,
+                required VerseKey lastVerseKey,
+                required SurahRanges verseMapping,
               }) => HizbsCompanion.insert(
                 hizbNumber: hizbNumber,
                 versesCount: versesCount,
@@ -3111,31 +3640,31 @@ typedef $$HizbsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $HizbsTable,
-      Hizb,
+      HizbRow,
       $$HizbsTableFilterComposer,
       $$HizbsTableOrderingComposer,
       $$HizbsTableAnnotationComposer,
       $$HizbsTableCreateCompanionBuilder,
       $$HizbsTableUpdateCompanionBuilder,
-      (Hizb, BaseReferences<_$AppDatabase, $HizbsTable, Hizb>),
-      Hizb,
+      (HizbRow, BaseReferences<_$AppDatabase, $HizbsTable, HizbRow>),
+      HizbRow,
       PrefetchHooks Function()
     >;
 typedef $$JuzsTableCreateCompanionBuilder =
     JuzsCompanion Function({
       Value<int> juzNumber,
       required int versesCount,
-      required String firstVerseKey,
-      required String lastVerseKey,
-      required String verseMapping,
+      required VerseKey firstVerseKey,
+      required VerseKey lastVerseKey,
+      required SurahRanges verseMapping,
     });
 typedef $$JuzsTableUpdateCompanionBuilder =
     JuzsCompanion Function({
       Value<int> juzNumber,
       Value<int> versesCount,
-      Value<String> firstVerseKey,
-      Value<String> lastVerseKey,
-      Value<String> verseMapping,
+      Value<VerseKey> firstVerseKey,
+      Value<VerseKey> lastVerseKey,
+      Value<SurahRanges> verseMapping,
     });
 
 class $$JuzsTableFilterComposer extends Composer<_$AppDatabase, $JuzsTable> {
@@ -3156,19 +3685,22 @@ class $$JuzsTableFilterComposer extends Composer<_$AppDatabase, $JuzsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get firstVerseKey => $composableBuilder(
+  ColumnWithTypeConverterFilters<VerseKey, VerseKey, String>
+  get firstVerseKey => $composableBuilder(
     column: $table.firstVerseKey,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get lastVerseKey => $composableBuilder(
-    column: $table.lastVerseKey,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<VerseKey, VerseKey, String> get lastVerseKey =>
+      $composableBuilder(
+        column: $table.lastVerseKey,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get verseMapping => $composableBuilder(
+  ColumnWithTypeConverterFilters<SurahRanges, SurahRanges, String>
+  get verseMapping => $composableBuilder(
     column: $table.verseMapping,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 }
 
@@ -3223,20 +3755,23 @@ class $$JuzsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get firstVerseKey => $composableBuilder(
-    column: $table.firstVerseKey,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<VerseKey, String> get firstVerseKey =>
+      $composableBuilder(
+        column: $table.firstVerseKey,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get lastVerseKey => $composableBuilder(
-    column: $table.lastVerseKey,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<VerseKey, String> get lastVerseKey =>
+      $composableBuilder(
+        column: $table.lastVerseKey,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get verseMapping => $composableBuilder(
-    column: $table.verseMapping,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<SurahRanges, String> get verseMapping =>
+      $composableBuilder(
+        column: $table.verseMapping,
+        builder: (column) => column,
+      );
 }
 
 class $$JuzsTableTableManager
@@ -3244,14 +3779,14 @@ class $$JuzsTableTableManager
         RootTableManager<
           _$AppDatabase,
           $JuzsTable,
-          Juz,
+          JuzRow,
           $$JuzsTableFilterComposer,
           $$JuzsTableOrderingComposer,
           $$JuzsTableAnnotationComposer,
           $$JuzsTableCreateCompanionBuilder,
           $$JuzsTableUpdateCompanionBuilder,
-          (Juz, BaseReferences<_$AppDatabase, $JuzsTable, Juz>),
-          Juz,
+          (JuzRow, BaseReferences<_$AppDatabase, $JuzsTable, JuzRow>),
+          JuzRow,
           PrefetchHooks Function()
         > {
   $$JuzsTableTableManager(_$AppDatabase db, $JuzsTable table)
@@ -3269,9 +3804,9 @@ class $$JuzsTableTableManager
               ({
                 Value<int> juzNumber = const Value.absent(),
                 Value<int> versesCount = const Value.absent(),
-                Value<String> firstVerseKey = const Value.absent(),
-                Value<String> lastVerseKey = const Value.absent(),
-                Value<String> verseMapping = const Value.absent(),
+                Value<VerseKey> firstVerseKey = const Value.absent(),
+                Value<VerseKey> lastVerseKey = const Value.absent(),
+                Value<SurahRanges> verseMapping = const Value.absent(),
               }) => JuzsCompanion(
                 juzNumber: juzNumber,
                 versesCount: versesCount,
@@ -3283,9 +3818,9 @@ class $$JuzsTableTableManager
               ({
                 Value<int> juzNumber = const Value.absent(),
                 required int versesCount,
-                required String firstVerseKey,
-                required String lastVerseKey,
-                required String verseMapping,
+                required VerseKey firstVerseKey,
+                required VerseKey lastVerseKey,
+                required SurahRanges verseMapping,
               }) => JuzsCompanion.insert(
                 juzNumber: juzNumber,
                 versesCount: versesCount,
@@ -3305,14 +3840,14 @@ typedef $$JuzsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $JuzsTable,
-      Juz,
+      JuzRow,
       $$JuzsTableFilterComposer,
       $$JuzsTableOrderingComposer,
       $$JuzsTableAnnotationComposer,
       $$JuzsTableCreateCompanionBuilder,
       $$JuzsTableUpdateCompanionBuilder,
-      (Juz, BaseReferences<_$AppDatabase, $JuzsTable, Juz>),
-      Juz,
+      (JuzRow, BaseReferences<_$AppDatabase, $JuzsTable, JuzRow>),
+      JuzRow,
       PrefetchHooks Function()
     >;
 typedef $$RukusTableCreateCompanionBuilder =
@@ -3320,18 +3855,18 @@ typedef $$RukusTableCreateCompanionBuilder =
       Value<int> rukuNumber,
       required int surahRukuNumber,
       required int versesCount,
-      required String firstVerseKey,
-      required String lastVerseKey,
-      required String verseMapping,
+      required VerseKey firstVerseKey,
+      required VerseKey lastVerseKey,
+      required SurahRanges verseMapping,
     });
 typedef $$RukusTableUpdateCompanionBuilder =
     RukusCompanion Function({
       Value<int> rukuNumber,
       Value<int> surahRukuNumber,
       Value<int> versesCount,
-      Value<String> firstVerseKey,
-      Value<String> lastVerseKey,
-      Value<String> verseMapping,
+      Value<VerseKey> firstVerseKey,
+      Value<VerseKey> lastVerseKey,
+      Value<SurahRanges> verseMapping,
     });
 
 class $$RukusTableFilterComposer extends Composer<_$AppDatabase, $RukusTable> {
@@ -3357,19 +3892,22 @@ class $$RukusTableFilterComposer extends Composer<_$AppDatabase, $RukusTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get firstVerseKey => $composableBuilder(
+  ColumnWithTypeConverterFilters<VerseKey, VerseKey, String>
+  get firstVerseKey => $composableBuilder(
     column: $table.firstVerseKey,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get lastVerseKey => $composableBuilder(
-    column: $table.lastVerseKey,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<VerseKey, VerseKey, String> get lastVerseKey =>
+      $composableBuilder(
+        column: $table.lastVerseKey,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get verseMapping => $composableBuilder(
+  ColumnWithTypeConverterFilters<SurahRanges, SurahRanges, String>
+  get verseMapping => $composableBuilder(
     column: $table.verseMapping,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 }
 
@@ -3437,20 +3975,23 @@ class $$RukusTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get firstVerseKey => $composableBuilder(
-    column: $table.firstVerseKey,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<VerseKey, String> get firstVerseKey =>
+      $composableBuilder(
+        column: $table.firstVerseKey,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get lastVerseKey => $composableBuilder(
-    column: $table.lastVerseKey,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<VerseKey, String> get lastVerseKey =>
+      $composableBuilder(
+        column: $table.lastVerseKey,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<String> get verseMapping => $composableBuilder(
-    column: $table.verseMapping,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<SurahRanges, String> get verseMapping =>
+      $composableBuilder(
+        column: $table.verseMapping,
+        builder: (column) => column,
+      );
 }
 
 class $$RukusTableTableManager
@@ -3458,14 +3999,14 @@ class $$RukusTableTableManager
         RootTableManager<
           _$AppDatabase,
           $RukusTable,
-          Ruku,
+          RukuRow,
           $$RukusTableFilterComposer,
           $$RukusTableOrderingComposer,
           $$RukusTableAnnotationComposer,
           $$RukusTableCreateCompanionBuilder,
           $$RukusTableUpdateCompanionBuilder,
-          (Ruku, BaseReferences<_$AppDatabase, $RukusTable, Ruku>),
-          Ruku,
+          (RukuRow, BaseReferences<_$AppDatabase, $RukusTable, RukuRow>),
+          RukuRow,
           PrefetchHooks Function()
         > {
   $$RukusTableTableManager(_$AppDatabase db, $RukusTable table)
@@ -3484,9 +4025,9 @@ class $$RukusTableTableManager
                 Value<int> rukuNumber = const Value.absent(),
                 Value<int> surahRukuNumber = const Value.absent(),
                 Value<int> versesCount = const Value.absent(),
-                Value<String> firstVerseKey = const Value.absent(),
-                Value<String> lastVerseKey = const Value.absent(),
-                Value<String> verseMapping = const Value.absent(),
+                Value<VerseKey> firstVerseKey = const Value.absent(),
+                Value<VerseKey> lastVerseKey = const Value.absent(),
+                Value<SurahRanges> verseMapping = const Value.absent(),
               }) => RukusCompanion(
                 rukuNumber: rukuNumber,
                 surahRukuNumber: surahRukuNumber,
@@ -3500,9 +4041,9 @@ class $$RukusTableTableManager
                 Value<int> rukuNumber = const Value.absent(),
                 required int surahRukuNumber,
                 required int versesCount,
-                required String firstVerseKey,
-                required String lastVerseKey,
-                required String verseMapping,
+                required VerseKey firstVerseKey,
+                required VerseKey lastVerseKey,
+                required SurahRanges verseMapping,
               }) => RukusCompanion.insert(
                 rukuNumber: rukuNumber,
                 surahRukuNumber: surahRukuNumber,
@@ -3523,27 +4064,27 @@ typedef $$RukusTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $RukusTable,
-      Ruku,
+      RukuRow,
       $$RukusTableFilterComposer,
       $$RukusTableOrderingComposer,
       $$RukusTableAnnotationComposer,
       $$RukusTableCreateCompanionBuilder,
       $$RukusTableUpdateCompanionBuilder,
-      (Ruku, BaseReferences<_$AppDatabase, $RukusTable, Ruku>),
-      Ruku,
+      (RukuRow, BaseReferences<_$AppDatabase, $RukusTable, RukuRow>),
+      RukuRow,
       PrefetchHooks Function()
     >;
 typedef $$SajdahsTableCreateCompanionBuilder =
     SajdahsCompanion Function({
       Value<int> sajdahNumber,
-      required String verseKey,
-      required String sajdahType,
+      required VerseKey verseKey,
+      required SajdahType sajdahType,
     });
 typedef $$SajdahsTableUpdateCompanionBuilder =
     SajdahsCompanion Function({
       Value<int> sajdahNumber,
-      Value<String> verseKey,
-      Value<String> sajdahType,
+      Value<VerseKey> verseKey,
+      Value<SajdahType> sajdahType,
     });
 
 class $$SajdahsTableFilterComposer
@@ -3560,14 +4101,16 @@ class $$SajdahsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get verseKey => $composableBuilder(
-    column: $table.verseKey,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<VerseKey, VerseKey, String> get verseKey =>
+      $composableBuilder(
+        column: $table.verseKey,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get sajdahType => $composableBuilder(
+  ColumnWithTypeConverterFilters<SajdahType, SajdahType, String>
+  get sajdahType => $composableBuilder(
     column: $table.sajdahType,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 }
 
@@ -3610,13 +4153,14 @@ class $$SajdahsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get verseKey =>
+  GeneratedColumnWithTypeConverter<VerseKey, String> get verseKey =>
       $composableBuilder(column: $table.verseKey, builder: (column) => column);
 
-  GeneratedColumn<String> get sajdahType => $composableBuilder(
-    column: $table.sajdahType,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<SajdahType, String> get sajdahType =>
+      $composableBuilder(
+        column: $table.sajdahType,
+        builder: (column) => column,
+      );
 }
 
 class $$SajdahsTableTableManager
@@ -3624,14 +4168,14 @@ class $$SajdahsTableTableManager
         RootTableManager<
           _$AppDatabase,
           $SajdahsTable,
-          Sajdah,
+          SajdahRow,
           $$SajdahsTableFilterComposer,
           $$SajdahsTableOrderingComposer,
           $$SajdahsTableAnnotationComposer,
           $$SajdahsTableCreateCompanionBuilder,
           $$SajdahsTableUpdateCompanionBuilder,
-          (Sajdah, BaseReferences<_$AppDatabase, $SajdahsTable, Sajdah>),
-          Sajdah,
+          (SajdahRow, BaseReferences<_$AppDatabase, $SajdahsTable, SajdahRow>),
+          SajdahRow,
           PrefetchHooks Function()
         > {
   $$SajdahsTableTableManager(_$AppDatabase db, $SajdahsTable table)
@@ -3648,8 +4192,8 @@ class $$SajdahsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> sajdahNumber = const Value.absent(),
-                Value<String> verseKey = const Value.absent(),
-                Value<String> sajdahType = const Value.absent(),
+                Value<VerseKey> verseKey = const Value.absent(),
+                Value<SajdahType> sajdahType = const Value.absent(),
               }) => SajdahsCompanion(
                 sajdahNumber: sajdahNumber,
                 verseKey: verseKey,
@@ -3658,8 +4202,8 @@ class $$SajdahsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> sajdahNumber = const Value.absent(),
-                required String verseKey,
-                required String sajdahType,
+                required VerseKey verseKey,
+                required SajdahType sajdahType,
               }) => SajdahsCompanion.insert(
                 sajdahNumber: sajdahNumber,
                 verseKey: verseKey,
@@ -3677,14 +4221,290 @@ typedef $$SajdahsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $SajdahsTable,
-      Sajdah,
+      SajdahRow,
       $$SajdahsTableFilterComposer,
       $$SajdahsTableOrderingComposer,
       $$SajdahsTableAnnotationComposer,
       $$SajdahsTableCreateCompanionBuilder,
       $$SajdahsTableUpdateCompanionBuilder,
-      (Sajdah, BaseReferences<_$AppDatabase, $SajdahsTable, Sajdah>),
-      Sajdah,
+      (SajdahRow, BaseReferences<_$AppDatabase, $SajdahsTable, SajdahRow>),
+      SajdahRow,
+      PrefetchHooks Function()
+    >;
+typedef $$AyahMetasTableCreateCompanionBuilder =
+    AyahMetasCompanion Function({
+      Value<int> id,
+      required int surah,
+      required int ayah,
+      required int globalIndex,
+      required int pageNo,
+      required int juzNo,
+      required int hizbNo,
+      required int rukuNo,
+      required HizbFraction hizbFraction,
+    });
+typedef $$AyahMetasTableUpdateCompanionBuilder =
+    AyahMetasCompanion Function({
+      Value<int> id,
+      Value<int> surah,
+      Value<int> ayah,
+      Value<int> globalIndex,
+      Value<int> pageNo,
+      Value<int> juzNo,
+      Value<int> hizbNo,
+      Value<int> rukuNo,
+      Value<HizbFraction> hizbFraction,
+    });
+
+class $$AyahMetasTableFilterComposer
+    extends Composer<_$AppDatabase, $AyahMetasTable> {
+  $$AyahMetasTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get surah => $composableBuilder(
+    column: $table.surah,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ayah => $composableBuilder(
+    column: $table.ayah,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pageNo => $composableBuilder(
+    column: $table.pageNo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get juzNo => $composableBuilder(
+    column: $table.juzNo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get hizbNo => $composableBuilder(
+    column: $table.hizbNo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rukuNo => $composableBuilder(
+    column: $table.rukuNo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<HizbFraction, HizbFraction, int>
+  get hizbFraction => $composableBuilder(
+    column: $table.hizbFraction,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+}
+
+class $$AyahMetasTableOrderingComposer
+    extends Composer<_$AppDatabase, $AyahMetasTable> {
+  $$AyahMetasTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get surah => $composableBuilder(
+    column: $table.surah,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ayah => $composableBuilder(
+    column: $table.ayah,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pageNo => $composableBuilder(
+    column: $table.pageNo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get juzNo => $composableBuilder(
+    column: $table.juzNo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get hizbNo => $composableBuilder(
+    column: $table.hizbNo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rukuNo => $composableBuilder(
+    column: $table.rukuNo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get hizbFraction => $composableBuilder(
+    column: $table.hizbFraction,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AyahMetasTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AyahMetasTable> {
+  $$AyahMetasTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get surah =>
+      $composableBuilder(column: $table.surah, builder: (column) => column);
+
+  GeneratedColumn<int> get ayah =>
+      $composableBuilder(column: $table.ayah, builder: (column) => column);
+
+  GeneratedColumn<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get pageNo =>
+      $composableBuilder(column: $table.pageNo, builder: (column) => column);
+
+  GeneratedColumn<int> get juzNo =>
+      $composableBuilder(column: $table.juzNo, builder: (column) => column);
+
+  GeneratedColumn<int> get hizbNo =>
+      $composableBuilder(column: $table.hizbNo, builder: (column) => column);
+
+  GeneratedColumn<int> get rukuNo =>
+      $composableBuilder(column: $table.rukuNo, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<HizbFraction, int> get hizbFraction =>
+      $composableBuilder(
+        column: $table.hizbFraction,
+        builder: (column) => column,
+      );
+}
+
+class $$AyahMetasTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AyahMetasTable,
+          AyahMetaRow,
+          $$AyahMetasTableFilterComposer,
+          $$AyahMetasTableOrderingComposer,
+          $$AyahMetasTableAnnotationComposer,
+          $$AyahMetasTableCreateCompanionBuilder,
+          $$AyahMetasTableUpdateCompanionBuilder,
+          (
+            AyahMetaRow,
+            BaseReferences<_$AppDatabase, $AyahMetasTable, AyahMetaRow>,
+          ),
+          AyahMetaRow,
+          PrefetchHooks Function()
+        > {
+  $$AyahMetasTableTableManager(_$AppDatabase db, $AyahMetasTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AyahMetasTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AyahMetasTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AyahMetasTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> surah = const Value.absent(),
+                Value<int> ayah = const Value.absent(),
+                Value<int> globalIndex = const Value.absent(),
+                Value<int> pageNo = const Value.absent(),
+                Value<int> juzNo = const Value.absent(),
+                Value<int> hizbNo = const Value.absent(),
+                Value<int> rukuNo = const Value.absent(),
+                Value<HizbFraction> hizbFraction = const Value.absent(),
+              }) => AyahMetasCompanion(
+                id: id,
+                surah: surah,
+                ayah: ayah,
+                globalIndex: globalIndex,
+                pageNo: pageNo,
+                juzNo: juzNo,
+                hizbNo: hizbNo,
+                rukuNo: rukuNo,
+                hizbFraction: hizbFraction,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int surah,
+                required int ayah,
+                required int globalIndex,
+                required int pageNo,
+                required int juzNo,
+                required int hizbNo,
+                required int rukuNo,
+                required HizbFraction hizbFraction,
+              }) => AyahMetasCompanion.insert(
+                id: id,
+                surah: surah,
+                ayah: ayah,
+                globalIndex: globalIndex,
+                pageNo: pageNo,
+                juzNo: juzNo,
+                hizbNo: hizbNo,
+                rukuNo: rukuNo,
+                hizbFraction: hizbFraction,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AyahMetasTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AyahMetasTable,
+      AyahMetaRow,
+      $$AyahMetasTableFilterComposer,
+      $$AyahMetasTableOrderingComposer,
+      $$AyahMetasTableAnnotationComposer,
+      $$AyahMetasTableCreateCompanionBuilder,
+      $$AyahMetasTableUpdateCompanionBuilder,
+      (
+        AyahMetaRow,
+        BaseReferences<_$AppDatabase, $AyahMetasTable, AyahMetaRow>,
+      ),
+      AyahMetaRow,
       PrefetchHooks Function()
     >;
 
@@ -3702,4 +4522,6 @@ class $AppDatabaseManager {
       $$RukusTableTableManager(_db, _db.rukus);
   $$SajdahsTableTableManager get sajdahs =>
       $$SajdahsTableTableManager(_db, _db.sajdahs);
+  $$AyahMetasTableTableManager get ayahMetas =>
+      $$AyahMetasTableTableManager(_db, _db.ayahMetas);
 }

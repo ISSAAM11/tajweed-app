@@ -1,11 +1,10 @@
 //? Base needed imports
 
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/features/home/quran/vm/quran_bloc.dart';
+import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/features/home/quran/screen/widgets/surah_name_card.dart';
-
-import '../../../../../database/app_database.dart';
-import '../../vm/quran_state.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_state.dart';
 
 class SurahListingBody extends SubWidget<QuranBloc> {
   final QuranState state;
@@ -31,7 +30,7 @@ class SurahListingBody extends SubWidget<QuranBloc> {
 
 class _QuranScreen extends StatelessWidget {
   final int itemCount;
-  final List<Chapter> quran;
+  final List<ChapterRow> quran;
   void Function() onTap;
   _QuranScreen({
     required this.itemCount,
