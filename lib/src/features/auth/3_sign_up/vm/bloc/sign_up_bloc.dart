@@ -5,6 +5,8 @@ import 'package:tajweed_ai/src/utils/input_validator.dart';
 import '../../../../../base/bloc/exports.dart';
 import '../../../../../base/screens/exports.dart'
     show GlobalKey, FormState, PageController, Curves;
+import '../../data/models/activate_account_response.dart';
+import '../../data/models/sign_up_model.dart';
 
 //$ DATA SOURCES
 import '../../datasource/sign_up_datasource.dart';
@@ -61,14 +63,16 @@ base class SignUpBloc extends BaseBloc<SignUpEvent, SignUpState> {
 
   //! Event Callers
   void next() => add(NextStep(_currentIndex));
+  void pinSubmit(String _) => add(NextStep(_currentIndex));
   void previous() => add(PreviousStep(_currentIndex));
-  void resendPin() => add(ResendPin(email.controller.text));
+  void resendPin() => add(ResendPin(email.getText()));
 
   SignUpBloc(this._signUpDataSource) : super(Idle(), debugginEnabled: true) {
     on<SignUpWithEmailAndPassword>(_signUpWithEmailAndPassword);
     on<NextStep>(_next);
     on<PreviousStep>(_previous);
     on<ResendPin>(_resendPin);
+    on<ActivateAccount>(_activateAccount);
   }
 
   //@ LIFECYCLE

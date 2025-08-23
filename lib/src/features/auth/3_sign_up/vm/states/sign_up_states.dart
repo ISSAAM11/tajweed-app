@@ -18,6 +18,15 @@ final class Success extends SignUpState {
   List<Object> get props => [message];
 }
 
+final class ResendPinSuccess extends SignUpState {
+  final String message;
+
+  ResendPinSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
 final class Error extends SignUpState implements Exception {
   final String message;
 

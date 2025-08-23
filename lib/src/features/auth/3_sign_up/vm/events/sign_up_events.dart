@@ -36,6 +36,15 @@ final class ResendPin extends SignUpEvent {
   List<Object> get props => [email];
 }
 
+final class ActivateAccount extends SignUpEvent {
+  final String email;
+  final String code;
+
+  const ActivateAccount({required this.email, required this.code});
+  @override
+  List<Object> get props => [email, code];
+}
+
 //- Sign Up
 final class SignUpWithEmailAndPassword extends SignUpEvent {
   const SignUpWithEmailAndPassword();
