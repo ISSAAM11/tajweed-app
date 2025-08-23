@@ -20,15 +20,18 @@ final class AppBinding extends AppBindings {
   Future<void> asynchronous() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    //& Packages
-    di.registerLazySingletonAsync(() => SharedPreferences.getInstance());
+    //& Packages - Initialize SharedPreferences first
+    final prefs = await SharedPreferences.getInstance();
+    di.registerInstance<SharedPreferences>(prefs);
   }
 
   @override
   void synchronous() {
     //? Managers
     di.registerLazySingleton(() => FlutterSecureStorage());
-    di.registerLazySingleton<CacheManager>(() => CacheManagerImpl());
+    di.registerLazySingleton<CacheManager<SharedPreferences>>(
+      () => CacheManagerImpl(),
+    );
 
     //& Packages
     di.registerLazySingleton(() => Dio());
