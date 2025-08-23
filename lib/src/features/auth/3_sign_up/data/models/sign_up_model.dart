@@ -9,6 +9,13 @@ final class SignUpModelResponse extends ModelingProtocol {
   factory SignUpModelResponse.empty() =>
       SignUpModelResponse(success: false, info: '');
 
+  factory SignUpModelResponse.fromMap(Map<String, dynamic>? json) {
+    return SignUpModelResponse(
+      success: json?['success'] ?? false,
+      info: json?['info'] ?? '',
+    );
+  }
+
   @override
   fromJson(json) {
     return SignUpModelResponse(
