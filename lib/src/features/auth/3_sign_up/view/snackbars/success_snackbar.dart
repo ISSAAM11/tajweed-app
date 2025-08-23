@@ -1,6 +1,5 @@
 import '../../../../../base/screens/exports.dart';
 
 class SuccessSnackbar extends CommonSnackbar {
-  SuccessSnackbar()
-    : super(message: "Successfully signed in", type: SnackbarType.success);
+  SuccessSnackbar({required super.message}) : super(type: SnackbarType.success);
 }

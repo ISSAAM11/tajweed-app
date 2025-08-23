@@ -42,6 +42,7 @@ class SignupBody extends SubWidget<SignUpBloc> {
       isLoading: state is Loading,
       pinController: bloc.pinController,
       pinFocusNode: bloc.pinFocusNode,
+      onPinSubmitted: bloc.pinSubmit,
       resnedPin: bloc.resendPin,
     ),
   );

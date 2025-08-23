@@ -132,7 +132,7 @@ class OptionSelector<T> extends StatelessWidget {
           ? labelBuilder!(option)
           : option.toString();
       return Padding(
-        padding: const EdgeInsets.only(right: 8, bottom: 4),
+        padding: const EdgeInsets.only(right: 7, bottom: 4),
         child: _RadioButton(
           label: label,
           isSelected: selectedValue == option,

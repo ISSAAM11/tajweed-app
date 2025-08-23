@@ -34,7 +34,7 @@ class _Actions extends StatelessWidget {
               ? 'Next'
               : index == 1
               ? 'Sign Up'
-              : 'Verify',
+              : 'Activate',
           onTap: onNext,
           isLoading: isLoading,
           titleFontSize: FontSizes.title,

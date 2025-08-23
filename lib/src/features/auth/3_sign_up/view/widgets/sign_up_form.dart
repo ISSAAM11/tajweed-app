@@ -35,7 +35,7 @@ class SignUpForm extends StatelessWidget {
   final void Function()? previousActions;
   final TextEditingController pinController;
   final FocusNode pinFocusNode;
-  final void Function(String)? onPinSubmitted;
+  final void Function(String) onPinSubmitted;
   final void Function() resnedPin;
   const SignUpForm({
     super.key,
@@ -57,7 +57,7 @@ class SignUpForm extends StatelessWidget {
     required this.isLoading,
     required this.pinController,
     required this.pinFocusNode,
-    this.onPinSubmitted,
+    required this.onPinSubmitted,
     required this.resnedPin,
   });
 
@@ -93,7 +93,7 @@ class SignUpForm extends StatelessWidget {
           ),
         ],
       ),
-      _TermsOfUse(isChecked: acceptedTerms),
+      if (currentStep.value != 2) _TermsOfUse(isChecked: acceptedTerms),
 
       _Actions(
         index: currentStep,

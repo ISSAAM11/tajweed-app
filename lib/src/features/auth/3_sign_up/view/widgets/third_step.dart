@@ -3,7 +3,7 @@ part of 'sign_up_form.dart';
 class _Step3 extends StatelessWidget {
   final TextEditingController pinController;
   final FocusNode pinFocusNode;
-  final void Function(String)? onCompleted;
+  final void Function(String) onCompleted;
   final void Function() resend;
 
   const _Step3({
@@ -38,7 +38,7 @@ class _Step3 extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          "We’ve sent you a 6-digit verification code to your email. "
+          "We’ve sent you a 4-digit verification code to your email. "
           "Please enter it below to continue.",
           style: AppStyles.title.semiBold().copyWith(color: AppColors.black),
           textAlign: TextAlign.center,
@@ -48,7 +48,7 @@ class _Step3 extends StatelessWidget {
           autofillHints: const [AutofillHints.oneTimeCode],
           enableSuggestions: false,
           autofocus: true,
-          length: 6,
+          length: 4,
           controller: pinController,
           focusNode: pinFocusNode,
           pinAnimationType: PinAnimationType.fade,
