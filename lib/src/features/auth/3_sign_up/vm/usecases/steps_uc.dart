@@ -10,7 +10,9 @@ extension on SignUpBloc {
           firstStepFormKey,
         ),
         1 => add(SignUpWithEmailAndPassword()),
-        2 => _verifyEmail(event, emit),
+        2 => add(
+          ActivateAccount(email: email.getText(), code: pinController.text),
+        ),
         _ => null,
       };
   Future<void> _previous(PreviousStep event, Emitter<SignUpState> emit) async =>
@@ -49,5 +51,3 @@ void _handlefirstStep(
   );
   emit(Idle());
 }
-
-void _verifyEmail(NextStep event, Emitter<SignUpState> emit) {}
