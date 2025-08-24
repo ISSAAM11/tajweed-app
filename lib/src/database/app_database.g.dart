@@ -2390,18 +2390,16 @@ class $AyahMetasTable extends AyahMetas
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $AyahMetasTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  static const VerificationMeta _globalIndexMeta = const VerificationMeta(
+    'globalIndex',
+  );
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
+  late final GeneratedColumn<int> globalIndex = GeneratedColumn<int>(
+    'global_index',
     aliasedName,
     false,
-    hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
   );
   static const VerificationMeta _surahMeta = const VerificationMeta('surah');
   @override
@@ -2416,17 +2414,6 @@ class $AyahMetasTable extends AyahMetas
   @override
   late final GeneratedColumn<int> ayah = GeneratedColumn<int>(
     'ayah',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _globalIndexMeta = const VerificationMeta(
-    'globalIndex',
-  );
-  @override
-  late final GeneratedColumn<int> globalIndex = GeneratedColumn<int>(
-    'global_index',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -2478,16 +2465,25 @@ class $AyahMetasTable extends AyahMetas
         requiredDuringInsert: true,
       ).withConverter<HizbFraction>($AyahMetasTable.$converterhizbFraction);
   @override
+  late final GeneratedColumnWithTypeConverter<bool, int> hasSajdah =
+      GeneratedColumn<int>(
+        'has_sajdah',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<bool>($AyahMetasTable.$converterhasSajdah);
+  @override
   List<GeneratedColumn> get $columns => [
-    id,
+    globalIndex,
     surah,
     ayah,
-    globalIndex,
     pageNo,
     juzNo,
     hizbNo,
     rukuNo,
     hizbFraction,
+    hasSajdah,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2501,8 +2497,14 @@ class $AyahMetasTable extends AyahMetas
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('global_index')) {
+      context.handle(
+        _globalIndexMeta,
+        globalIndex.isAcceptableOrUnknown(
+          data['global_index']!,
+          _globalIndexMeta,
+        ),
+      );
     }
     if (data.containsKey('surah')) {
       context.handle(
@@ -2519,17 +2521,6 @@ class $AyahMetasTable extends AyahMetas
       );
     } else if (isInserting) {
       context.missing(_ayahMeta);
-    }
-    if (data.containsKey('global_index')) {
-      context.handle(
-        _globalIndexMeta,
-        globalIndex.isAcceptableOrUnknown(
-          data['global_index']!,
-          _globalIndexMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_globalIndexMeta);
     }
     if (data.containsKey('page_no')) {
       context.handle(
@@ -2567,14 +2558,14 @@ class $AyahMetasTable extends AyahMetas
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {globalIndex};
   @override
   AyahMetaRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return AyahMetaRow(
-      id: attachedDatabase.typeMapping.read(
+      globalIndex: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}id'],
+        data['${effectivePrefix}global_index'],
       )!,
       surah: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -2583,10 +2574,6 @@ class $AyahMetasTable extends AyahMetas
       ayah: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}ayah'],
-      )!,
-      globalIndex: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}global_index'],
       )!,
       pageNo: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -2610,6 +2597,12 @@ class $AyahMetasTable extends AyahMetas
           data['${effectivePrefix}hizb_fraction'],
         )!,
       ),
+      hasSajdah: $AyahMetasTable.$converterhasSajdah.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}has_sajdah'],
+        )!,
+      ),
     );
   }
 
@@ -2620,36 +2613,37 @@ class $AyahMetasTable extends AyahMetas
 
   static TypeConverter<HizbFraction, int> $converterhizbFraction =
       const HizbFractionConverter();
+  static TypeConverter<bool, int> $converterhasSajdah =
+      const BoolIntConverter();
 }
 
 class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
-  final int id;
+  final int globalIndex;
   final int surah;
   final int ayah;
-  final int globalIndex;
   final int pageNo;
   final int juzNo;
   final int hizbNo;
   final int rukuNo;
   final HizbFraction hizbFraction;
+  final bool hasSajdah;
   const AyahMetaRow({
-    required this.id,
+    required this.globalIndex,
     required this.surah,
     required this.ayah,
-    required this.globalIndex,
     required this.pageNo,
     required this.juzNo,
     required this.hizbNo,
     required this.rukuNo,
     required this.hizbFraction,
+    required this.hasSajdah,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['global_index'] = Variable<int>(globalIndex);
     map['surah'] = Variable<int>(surah);
     map['ayah'] = Variable<int>(ayah);
-    map['global_index'] = Variable<int>(globalIndex);
     map['page_no'] = Variable<int>(pageNo);
     map['juz_no'] = Variable<int>(juzNo);
     map['hizb_no'] = Variable<int>(hizbNo);
@@ -2659,20 +2653,25 @@ class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
         $AyahMetasTable.$converterhizbFraction.toSql(hizbFraction),
       );
     }
+    {
+      map['has_sajdah'] = Variable<int>(
+        $AyahMetasTable.$converterhasSajdah.toSql(hasSajdah),
+      );
+    }
     return map;
   }
 
   AyahMetasCompanion toCompanion(bool nullToAbsent) {
     return AyahMetasCompanion(
-      id: Value(id),
+      globalIndex: Value(globalIndex),
       surah: Value(surah),
       ayah: Value(ayah),
-      globalIndex: Value(globalIndex),
       pageNo: Value(pageNo),
       juzNo: Value(juzNo),
       hizbNo: Value(hizbNo),
       rukuNo: Value(rukuNo),
       hizbFraction: Value(hizbFraction),
+      hasSajdah: Value(hasSajdah),
     );
   }
 
@@ -2682,62 +2681,61 @@ class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AyahMetaRow(
-      id: serializer.fromJson<int>(json['id']),
+      globalIndex: serializer.fromJson<int>(json['globalIndex']),
       surah: serializer.fromJson<int>(json['surah']),
       ayah: serializer.fromJson<int>(json['ayah']),
-      globalIndex: serializer.fromJson<int>(json['globalIndex']),
       pageNo: serializer.fromJson<int>(json['pageNo']),
       juzNo: serializer.fromJson<int>(json['juzNo']),
       hizbNo: serializer.fromJson<int>(json['hizbNo']),
       rukuNo: serializer.fromJson<int>(json['rukuNo']),
       hizbFraction: serializer.fromJson<HizbFraction>(json['hizbFraction']),
+      hasSajdah: serializer.fromJson<bool>(json['hasSajdah']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'globalIndex': serializer.toJson<int>(globalIndex),
       'surah': serializer.toJson<int>(surah),
       'ayah': serializer.toJson<int>(ayah),
-      'globalIndex': serializer.toJson<int>(globalIndex),
       'pageNo': serializer.toJson<int>(pageNo),
       'juzNo': serializer.toJson<int>(juzNo),
       'hizbNo': serializer.toJson<int>(hizbNo),
       'rukuNo': serializer.toJson<int>(rukuNo),
       'hizbFraction': serializer.toJson<HizbFraction>(hizbFraction),
+      'hasSajdah': serializer.toJson<bool>(hasSajdah),
     };
   }
 
   AyahMetaRow copyWith({
-    int? id,
+    int? globalIndex,
     int? surah,
     int? ayah,
-    int? globalIndex,
     int? pageNo,
     int? juzNo,
     int? hizbNo,
     int? rukuNo,
     HizbFraction? hizbFraction,
+    bool? hasSajdah,
   }) => AyahMetaRow(
-    id: id ?? this.id,
+    globalIndex: globalIndex ?? this.globalIndex,
     surah: surah ?? this.surah,
     ayah: ayah ?? this.ayah,
-    globalIndex: globalIndex ?? this.globalIndex,
     pageNo: pageNo ?? this.pageNo,
     juzNo: juzNo ?? this.juzNo,
     hizbNo: hizbNo ?? this.hizbNo,
     rukuNo: rukuNo ?? this.rukuNo,
     hizbFraction: hizbFraction ?? this.hizbFraction,
+    hasSajdah: hasSajdah ?? this.hasSajdah,
   );
   AyahMetaRow copyWithCompanion(AyahMetasCompanion data) {
     return AyahMetaRow(
-      id: data.id.present ? data.id.value : this.id,
-      surah: data.surah.present ? data.surah.value : this.surah,
-      ayah: data.ayah.present ? data.ayah.value : this.ayah,
       globalIndex: data.globalIndex.present
           ? data.globalIndex.value
           : this.globalIndex,
+      surah: data.surah.present ? data.surah.value : this.surah,
+      ayah: data.ayah.present ? data.ayah.value : this.ayah,
       pageNo: data.pageNo.present ? data.pageNo.value : this.pageNo,
       juzNo: data.juzNo.present ? data.juzNo.value : this.juzNo,
       hizbNo: data.hizbNo.present ? data.hizbNo.value : this.hizbNo,
@@ -2745,153 +2743,151 @@ class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
       hizbFraction: data.hizbFraction.present
           ? data.hizbFraction.value
           : this.hizbFraction,
+      hasSajdah: data.hasSajdah.present ? data.hasSajdah.value : this.hasSajdah,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('AyahMetaRow(')
-          ..write('id: $id, ')
+          ..write('globalIndex: $globalIndex, ')
           ..write('surah: $surah, ')
           ..write('ayah: $ayah, ')
-          ..write('globalIndex: $globalIndex, ')
           ..write('pageNo: $pageNo, ')
           ..write('juzNo: $juzNo, ')
           ..write('hizbNo: $hizbNo, ')
           ..write('rukuNo: $rukuNo, ')
-          ..write('hizbFraction: $hizbFraction')
+          ..write('hizbFraction: $hizbFraction, ')
+          ..write('hasSajdah: $hasSajdah')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-    id,
+    globalIndex,
     surah,
     ayah,
-    globalIndex,
     pageNo,
     juzNo,
     hizbNo,
     rukuNo,
     hizbFraction,
+    hasSajdah,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AyahMetaRow &&
-          other.id == this.id &&
+          other.globalIndex == this.globalIndex &&
           other.surah == this.surah &&
           other.ayah == this.ayah &&
-          other.globalIndex == this.globalIndex &&
           other.pageNo == this.pageNo &&
           other.juzNo == this.juzNo &&
           other.hizbNo == this.hizbNo &&
           other.rukuNo == this.rukuNo &&
-          other.hizbFraction == this.hizbFraction);
+          other.hizbFraction == this.hizbFraction &&
+          other.hasSajdah == this.hasSajdah);
 }
 
 class AyahMetasCompanion extends UpdateCompanion<AyahMetaRow> {
-  final Value<int> id;
+  final Value<int> globalIndex;
   final Value<int> surah;
   final Value<int> ayah;
-  final Value<int> globalIndex;
   final Value<int> pageNo;
   final Value<int> juzNo;
   final Value<int> hizbNo;
   final Value<int> rukuNo;
   final Value<HizbFraction> hizbFraction;
+  final Value<bool> hasSajdah;
   const AyahMetasCompanion({
-    this.id = const Value.absent(),
+    this.globalIndex = const Value.absent(),
     this.surah = const Value.absent(),
     this.ayah = const Value.absent(),
-    this.globalIndex = const Value.absent(),
     this.pageNo = const Value.absent(),
     this.juzNo = const Value.absent(),
     this.hizbNo = const Value.absent(),
     this.rukuNo = const Value.absent(),
     this.hizbFraction = const Value.absent(),
+    this.hasSajdah = const Value.absent(),
   });
   AyahMetasCompanion.insert({
-    this.id = const Value.absent(),
+    this.globalIndex = const Value.absent(),
     required int surah,
     required int ayah,
-    required int globalIndex,
     required int pageNo,
     required int juzNo,
     required int hizbNo,
     required int rukuNo,
     required HizbFraction hizbFraction,
+    required bool hasSajdah,
   }) : surah = Value(surah),
        ayah = Value(ayah),
-       globalIndex = Value(globalIndex),
        pageNo = Value(pageNo),
        juzNo = Value(juzNo),
        hizbNo = Value(hizbNo),
        rukuNo = Value(rukuNo),
-       hizbFraction = Value(hizbFraction);
+       hizbFraction = Value(hizbFraction),
+       hasSajdah = Value(hasSajdah);
   static Insertable<AyahMetaRow> custom({
-    Expression<int>? id,
+    Expression<int>? globalIndex,
     Expression<int>? surah,
     Expression<int>? ayah,
-    Expression<int>? globalIndex,
     Expression<int>? pageNo,
     Expression<int>? juzNo,
     Expression<int>? hizbNo,
     Expression<int>? rukuNo,
     Expression<int>? hizbFraction,
+    Expression<int>? hasSajdah,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
+      if (globalIndex != null) 'global_index': globalIndex,
       if (surah != null) 'surah': surah,
       if (ayah != null) 'ayah': ayah,
-      if (globalIndex != null) 'global_index': globalIndex,
       if (pageNo != null) 'page_no': pageNo,
       if (juzNo != null) 'juz_no': juzNo,
       if (hizbNo != null) 'hizb_no': hizbNo,
       if (rukuNo != null) 'ruku_no': rukuNo,
       if (hizbFraction != null) 'hizb_fraction': hizbFraction,
+      if (hasSajdah != null) 'has_sajdah': hasSajdah,
     });
   }
 
   AyahMetasCompanion copyWith({
-    Value<int>? id,
+    Value<int>? globalIndex,
     Value<int>? surah,
     Value<int>? ayah,
-    Value<int>? globalIndex,
     Value<int>? pageNo,
     Value<int>? juzNo,
     Value<int>? hizbNo,
     Value<int>? rukuNo,
     Value<HizbFraction>? hizbFraction,
+    Value<bool>? hasSajdah,
   }) {
     return AyahMetasCompanion(
-      id: id ?? this.id,
+      globalIndex: globalIndex ?? this.globalIndex,
       surah: surah ?? this.surah,
       ayah: ayah ?? this.ayah,
-      globalIndex: globalIndex ?? this.globalIndex,
       pageNo: pageNo ?? this.pageNo,
       juzNo: juzNo ?? this.juzNo,
       hizbNo: hizbNo ?? this.hizbNo,
       rukuNo: rukuNo ?? this.rukuNo,
       hizbFraction: hizbFraction ?? this.hizbFraction,
+      hasSajdah: hasSajdah ?? this.hasSajdah,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
+    if (globalIndex.present) {
+      map['global_index'] = Variable<int>(globalIndex.value);
     }
     if (surah.present) {
       map['surah'] = Variable<int>(surah.value);
     }
     if (ayah.present) {
       map['ayah'] = Variable<int>(ayah.value);
-    }
-    if (globalIndex.present) {
-      map['global_index'] = Variable<int>(globalIndex.value);
     }
     if (pageNo.present) {
       map['page_no'] = Variable<int>(pageNo.value);
@@ -2910,21 +2906,26 @@ class AyahMetasCompanion extends UpdateCompanion<AyahMetaRow> {
         $AyahMetasTable.$converterhizbFraction.toSql(hizbFraction.value),
       );
     }
+    if (hasSajdah.present) {
+      map['has_sajdah'] = Variable<int>(
+        $AyahMetasTable.$converterhasSajdah.toSql(hasSajdah.value),
+      );
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('AyahMetasCompanion(')
-          ..write('id: $id, ')
+          ..write('globalIndex: $globalIndex, ')
           ..write('surah: $surah, ')
           ..write('ayah: $ayah, ')
-          ..write('globalIndex: $globalIndex, ')
           ..write('pageNo: $pageNo, ')
           ..write('juzNo: $juzNo, ')
           ..write('hizbNo: $hizbNo, ')
           ..write('rukuNo: $rukuNo, ')
-          ..write('hizbFraction: $hizbFraction')
+          ..write('hizbFraction: $hizbFraction, ')
+          ..write('hasSajdah: $hasSajdah')
           ..write(')'))
         .toString();
   }
@@ -2941,7 +2942,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SajdahsTable sajdahs = $SajdahsTable(this);
   late final $AyahMetasTable ayahMetas = $AyahMetasTable(this);
   late final QuranDao quranDao = QuranDao(this as AppDatabase);
-  late final AyahMetaDao ayahMetaDao = AyahMetaDao(this as AppDatabase);
+  late final QuranListingDao quranListingDao = QuranListingDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4233,27 +4236,27 @@ typedef $$SajdahsTableProcessedTableManager =
     >;
 typedef $$AyahMetasTableCreateCompanionBuilder =
     AyahMetasCompanion Function({
-      Value<int> id,
+      Value<int> globalIndex,
       required int surah,
       required int ayah,
-      required int globalIndex,
       required int pageNo,
       required int juzNo,
       required int hizbNo,
       required int rukuNo,
       required HizbFraction hizbFraction,
+      required bool hasSajdah,
     });
 typedef $$AyahMetasTableUpdateCompanionBuilder =
     AyahMetasCompanion Function({
-      Value<int> id,
+      Value<int> globalIndex,
       Value<int> surah,
       Value<int> ayah,
-      Value<int> globalIndex,
       Value<int> pageNo,
       Value<int> juzNo,
       Value<int> hizbNo,
       Value<int> rukuNo,
       Value<HizbFraction> hizbFraction,
+      Value<bool> hasSajdah,
     });
 
 class $$AyahMetasTableFilterComposer
@@ -4265,8 +4268,8 @@ class $$AyahMetasTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
+  ColumnFilters<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4277,11 +4280,6 @@ class $$AyahMetasTableFilterComposer
 
   ColumnFilters<int> get ayah => $composableBuilder(
     column: $table.ayah,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get globalIndex => $composableBuilder(
-    column: $table.globalIndex,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4310,6 +4308,12 @@ class $$AyahMetasTableFilterComposer
     column: $table.hizbFraction,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<bool, bool, int> get hasSajdah =>
+      $composableBuilder(
+        column: $table.hasSajdah,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 }
 
 class $$AyahMetasTableOrderingComposer
@@ -4321,8 +4325,8 @@ class $$AyahMetasTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
+  ColumnOrderings<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -4333,11 +4337,6 @@ class $$AyahMetasTableOrderingComposer
 
   ColumnOrderings<int> get ayah => $composableBuilder(
     column: $table.ayah,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get globalIndex => $composableBuilder(
-    column: $table.globalIndex,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -4365,6 +4364,11 @@ class $$AyahMetasTableOrderingComposer
     column: $table.hizbFraction,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get hasSajdah => $composableBuilder(
+    column: $table.hasSajdah,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AyahMetasTableAnnotationComposer
@@ -4376,19 +4380,16 @@ class $$AyahMetasTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get surah =>
       $composableBuilder(column: $table.surah, builder: (column) => column);
 
   GeneratedColumn<int> get ayah =>
       $composableBuilder(column: $table.ayah, builder: (column) => column);
-
-  GeneratedColumn<int> get globalIndex => $composableBuilder(
-    column: $table.globalIndex,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<int> get pageNo =>
       $composableBuilder(column: $table.pageNo, builder: (column) => column);
@@ -4407,6 +4408,9 @@ class $$AyahMetasTableAnnotationComposer
         column: $table.hizbFraction,
         builder: (column) => column,
       );
+
+  GeneratedColumnWithTypeConverter<bool, int> get hasSajdah =>
+      $composableBuilder(column: $table.hasSajdah, builder: (column) => column);
 }
 
 class $$AyahMetasTableTableManager
@@ -4440,47 +4444,47 @@ class $$AyahMetasTableTableManager
               $$AyahMetasTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int> globalIndex = const Value.absent(),
                 Value<int> surah = const Value.absent(),
                 Value<int> ayah = const Value.absent(),
-                Value<int> globalIndex = const Value.absent(),
                 Value<int> pageNo = const Value.absent(),
                 Value<int> juzNo = const Value.absent(),
                 Value<int> hizbNo = const Value.absent(),
                 Value<int> rukuNo = const Value.absent(),
                 Value<HizbFraction> hizbFraction = const Value.absent(),
+                Value<bool> hasSajdah = const Value.absent(),
               }) => AyahMetasCompanion(
-                id: id,
+                globalIndex: globalIndex,
                 surah: surah,
                 ayah: ayah,
-                globalIndex: globalIndex,
                 pageNo: pageNo,
                 juzNo: juzNo,
                 hizbNo: hizbNo,
                 rukuNo: rukuNo,
                 hizbFraction: hizbFraction,
+                hasSajdah: hasSajdah,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int> globalIndex = const Value.absent(),
                 required int surah,
                 required int ayah,
-                required int globalIndex,
                 required int pageNo,
                 required int juzNo,
                 required int hizbNo,
                 required int rukuNo,
                 required HizbFraction hizbFraction,
+                required bool hasSajdah,
               }) => AyahMetasCompanion.insert(
-                id: id,
+                globalIndex: globalIndex,
                 surah: surah,
                 ayah: ayah,
-                globalIndex: globalIndex,
                 pageNo: pageNo,
                 juzNo: juzNo,
                 hizbNo: hizbNo,
                 rukuNo: rukuNo,
                 hizbFraction: hizbFraction,
+                hasSajdah: hasSajdah,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

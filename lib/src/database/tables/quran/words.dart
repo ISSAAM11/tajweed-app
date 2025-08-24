@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-
-import 'converters.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart'
+    show WordLocationConverter;
 
 @DataClassName('WordRow')
 class Words extends Table {

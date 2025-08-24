@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tajweed_ai/src/app/index.dart';
-
-enum RevelationPlace { makkah, madinah }
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 
 class SurahNameCard extends StatelessWidget {
   final String name;
@@ -35,10 +34,7 @@ class SurahNameCard extends StatelessWidget {
           text: TextSpan(
             text:
                 "$orderNumber ${String.fromCharCode(int.parse(glyph, radix: 16))}",
-            style: AppStyles.headline2.bold().copyWith(
-              fontFamily: 'SurahNameV4',
-              color: AppColors.primary,
-            ),
+            style: AppFonts.surahNamesFont.bold(),
           ),
         ),
       ),

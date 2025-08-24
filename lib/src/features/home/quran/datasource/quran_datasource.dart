@@ -1,35 +1,82 @@
-import 'package:tajweed_ai/src/base/datasource/exports.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
-import 'package:tajweed_ai/src/database/daos/quran_dao.dart';
-
-// part 'quran_datasource_mock.dart';
+import 'package:tajweed_ai/src/database/daos/ayah_meta_helper_models.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/quran_listing_datasource.dart'
+    show ListingDataDto, QuranListingDatasource;
+import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/quran_meta_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/quran_page_datasource.dart';
 
 abstract interface class QuranDatasource {
-  Future<List<ChapterRow>> getChapters();
+  // Listing
+  Future<ListingDataDto> getListingData();
+  // Meta
+  Stream<AyahMetaRow?> watchPageMeta(int pageNo);
+  Future<int?> getPartitionForAyah(PartitionMode mode, int globalIndex);
+  // Content
+  Future<PageContentDto> getPageContent(int pageNo);
+  Future<void> prefetchPagesAround(
+    int centerPage, {
+    int before = 2,
+    int after = 2,
+  });
+  Stream<List<PageContentDto>> watchPartition(
+    PartitionMode mode,
+    int partitionNo, {
+    HizbFraction? fraction,
+  });
 }
 
-final class QuranDatasourceImpl extends DataSource implements QuranDatasource {
-  final QuranDao dao;
+final class QuranDatasourceImpl implements QuranDatasource {
+  final QuranListingDatasource listingDatasource;
+  final QuranPageDatasource pageDatasource;
+  final QuranMetaDatasource metaDatasource;
 
   QuranDatasourceImpl({
-    required super.client,
-    required super.cacheManager,
-    required super.connectivityMonitor,
-    required this.dao,
+    required this.pageDatasource,
+    required this.listingDatasource,
+    required this.metaDatasource,
   });
 
+  /// Fetch all listing data (pages, juzs, rukus, hizbs) in parallel
   @override
-  Future<List<ChapterRow>> getChapters() {
-    return dao.getAllChapters();
+  Future<ListingDataDto> getListingData() async {
+    return listingDatasource.getListingData();
   }
 
-  // final responseMock = ResponseMock.success;
+  @override
+  Future<void> prefetchPagesAround(
+    int centerPage, {
+    int before = 2,
+    int after = 2,
+  }) {
+    return pageDatasource.prefetchPagesAround(
+      centerPage,
+      before: before,
+      after: after,
+    );
+  }
 
-  // @override
-  // FutureRequestResult<Bookmarks> getUserBookmarks() {
-  //   // TODO: implement getUserBookmarks
-  //   throw UnimplementedError();
-  // }
+  @override
+  Future<PageContentDto> getPageContent(int pageNo) {
+    return pageDatasource.getPageContent(pageNo);
+  }
+
+  @override
+  Stream<List<PageContentDto>> watchPartition(
+    PartitionMode mode,
+    int partitionNo, {
+    HizbFraction? fraction,
+  }) {
+    return pageDatasource.watchPartition(mode, partitionNo, fraction: fraction);
+  }
+
+  @override
+  Future<int?> getPartitionForAyah(PartitionMode mode, int globalIndex) {
+    return metaDatasource.getPartitionForAyah(mode, globalIndex);
+  }
+
+  @override
+  Stream<AyahMetaRow?> watchPageMeta(int pageNo) {
+    return metaDatasource.watchPageMeta(pageNo);
+  }
 }
-
-// enum ResponseMock { noInternet, noData, success, failure }

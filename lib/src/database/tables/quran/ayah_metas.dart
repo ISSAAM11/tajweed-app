@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart'
+    show HizbFractionConverter, BoolIntConverter;
 
 @DataClassName("AyahMetaRow")
 class AyahMetas extends Table {

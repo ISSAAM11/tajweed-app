@@ -9,4 +9,8 @@ abstract final class AppFonts {
     fontFamily: "Helvetica",
     color: AppColors.scaffold,
   );
+  static const TextStyle surahNamesFont = TextStyle(
+    fontFamily: "SurahNameV4",
+    color: AppColors.primaryLight,
+  );
 }
