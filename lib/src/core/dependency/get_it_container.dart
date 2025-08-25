@@ -110,6 +110,18 @@ class GetItContainer extends DependecyInjectionContainer {
   }
 
   @override
+  Future<void> allReady({bool ignorePendingAsyncCreation = false}) {
+    return actor.allReady(
+      ignorePendingAsyncCreation: ignorePendingAsyncCreation,
+    );
+  }
+
+  @override
+  Future<void> isReady<T extends Object>({String? name}) {
+    return actor.isReady<T>(instanceName: name);
+  }
+
+  @override
   T get<T extends Object>() => actor<T>();
 
   @override

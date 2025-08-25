@@ -13,6 +13,7 @@ void main() => runZonedGuarded(_application, _recordError);
 
 void _application() async {
   await AppBinding().all();
+  await di.allReady();
 
   AppEnvironment.setupEnvironment(Environment.dev);
 

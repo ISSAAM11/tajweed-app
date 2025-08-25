@@ -78,4 +78,10 @@ abstract class DependecyInjectionContainer<A> {
 
   /// Clear all registered types.
   void clear();
+
+  /// Wait until all async singletons are ready
+  Future<void> allReady({bool ignorePendingAsyncCreation = false});
+
+  /// Wait until a specific type is ready
+  Future<void> isReady<T extends Object>({String? name});
 }
