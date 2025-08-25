@@ -10,7 +10,7 @@ class CacheManagerImpl
     with SecureCachingMixin
     implements CacheManager<SharedPreferences> {
   SharedPreferences? _sharedPrefs;
-
+  CacheManagerImpl(this._sharedPrefs);
   @override
   SharedPreferences get actor {
     if (_sharedPrefs == null) {

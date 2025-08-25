@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:tajweed_ai/src/database/daos/ayah_meta_helper_models.dart';
 import 'package:tajweed_ai/src/database/tables/quran/ayah_metas.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 
@@ -12,16 +11,6 @@ part 'quran_dao.g.dart';
 @DriftAccessor(tables: [AyahMetas, Words, Chapters])
 class QuranDao extends DatabaseAccessor<AppDatabase> with _$QuranDaoMixin {
   QuranDao(super.db);
-
-  /// Get one chapter by ID
-  Future<ChapterRow?> getChapterById(int id) {
-    return (select(chapters)..where((c) => c.id.equals(id))).getSingleOrNull();
-  }
-
-  /// Get all chapters
-  Future<List<ChapterRow>> getAllChapters() {
-    return (select(chapters)).get();
-  }
 
   /// Lookup meta for a given ayah
   Future<AyahMetaRow?> getAyahMeta(int globalIndex) {
@@ -46,21 +35,6 @@ class QuranDao extends DatabaseAccessor<AppDatabase> with _$QuranDaoMixin {
       result.add((ayah, wordsResult));
     }
     return result;
-  }
-
-  /// Get surah header if page starts with new surah
-  Future<ChapterRow?> getSurahHeaderForPage(int pageNo) async {
-    final firstAyah =
-        await (select(ayahMetas)
-              ..where((a) => a.pageNo.equals(pageNo))
-              ..orderBy([(a) => OrderingTerm.asc(a.globalIndex)])
-              ..limit(1))
-            .getSingleOrNull();
-
-    if (firstAyah == null) return null;
-    return (select(
-      chapters,
-    )..where((c) => c.id.equals(firstAyah.surah))).getSingleOrNull();
   }
 
   /// Given globalIndex, get containing partition for a mode

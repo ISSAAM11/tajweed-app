@@ -2,19 +2,30 @@ import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart'
     show HizbFraction, VerseKey;
+import 'package:tajweed_ai/src/features/home/quran/datasource/cache/listing_cache.dart';
 
 abstract interface class QuranListingDatasource {
   Future<ListingDataDto> getListingData();
+  Future<ChapterRow?> getChapterById(int id);
 }
 
 final class QuranListingDatasourceImpl implements QuranListingDatasource {
   final QuranListingDao listingDao;
+  final ListingCache listingCache;
 
-  QuranListingDatasourceImpl({required this.listingDao});
+  QuranListingDatasourceImpl({
+    required this.listingDao,
+    required this.listingCache,
+  });
 
   /// Fetch all listing data (pages, juzs, rukus, hizbs) in parallel
   @override
   Future<ListingDataDto> getListingData() async {
+    // 1) Try cache
+    final cached = listingCache.get();
+    if (cached != null) return cached;
+
+    // 2) Fetch fresh
     final results = await Future.wait([
       listingDao.getChapters(), // List<ChapterRow>
       listingDao
@@ -26,8 +37,7 @@ final class QuranListingDatasourceImpl implements QuranListingDatasource {
       listingDao
           .getHizbsWithFirstAyah(), // List<({int juzNumber, HizbFraction fraction, VerseKey verseKey, String ayahText})>
     ]);
-
-    return ListingDataDto(
+    final dto = ListingDataDto(
       chapters: results[0] as List<ChapterRow>,
       pages:
           results[1]
@@ -49,6 +59,15 @@ final class QuranListingDatasourceImpl implements QuranListingDatasource {
                 })
               >,
     );
+    // 3) Save cache
+    await listingCache.set(dto);
+    return dto;
+  }
+
+  @override
+  Future<ChapterRow?> getChapterById(int id) async {
+    final listing = await getListingData();
+    return listing.chapters.firstWhere((c) => c.id == id);
   }
 }
 

@@ -1,8 +1,7 @@
 //? Base needed imports
 
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/database/daos/ayah_meta_helper_models.dart';
-import 'package:tajweed_ai/src/features/home/quran/screen/widgets/list_header.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/screen/widgets/surah_name_card.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_state.dart';
@@ -17,7 +16,7 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
     QuranListingLoadedState() => _QuranScreen(
       itemCount: (state as QuranListingLoadedState).chapters.length,
       items: (state as QuranListingLoadedState).chapters,
-      onTap: () => bloc.selectSurah,
+      onTap: (index) => bloc.selectSurah(index),
       selectedViewMode: (state as QuranListingLoadedState).currentListingMode,
       onSelectMode: (mode) => bloc.changeListingMode(mode),
     ),
@@ -36,8 +35,7 @@ class _QuranScreen extends StatelessWidget {
   final List<dynamic> items;
   final PartitionMode selectedViewMode;
   final Function(PartitionMode) onSelectMode;
-
-  void Function() onTap;
+  void Function(int) onTap;
   _QuranScreen({
     required this.itemCount,
     required this.items,
@@ -45,32 +43,24 @@ class _QuranScreen extends StatelessWidget {
     required this.selectedViewMode,
     required this.onSelectMode,
   });
-
+  @override
   @override
   Widget build(BuildContext context) => AnimatedOpacity(
     opacity: 1.0,
     duration: const Duration(milliseconds: 500),
-    child: Column(
-      children: [
-        ListHeader(
-          selectedViewMode: selectedViewMode,
-          onSelectMode: onSelectMode,
-        ),
-        ListView.builder(
-          itemCount: itemCount,
-          itemBuilder: (context, index) {
-            final c = items[index];
-            return SurahNameCard(
-              name: c.nameArabic,
-              nameEnglish: c.name,
-              glyph: c.nameGlyph,
-              revelationPlace: c.revelationPlace,
-              orderNumber: c.id,
-              onTap: onTap,
-            ).expanded();
-          },
-        ),
-      ],
+    child: ListView.builder(
+      itemCount: itemCount,
+      itemBuilder: (context, index) {
+        final c = items[index];
+        return SurahNameCard(
+          name: c.nameArabic,
+          nameEnglish: c.name,
+          glyph: c.nameGlyph,
+          revelationPlace: c.revelationPlace,
+          orderNumber: c.id,
+          onTap: (index) => onTap(index),
+        );
+      },
     ),
   );
 }

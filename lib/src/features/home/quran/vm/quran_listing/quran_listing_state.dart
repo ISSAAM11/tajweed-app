@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:tajweed_ai/src/database/app_database.dart' show ChapterRow;
-import 'package:tajweed_ai/src/database/daos/ayah_meta_helper_models.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 
 sealed class QuranListingState extends Equatable {

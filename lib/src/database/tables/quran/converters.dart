@@ -9,6 +9,8 @@ enum SajdahType { recommended, obligatory }
 
 enum HizbFraction { full, quarter, half, threeQuarter }
 
+enum PartitionMode { surah, page, juz, hizb, ruku }
+
 /// --- Converters ---
 class BoolIntConverter extends TypeConverter<bool, int> {
   const BoolIntConverter();

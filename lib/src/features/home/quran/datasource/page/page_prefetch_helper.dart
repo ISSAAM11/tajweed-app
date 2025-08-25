@@ -1,6 +1,5 @@
-import 'package:tajweed_ai/src/database/daos/ayah_meta_helper_models.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/quran_page_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/page/quran_page_datasource.dart';
 
 class QuranPrefetchHelper {
   final QuranPageDatasource pageDatasource;

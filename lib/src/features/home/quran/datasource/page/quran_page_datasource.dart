@@ -1,9 +1,8 @@
-import 'package:tajweed_ai/cache/page_cache.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
-import 'package:tajweed_ai/src/database/daos/ayah_meta_helper_models.dart';
 import 'package:tajweed_ai/src/database/daos/quran_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/chapter_cache.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/cache/page_cache.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart';
 
 abstract interface class QuranPageDatasource {
   Future<PageContentDto> getPageContent(int pageNo);
@@ -22,13 +21,13 @@ abstract interface class QuranPageDatasource {
 
 final class QuranPageDatasourceImpl implements QuranPageDatasource {
   final QuranDao _dao;
+  final QuranListingDatasource listingDatasource;
 
-  final ChapterCache chapterCache;
   final PageCache pageCache;
 
   QuranPageDatasourceImpl({
     required QuranDao dao,
-    required this.chapterCache,
+    required this.listingDatasource,
     required this.pageCache,
   }) : _dao = dao;
 
@@ -73,7 +72,7 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
       if (a.ayah == 1) {
         var header = chapterCacheMap[a.surah];
         if (header == null) {
-          final chap = await chapterCache.getChapterById(a.surah);
+          final chap = await listingDatasource.getChapterById(a.surah);
           if (chap != null) {
             header = ChapterHeaderDto(
               id: chap.id,
@@ -143,8 +142,6 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
           return pages;
         });
   }
-
-  String _kPageKey(int pageNo) => 'page_layout_v1_$pageNo';
 }
 
 // ************ helper Dto classes

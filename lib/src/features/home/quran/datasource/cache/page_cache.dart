@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:cg_core_defs/strategies/cache/cache_manager.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/quran_page_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/page/quran_page_datasource.dart';
 
 import 'page_codec.dart';
 

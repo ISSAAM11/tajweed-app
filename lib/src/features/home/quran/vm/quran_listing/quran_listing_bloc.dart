@@ -1,5 +1,5 @@
 import 'package:tajweed_ai/src/base/bloc/exports.dart';
-import 'package:tajweed_ai/src/database/daos/ayah_meta_helper_models.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/quran_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_events.dart';
 

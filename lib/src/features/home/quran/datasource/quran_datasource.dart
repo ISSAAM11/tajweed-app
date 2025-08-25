@@ -1,10 +1,9 @@
 import 'package:tajweed_ai/src/database/app_database.dart';
-import 'package:tajweed_ai/src/database/daos/ayah_meta_helper_models.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/quran_listing_datasource.dart'
+import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart'
     show ListingDataDto, QuranListingDatasource;
-import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/quran_meta_datasource.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/helpers/quran_page_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/meta/quran_meta_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/page/quran_page_datasource.dart';
 
 abstract interface class QuranDatasource {
   // Listing
