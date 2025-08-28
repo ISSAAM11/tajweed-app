@@ -13,10 +13,10 @@ class QuranDao extends DatabaseAccessor<AppDatabase> with _$QuranDaoMixin {
   QuranDao(super.db);
 
   /// Lookup meta for a given ayah
-  Future<AyahMetaRow?> getAyahMeta(int globalIndex) {
-    return (select(
-      ayahMetas,
-    )..where((a) => a.globalIndex.equals(globalIndex))).getSingleOrNull();
+  Future<AyahMetaRow?> getAyahMetaByKey(VerseKey key) {
+    return (select(ayahMetas)
+          ..where((a) => a.surah.equals(key.surah) & a.ayah.equals(key.ayah)))
+        .getSingleOrNull();
   }
 
   /// Get ayat of a page with words
@@ -37,9 +37,12 @@ class QuranDao extends DatabaseAccessor<AppDatabase> with _$QuranDaoMixin {
     return result;
   }
 
-  /// Given globalIndex, get containing partition for a mode
-  Future<int?> getPartitionForAyah(PartitionMode mode, int globalIndex) async {
-    final meta = await getAyahMeta(globalIndex);
+  /// Given verse key, get containing partition for a mode
+  Future<int?> getPartitionForAyah(
+    PartitionMode mode,
+    VerseKey verseKey,
+  ) async {
+    final meta = await getAyahMetaByKey(verseKey);
     if (meta == null) return null;
     switch (mode) {
       case PartitionMode.surah:
@@ -74,104 +77,72 @@ class QuranDao extends DatabaseAccessor<AppDatabase> with _$QuranDaoMixin {
         .get();
   }
 
-  Future<List<WordRow>> getWordsForAyat(List<(int, int)> ayat) {
+  Future<List<WordRow>> getWordsForAyat(List<VerseKey> ayat) {
     if (ayat.isEmpty) return Future.value([]);
 
     final expression = ayat
-        .map((a) => words.surah.equals(a.$1) & words.ayah.equals(a.$2))
+        .map((a) => words.surah.equals(a.surah) & words.ayah.equals(a.ayah))
         .reduce((lhs, rhs) => lhs | rhs);
 
     return (select(words)..where((tbl) => expression)).get();
   }
 
-  Future<List<int>> getPagesForPartition(
-    PartitionMode mode,
-    int partitionNo, {
+  Future<({List<int> pages, int? totalPartitions})> getPagesForPartition({
+    required PartitionMode mode,
+    required int partitionNo,
     HizbFraction? fraction,
+    bool getTotal = false,
   }) async {
-    switch (mode) {
-      case PartitionMode.page:
-        return [partitionNo];
-
-      case PartitionMode.juz:
-        final rows =
-            await (selectOnly(ayahMetas, distinct: true)
-                  ..addColumns([ayahMetas.pageNo])
-                  ..where(ayahMetas.juzNo.equals(partitionNo)))
-                .map((row) => row.read<int>(ayahMetas.pageNo))
-                .get();
-        return rows.whereType<int>().toList(); // remove nulls
-
-      case PartitionMode.hizb:
-        final q = selectOnly(ayahMetas, distinct: true)
-          ..addColumns([ayahMetas.pageNo])
-          ..where(ayahMetas.hizbNo.equals(partitionNo));
-        if (fraction != null) {
-          q.where(ayahMetas.hizbFraction.equalsValue(fraction));
-        }
-        final rows = await q
-            .map((row) => row.read<int>(ayahMetas.pageNo))
-            .get();
-        return rows.whereType<int>().toList();
-
-      case PartitionMode.ruku:
-        final rows =
-            await (selectOnly(ayahMetas, distinct: true)
-                  ..addColumns([ayahMetas.pageNo])
-                  ..where(ayahMetas.rukuNo.equals(partitionNo)))
-                .map((row) => row.read<int>(ayahMetas.pageNo))
-                .get();
-        return rows.whereType<int>().toList();
-
-      case PartitionMode.surah:
-        final rows =
-            await (selectOnly(ayahMetas, distinct: true)
-                  ..addColumns([ayahMetas.pageNo])
-                  ..where(ayahMetas.surah.equals(partitionNo)))
-                .map((row) => row.read<int>(ayahMetas.pageNo))
-                .get();
-        return rows.whereType<int>().toList();
-    }
-  }
-
-  Stream<List<int>> watchPagesForPartition(
-    PartitionMode mode,
-    int partitionNo, {
-    HizbFraction? fraction,
-  }) {
-    final query = selectOnly(ayahMetas, distinct: true)
-      ..addColumns([ayahMetas.pageNo]);
-    // Filter by mode
-    switch (mode) {
-      case PartitionMode.page:
-        // page mode: only the given page
-        return Stream.value([partitionNo]);
-
-      case PartitionMode.juz:
-        query.where(ayahMetas.juzNo.equals(partitionNo));
-        break;
-
-      case PartitionMode.hizb:
-        query.where(ayahMetas.hizbNo.equals(partitionNo));
-        if (fraction != null) {
-          query.where(ayahMetas.hizbFraction.equalsValue(fraction));
-        }
-        break;
-
-      case PartitionMode.ruku:
-        query.where(ayahMetas.rukuNo.equals(partitionNo));
-        break;
-
-      case PartitionMode.surah:
-        query.where(ayahMetas.surah.equals(partitionNo));
-        break;
+    // Helper to resolve the right column
+    Column<int> columnForMode(PartitionMode mode) {
+      switch (mode) {
+        case PartitionMode.page:
+          return ayahMetas.pageNo;
+        case PartitionMode.juz:
+          return ayahMetas.juzNo;
+        case PartitionMode.hizb:
+          return ayahMetas.hizbNo;
+        case PartitionMode.ruku:
+          return ayahMetas.rukuNo;
+        case PartitionMode.surah:
+          return ayahMetas.surah;
+      }
     }
 
-    return query.watch().map(
-      (rows) => rows
-          .map((row) => row.read<int>(ayahMetas.pageNo))
-          .whereType<int>()
-          .toList(),
-    );
+    final column = columnForMode(mode);
+
+    // Special case: Page mode → trivial
+    if (mode == PartitionMode.page) {
+      int? total;
+      if (getTotal) {
+        total = await (selectOnly(
+          ayahMetas,
+          distinct: true,
+        )..addColumns([ayahMetas.pageNo])).get().then((rows) => rows.length);
+      }
+      return (pages: [partitionNo], totalPartitions: total);
+    }
+
+    // Query pages for given partition
+    final q = selectOnly(ayahMetas, distinct: true)
+      ..addColumns([ayahMetas.pageNo])
+      ..where(column.equals(partitionNo));
+
+    if (mode == PartitionMode.hizb && fraction != null) {
+      q.where(ayahMetas.hizbFraction.equalsValue(fraction));
+    }
+
+    final pages = await q.map((row) => row.read<int>(ayahMetas.pageNo)).get();
+
+    // Compute totalPartitions only if requested
+    int? total;
+    if (getTotal) {
+      total = await (selectOnly(
+        ayahMetas,
+        distinct: true,
+      )..addColumns([column])).get().then((rows) => rows.length);
+    }
+
+    return (pages: pages.whereType<int>().toList(), totalPartitions: total);
   }
 }

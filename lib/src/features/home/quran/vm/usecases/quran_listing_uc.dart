@@ -43,11 +43,13 @@ extension QuranListingUC on QuranListingBloc {
     }
   }
 
-  Future<void> _quranSurahSelectedEvent(
-    SelectSurahEvent event,
+  Future<void> _selectPartitionEvent(
+    SelectPartitionEvent event,
     Emitter<QuranListingState> emit,
   ) async {
-    Debugger.yellow('Surah selected: ${event.surahId}');
-    // TODO: handle surah selection (e.g. navigate or load ayat)
+    Debugger.yellow(
+      'Partition selected: ${event.partitionId} ${event.fraction != null ? 'fraction ${event.fraction}' : ""} with mode: ${event.mode}',
+    );
+    // TODO: handle partition selection (e.g. navigate or load ayat)
   }
 }

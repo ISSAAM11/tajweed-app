@@ -2,8 +2,10 @@
 
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/screen/widgets/surah_name_card.dart';
+import 'package:tajweed_ai/src/features/home/quran/screen/widgets/list_header.dart';
+import 'package:tajweed_ai/src/features/home/quran/screen/widgets/quran_list_view.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_model_helper.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_state.dart';
 
 class SurahListingBody extends SubWidget<QuranListingBloc> {
@@ -14,9 +16,9 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
   @override
   Widget build(BuildContext context) => switch (state) {
     QuranListingLoadedState() => _QuranScreen(
-      itemCount: (state as QuranListingLoadedState).chapters.length,
-      items: (state as QuranListingLoadedState).chapters,
-      onTap: (index) => bloc.selectSurah(index),
+      itemCount: (state as QuranListingLoadedState).items.length,
+      items: (state as QuranListingLoadedState).items,
+      onTap: bloc.selectPartition,
       selectedViewMode: (state as QuranListingLoadedState).currentListingMode,
       onSelectMode: (mode) => bloc.changeListingMode(mode),
     ),
@@ -32,10 +34,15 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
 
 class _QuranScreen extends StatelessWidget {
   final int itemCount;
-  final List<dynamic> items;
+  final List<PartitionItem> items;
   final PartitionMode selectedViewMode;
   final Function(PartitionMode) onSelectMode;
-  void Function(int) onTap;
+  void Function({
+    required int partitionId,
+    required PartitionMode mode,
+    HizbFraction? fraction,
+  })
+  onTap;
   _QuranScreen({
     required this.itemCount,
     required this.items,
@@ -43,24 +50,24 @@ class _QuranScreen extends StatelessWidget {
     required this.selectedViewMode,
     required this.onSelectMode,
   });
+
   @override
-  @override
-  Widget build(BuildContext context) => AnimatedOpacity(
-    opacity: 1.0,
-    duration: const Duration(milliseconds: 500),
-    child: ListView.builder(
-      itemCount: itemCount,
-      itemBuilder: (context, index) {
-        final c = items[index];
-        return SurahNameCard(
-          name: c.nameArabic,
-          nameEnglish: c.name,
-          glyph: c.nameGlyph,
-          revelationPlace: c.revelationPlace,
-          orderNumber: c.id,
-          onTap: (index) => onTap(index),
-        );
-      },
-    ),
-  );
+  Widget build(BuildContext context) => Column(
+    children: [
+      AnimatedOpacity(
+        opacity: 1.0,
+        duration: const Duration(milliseconds: 500),
+        child: ListHeader(
+          selectedViewMode: selectedViewMode,
+          onSelectMode: onSelectMode,
+        ),
+      ),
+      QuranListView(
+        itemCount: itemCount,
+        items: items,
+        selectedViewMode: selectedViewMode,
+        onTap: onTap,
+      ).expanded(),
+    ],
+  ).safeArea();
 }

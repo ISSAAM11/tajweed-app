@@ -9,7 +9,16 @@ enum SajdahType { recommended, obligatory }
 
 enum HizbFraction { full, quarter, half, threeQuarter }
 
-enum PartitionMode { surah, page, juz, hizb, ruku }
+enum PartitionMode {
+  surah('Surah'),
+  page('Page'),
+  juz('Juz'),
+  hizb('Hizb'),
+  ruku("Ruku");
+
+  final String label;
+  const PartitionMode(this.label);
+}
 
 /// --- Converters ---
 class BoolIntConverter extends TypeConverter<bool, int> {

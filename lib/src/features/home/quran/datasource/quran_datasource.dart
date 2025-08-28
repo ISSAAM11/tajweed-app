@@ -3,28 +3,47 @@ import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart'
     show ListingDataDto, QuranListingDatasource;
 import 'package:tajweed_ai/src/features/home/quran/datasource/meta/quran_meta_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/page/page_models.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/page/quran_page_datasource.dart';
 
+/// Facade for all Quran-related data operations.
+///
+/// This interface hides the complexity of dealing with
+/// multiple data sources (listing, page, meta) and provides
+/// a single entry point for the rest of the app.
 abstract interface class QuranDatasource {
-  // Listing
+  // -------------------
+  // Listing operations
+  // -------------------
+
+  /// Fetches all Quran listing data (chapters, pages, juzs, rukus, hizbs).
   Future<ListingDataDto> getListingData();
-  // Meta
+
+  // -------------------
+  // Meta operations
+  // -------------------
+
+  /// Watches metadata for a specific page (async stream of updates).
   Stream<AyahMetaRow?> watchPageMeta(int pageNo);
-  Future<int?> getPartitionForAyah(PartitionMode mode, int globalIndex);
-  // Content
+
+  /// Returns the partition number (e.g., juz, hizb, etc.)
+  /// for a given ayah by its global index.
+  Future<int?> getPartitionForAyah(PartitionMode mode, VerseKey key);
+
+  // -------------------
+  // Content operations
+  // -------------------
+
+  /// Returns the content (ayat, surah headers, etc.) of a specific page.
   Future<PageContentDto> getPageContent(int pageNo);
-  Future<void> prefetchPagesAround(
-    int centerPage, {
-    int before = 2,
-    int after = 2,
-  });
-  Stream<List<PageContentDto>> watchPartition(
-    PartitionMode mode,
-    int partitionNo, {
-    HizbFraction? fraction,
-  });
 }
 
+/// Implementation of [QuranDatasource].
+///
+/// Acts as a facade that delegates to the specialized datasources:
+/// - [QuranListingDatasource] for listings (chapters, juzs, pages, etc.)
+/// - [QuranPageDatasource] for page content & prefetching
+/// - [QuranMetaDatasource] for metadata (ayah <-> partition relations, etc.)
 final class QuranDatasourceImpl implements QuranDatasource {
   final QuranListingDatasource listingDatasource;
   final QuranPageDatasource pageDatasource;
@@ -36,42 +55,30 @@ final class QuranDatasourceImpl implements QuranDatasource {
     required this.metaDatasource,
   });
 
-  /// Fetch all listing data (pages, juzs, rukus, hizbs) in parallel
+  // -------------------
+  // Listing delegation
+  // -------------------
+
   @override
-  Future<ListingDataDto> getListingData() async {
+  Future<ListingDataDto> getListingData() {
     return listingDatasource.getListingData();
   }
 
-  @override
-  Future<void> prefetchPagesAround(
-    int centerPage, {
-    int before = 2,
-    int after = 2,
-  }) {
-    return pageDatasource.prefetchPagesAround(
-      centerPage,
-      before: before,
-      after: after,
-    );
-  }
-
+  // -------------------
+  // Content delegation
+  // -------------------
   @override
   Future<PageContentDto> getPageContent(int pageNo) {
     return pageDatasource.getPageContent(pageNo);
   }
 
-  @override
-  Stream<List<PageContentDto>> watchPartition(
-    PartitionMode mode,
-    int partitionNo, {
-    HizbFraction? fraction,
-  }) {
-    return pageDatasource.watchPartition(mode, partitionNo, fraction: fraction);
-  }
+  // -------------------
+  // Meta delegation
+  // -------------------
 
   @override
-  Future<int?> getPartitionForAyah(PartitionMode mode, int globalIndex) {
-    return metaDatasource.getPartitionForAyah(mode, globalIndex);
+  Future<int?> getPartitionForAyah(PartitionMode mode, VerseKey key) {
+    return metaDatasource.getPartitionForAyah(mode, key);
   }
 
   @override

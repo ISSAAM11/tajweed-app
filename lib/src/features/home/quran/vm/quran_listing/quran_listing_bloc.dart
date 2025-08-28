@@ -12,9 +12,20 @@ class QuranListingBloc extends BaseBloc<QuranListingEvent, QuranListingState> {
   final QuranDatasource _datasource;
   PartitionMode currentListingMode;
 
-  void selectSurah(int surahId) => add(SelectSurahEvent(surahId));
   void changeListingMode(PartitionMode mode) =>
       add(ChangeListingModeEvent(mode));
+
+  void selectPartition({
+    required int partitionId,
+    required PartitionMode mode,
+    HizbFraction? fraction,
+  }) => add(
+    SelectPartitionEvent(
+      partitionId: partitionId,
+      mode: mode,
+      fraction: fraction,
+    ),
+  );
 
   QuranListingBloc(this._datasource, this.currentListingMode)
     : super(
@@ -22,7 +33,7 @@ class QuranListingBloc extends BaseBloc<QuranListingEvent, QuranListingState> {
         debugginEnabled: true,
       ) {
     on<LoadListingDataEvent>(_loadListingData);
-    on<SelectSurahEvent>(_quranSurahSelectedEvent);
+    on<SelectPartitionEvent>(_selectPartitionEvent);
     on<ChangeListingModeEvent>(_changeListingMode);
 
     // Initial fetch

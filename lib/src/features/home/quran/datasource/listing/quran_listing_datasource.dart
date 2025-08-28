@@ -1,12 +1,11 @@
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
-import 'package:tajweed_ai/src/database/tables/quran/converters.dart'
-    show HizbFraction, VerseKey;
 import 'package:tajweed_ai/src/features/home/quran/datasource/cache/listing_cache.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_model_helper.dart';
 
 abstract interface class QuranListingDatasource {
   Future<ListingDataDto> getListingData();
-  Future<ChapterRow?> getChapterById(int id);
+  Future<ChapterItem?> getChapterById(int id);
 }
 
 final class QuranListingDatasourceImpl implements QuranListingDatasource {
@@ -38,26 +37,13 @@ final class QuranListingDatasourceImpl implements QuranListingDatasource {
           .getHizbsWithFirstAyah(), // List<({int juzNumber, HizbFraction fraction, VerseKey verseKey, String ayahText})>
     ]);
     final dto = ListingDataDto(
-      chapters: results[0] as List<ChapterRow>,
-      pages:
-          results[1]
-              as List<({int pageNumber, VerseKey verseKey, String ayahText})>,
-      juzs:
-          results[2]
-              as List<({int juzNumber, VerseKey verseKey, String ayahText})>,
-      rukus:
-          results[3]
-              as List<({int rukuNumber, VerseKey verseKey, String ayahText})>,
-      hizbs:
-          results[4]
-              as List<
-                ({
-                  int juzNumber,
-                  HizbFraction fraction,
-                  VerseKey verseKey,
-                  String ayahText,
-                })
-              >,
+      chapters: (results[0] as List<ChapterRow>)
+          .map(ChapterItem.fromChapterRow)
+          .toList(),
+      pages: results[1] as List<PageItem>,
+      juzs: results[2] as List<JuzItem>,
+      rukus: results[3] as List<RukuItem>,
+      hizbs: results[4] as List<HizbItem>,
     );
     // 3) Save cache
     await listingCache.set(dto);
@@ -65,27 +51,24 @@ final class QuranListingDatasourceImpl implements QuranListingDatasource {
   }
 
   @override
-  Future<ChapterRow?> getChapterById(int id) async {
+  Future<ChapterItem?> getChapterById(int id) async {
     final listing = await getListingData();
     return listing.chapters.firstWhere((c) => c.id == id);
   }
 }
 
 class ListingDataDto {
-  final List<ChapterRow> chapters;
-  final List<({int pageNumber, VerseKey verseKey, String ayahText})>? pages;
-  final List<({int juzNumber, VerseKey verseKey, String ayahText})>? juzs;
-  final List<({int rukuNumber, VerseKey verseKey, String ayahText})>? rukus;
-  final List<
-    ({int juzNumber, HizbFraction fraction, VerseKey verseKey, String ayahText})
-  >?
-  hizbs;
+  final List<ChapterItem> chapters;
+  final List<PageItem> pages;
+  final List<JuzItem> juzs;
+  final List<RukuItem> rukus;
+  final List<HizbItem> hizbs;
 
   const ListingDataDto({
     required this.chapters,
-    this.pages,
-    this.juzs,
-    this.rukus,
-    this.hizbs,
+    required this.pages,
+    required this.juzs,
+    required this.rukus,
+    required this.hizbs,
   });
 }

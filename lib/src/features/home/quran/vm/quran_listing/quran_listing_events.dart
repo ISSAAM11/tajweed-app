@@ -10,12 +10,18 @@ sealed class QuranListingEvent extends Equatable {
 
 final class LoadListingDataEvent extends QuranListingEvent {}
 
-final class SelectSurahEvent extends QuranListingEvent {
-  final int surahId;
-  const SelectSurahEvent(this.surahId);
+final class SelectPartitionEvent extends QuranListingEvent {
+  final PartitionMode mode;
+  final int partitionId;
+  final HizbFraction? fraction;
+  const SelectPartitionEvent({
+    required this.partitionId,
+    required this.mode,
+    this.fraction,
+  });
 
   @override
-  List<Object?> get props => [surahId];
+  List<Object?> get props => [mode, partitionId, fraction];
 }
 
 final class ListWithJuz extends QuranListingEvent {

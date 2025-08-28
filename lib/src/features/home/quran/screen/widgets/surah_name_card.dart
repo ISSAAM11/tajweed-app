@@ -9,11 +9,11 @@ class SurahNameCard extends StatelessWidget {
   final String glyph;
   final RevelationPlace revelationPlace;
   final int orderNumber;
-  final Function(int) onTap;
+  void Function() onTap;
 
   final Color? prefixIconColor;
 
-  const SurahNameCard({
+  SurahNameCard({
     super.key,
     required this.name,
     this.nameEnglish,
@@ -29,7 +29,7 @@ class SurahNameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () => onTap(orderNumber),
+        onTap: onTap,
         child: RichText(
           text: TextSpan(
             text:

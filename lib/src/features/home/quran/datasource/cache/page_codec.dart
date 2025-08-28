@@ -2,7 +2,7 @@
 import 'package:generic_requester/generic_requester.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/page/quran_page_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/page/page_models.dart';
 
 class PageCodec {
   static String toJson(PageContentDto page) {
@@ -91,6 +91,9 @@ class PageCodec {
                 nameArabic: c['nameArabic'],
                 nameGlyph: c['nameGlyph'],
                 bismillahPre: c['bismillahPre'],
+                revelationPlace: c['revelationPlace'] == 'makkah'
+                    ? RevelationPlace.makkah
+                    : RevelationPlace.madinah,
               ),
             ),
           );

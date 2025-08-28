@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:tajweed_ai/src/database/app_database.dart' show ChapterRow;
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_model_helper.dart';
 
 sealed class QuranListingState extends Equatable {
   final PartitionMode currentListingMode;
@@ -21,22 +21,19 @@ final class QuranListingLoadingState extends QuranListingState {
 }
 
 final class QuranListingLoadedState extends QuranListingState {
-  final List<ChapterRow> chapters;
-  final List<({int pageNumber, VerseKey verseKey, String ayahText})>? pages;
-  final List<({int juzNumber, VerseKey verseKey, String ayahText})>? juzs;
-  final List<
-    ({int juzNumber, HizbFraction fraction, VerseKey verseKey, String ayahText})
-  >?
-  hizbs;
-  final List<({int rukuNumber, VerseKey verseKey, String ayahText})>? rukus;
+  final List<ChapterItem> chapters;
+  final List<PageItem> pages;
+  final List<JuzItem> juzs;
+  final List<HizbItem> hizbs;
+  final List<RukuItem> rukus;
 
   const QuranListingLoadedState({
     required super.currentListingMode, // ✅ super-parameter name must match the base field
     required this.chapters,
-    this.pages,
-    this.juzs,
-    this.rukus,
-    this.hizbs,
+    required this.pages,
+    required this.juzs,
+    required this.rukus,
+    required this.hizbs,
   });
 
   @override
@@ -51,19 +48,11 @@ final class QuranListingLoadedState extends QuranListingState {
 
   QuranListingLoadedState copyWith({
     PartitionMode? currentListingMode,
-    List<ChapterRow>? chapters,
-    List<({int pageNumber, VerseKey verseKey, String ayahText})>? pages,
-    List<({int juzNumber, VerseKey verseKey, String ayahText})>? juzs,
-    List<
-      ({
-        int juzNumber,
-        HizbFraction fraction,
-        VerseKey verseKey,
-        String ayahText,
-      })
-    >?
-    hizbs,
-    List<({int rukuNumber, VerseKey verseKey, String ayahText})>? rukus,
+    List<ChapterItem>? chapters,
+    List<PageItem>? pages,
+    List<JuzItem>? juzs,
+    List<HizbItem>? hizbs,
+    List<RukuItem>? rukus,
   }) {
     return QuranListingLoadedState(
       currentListingMode: currentListingMode ?? this.currentListingMode,
@@ -73,6 +62,22 @@ final class QuranListingLoadedState extends QuranListingState {
       hizbs: hizbs ?? this.hizbs,
       rukus: rukus ?? this.rukus,
     );
+  }
+
+  /// Unify current data access
+  List<PartitionItem> get items {
+    switch (currentListingMode) {
+      case PartitionMode.surah:
+        return chapters;
+      case PartitionMode.juz:
+        return juzs;
+      case PartitionMode.page:
+        return pages;
+      case PartitionMode.hizb:
+        return hizbs;
+      case PartitionMode.ruku:
+        return rukus;
+    }
   }
 }
 
