@@ -52,22 +52,18 @@ class _QuranScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Column(
-    children: [
-      AnimatedOpacity(
-        opacity: 1.0,
-        duration: const Duration(milliseconds: 500),
-        child: ListHeader(
-          selectedViewMode: selectedViewMode,
-          onSelectMode: onSelectMode,
-        ),
-      ),
-      QuranListView(
-        itemCount: itemCount,
-        items: items,
+  Widget build(BuildContext context) => QuranListView(
+    itemCount: itemCount,
+    items: items,
+    selectedViewMode: selectedViewMode,
+    onTap: onTap,
+    header: AnimatedOpacity(
+      opacity: 1.0,
+      duration: const Duration(milliseconds: 500),
+      child: ListHeader(
         selectedViewMode: selectedViewMode,
-        onTap: onTap,
-      ).expanded(),
-    ],
+        onSelectMode: onSelectMode,
+      ),
+    ),
   ).safeArea();
 }

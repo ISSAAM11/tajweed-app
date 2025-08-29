@@ -8,6 +8,7 @@ class QuranListView extends StatelessWidget {
   final int itemCount;
   final List<PartitionItem> items;
   final PartitionMode selectedViewMode;
+  final Widget? header; // new optional header
   void Function({
     required int partitionId,
     required PartitionMode mode,
@@ -20,18 +21,21 @@ class QuranListView extends StatelessWidget {
     required this.items,
     required this.selectedViewMode,
     required this.onTap,
+    this.header,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: itemCount,
+      itemCount: header != null ? itemCount + 1 : itemCount,
       itemBuilder: (context, index) {
-        final item = items[index];
+        if (header != null && index == 0) return header!;
 
-        if (item is ChapterItem) {
-          return _buildSurahItem(item, index);
-        }
+        final itemIndex = header != null ? index - 1 : index;
+        final item = items[itemIndex];
+
+        if (item is ChapterItem) return _buildSurahItem(item, index);
+
         return _buildPartitionItem(item, index);
       },
     );
@@ -51,17 +55,29 @@ class QuranListView extends StatelessWidget {
 
   Widget _buildPartitionItem(PartitionItem item, int index) {
     final String label = _getPartitionLabel(item);
+
+    // Process ayah words
     final parsedWords = QuranTextParser.stripRulesList(item.ayahWords);
     final noNumbers = QuranTextParser.removeAyahNumbersList(parsedWords);
     final itemWordList = QuranTextParser.cutWordsAtFirstWaqf(noNumbers);
+    final previewText = itemWordList.join('\u00A0');
 
     return ListTile(
-      leading: Text(label),
-
-      title: Text(
-        itemWordList.join('\u00A0'),
-        textDirection: TextDirection.rtl,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      leading: Text(
+        label,
+        style: AppFonts.uthmanicHafsFont.copyWith(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          color: AppColors.primary,
+        ),
+      ),
+      subtitle: Text(
+        previewText,
         style: AppFonts.uthmanicHafsFont.withColor(AppColors.greyMedium),
+        textDirection: TextDirection.rtl,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
       ),
       onTap: () => _handlePartitionTap(item),
     );
