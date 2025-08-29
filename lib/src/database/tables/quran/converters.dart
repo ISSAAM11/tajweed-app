@@ -7,7 +7,15 @@ enum RevelationPlace { makkah, madinah }
 
 enum SajdahType { recommended, obligatory }
 
-enum HizbFraction { full, quarter, half, threeQuarter }
+enum HizbFraction {
+  full(''),
+  quarter('1/4'),
+  half('1/2'),
+  threeQuarter('3/4');
+
+  final String label;
+  const HizbFraction(this.label);
+}
 
 enum PartitionMode {
   surah('Surah'),

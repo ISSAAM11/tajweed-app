@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:html/parser.dart' as html;
 import 'package:tajweed_ai/src/database/tables/quran/ayah_metas.dart';
 import 'package:tajweed_ai/src/database/tables/quran/chapters.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
@@ -23,146 +22,139 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
   Future<List<PageItem>> getPagesWithFirstAyah() async {
     final rows = await customSelect(
       '''
-        SELECT a.page_no, a.surah, a.ayah,
-              GROUP_CONCAT(w.text, ' ') as ayahText
+        SELECT a.page_no, a.surah, a.ayah, w.text
         FROM ayah_metas a
-        JOIN words w
-          ON w.surah = a.surah AND w.ayah = a.ayah
+        JOIN words w ON w.surah = a.surah AND w.ayah = a.ayah
         INNER JOIN (
-            SELECT page_no, MIN(global_index) AS firstIndex
-            FROM ayah_metas
-            GROUP BY page_no
+          SELECT page_no, MIN(global_index) AS firstIndex
+          FROM ayah_metas
+          GROUP BY page_no
         ) b ON a.global_index = b.firstIndex
-        GROUP BY a.page_no, a.surah, a.ayah
-        ORDER BY a.page_no;
+        ORDER BY a.page_no, w.word;
       ''',
       readsFrom: {ayahMetas, words},
     ).get();
 
-    final result = rows.map((row) {
+    final grouped = <int, List<Map<String, dynamic>>>{};
+
+    for (final row in rows) {
+      final pageNo = row.read<int>('page_no');
+      grouped.putIfAbsent(pageNo, () => []).add(row.data);
+    }
+
+    return grouped.entries.map((entry) {
+      final first = entry.value.first;
       return PageItem(
-        pageNumber: row.read<int>('page_no'),
-        verseKey: VerseKey(row.read<int>('surah'), row.read<int>('ayah')),
-        ayahText: stripRules(row.read<String>('ayahText')),
+        pageNumber: entry.key,
+        verseKey: VerseKey(first['surah'] as int, first['ayah'] as int),
+        ayahWords: entry.value.map((r) => r['text'] as String).toList(),
       );
     }).toList();
-
-    return result;
   }
 
   /// Juz
   Future<List<JuzItem>> getJuzsWithFirstAyah() async {
     final rows = await customSelect(
       '''
-        WITH numbered_words AS (
-          SELECT w.text, w.surah, w.ayah,
-                ROW_NUMBER() OVER (PARTITION BY w.surah, w.ayah ORDER BY w.word ASC) AS rn
-            FROM words w
-        )
-        SELECT a.juz_no, a.surah, a.ayah,
-              GROUP_CONCAT(nw.text, ' ') AS ayahText
-          FROM ayah_metas a
-          JOIN numbered_words nw
-            ON nw.surah = a.surah AND nw.ayah = a.ayah AND nw.rn <= 4
+        SELECT a.juz_no, a.surah, a.ayah, w.text
+        FROM ayah_metas a
+        JOIN words w ON w.surah = a.surah AND w.ayah = a.ayah
         INNER JOIN (
-              SELECT juz_no, MIN(global_index) AS firstIndex
-                FROM ayah_metas
-              GROUP BY juz_no
-              ) b
-            ON a.global_index = b.firstIndex
-        GROUP BY a.juz_no, a.surah, a.ayah
-        ORDER BY a.juz_no;
+          SELECT juz_no, MIN(global_index) AS firstIndex
+          FROM ayah_metas
+          GROUP BY juz_no
+        ) b ON a.global_index = b.firstIndex
+        ORDER BY a.juz_no, w.word;
       ''',
       readsFrom: {ayahMetas, words},
     ).get();
 
-    final result = rows.map((row) {
+    final grouped = <int, List<Map<String, dynamic>>>{};
+
+    for (final row in rows) {
+      final juzNo = row.read<int>('juz_no');
+      grouped.putIfAbsent(juzNo, () => []).add(row.data);
+    }
+
+    return grouped.entries.map((entry) {
+      final first = entry.value.first;
       return JuzItem(
-        juzNumber: row.read<int>('juz_no'),
-        verseKey: VerseKey(row.read<int>('surah'), row.read<int>('ayah')),
-        ayahText: stripRules(row.read<String>('ayahText')),
+        juzNumber: entry.key,
+        verseKey: VerseKey(first['surah'] as int, first['ayah'] as int),
+        ayahWords: entry.value.map((r) => r['text'] as String).toList(),
       );
     }).toList();
-
-    return result;
   }
 
   /// Rukus
   Future<List<RukuItem>> getRukusWithFirstAyah() async {
     final rows = await customSelect(
       '''
-      WITH numbered_words AS (
-        SELECT w.text, w.surah, w.ayah,
-              ROW_NUMBER() OVER (PARTITION BY w.surah, w.ayah ORDER BY w.word ASC) AS rn
-          FROM words w
-      )
-      SELECT a.ruku_no, a.surah, a.ayah,
-            GROUP_CONCAT(nw.text, ' ') AS ayahText
+        SELECT a.ruku_no, a.surah, a.ayah, w.text
         FROM ayah_metas a
-        JOIN numbered_words nw
-          ON nw.surah = a.surah AND nw.ayah = a.ayah AND nw.rn <= 4
-      INNER JOIN (
-            SELECT ruku_no, MIN(global_index) AS firstIndex
-              FROM ayah_metas
-            GROUP BY ruku_no
-            ) b
-          ON a.global_index = b.firstIndex
-      GROUP BY a.ruku_no, a.surah, a.ayah
-      ORDER BY a.ruku_no;
-  ''',
+        JOIN words w ON w.surah = a.surah AND w.ayah = a.ayah
+        INNER JOIN (
+          SELECT ruku_no, MIN(global_index) AS firstIndex
+          FROM ayah_metas
+          GROUP BY ruku_no
+        ) b ON a.global_index = b.firstIndex
+        ORDER BY a.ruku_no, w.word;
+      ''',
       readsFrom: {ayahMetas, words},
     ).get();
-    final result = rows.map((row) {
+
+    final grouped = <int, List<Map<String, dynamic>>>{};
+
+    for (final row in rows) {
+      final rukuNo = row.read<int>('ruku_no');
+      grouped.putIfAbsent(rukuNo, () => []).add(row.data);
+    }
+
+    return grouped.entries.map((entry) {
+      final first = entry.value.first;
       return RukuItem(
-        rukuNumber: row.read<int>('ruku_no'),
-        verseKey: VerseKey(row.read<int>('surah'), row.read<int>('ayah')),
-        ayahText: stripRules(row.read<String>('ayahText')),
+        rukuNumber: entry.key,
+        verseKey: VerseKey(first['surah'] as int, first['ayah'] as int),
+        ayahWords: entry.value.map((r) => r['text'] as String).toList(),
       );
     }).toList();
-    return result;
   }
 
   /// Hizbs
   Future<List<HizbItem>> getHizbsWithFirstAyah() async {
     final rows = await customSelect(
       '''
-      WITH numbered_words AS (
-        SELECT w.text, w.surah, w.ayah,
-              ROW_NUMBER() OVER (PARTITION BY w.surah, w.ayah ORDER BY w.word ASC) AS rn
-          FROM words w
-      )
-      SELECT a.juz_no, a.hizb_fraction, a.surah, a.ayah,
-            GROUP_CONCAT(nw.text, ' ') AS ayahText
+        SELECT a.juz_no, a.hizb_fraction, a.surah, a.ayah, w.text
         FROM ayah_metas a
-        JOIN numbered_words nw
-          ON nw.surah = a.surah AND nw.ayah = a.ayah AND nw.rn <= 4
-      INNER JOIN (
-            SELECT juz_no, hizb_fraction, MIN(global_index) AS firstIndex
-              FROM ayah_metas
-            GROUP BY juz_no, hizb_fraction
-            ) b
-          ON a.global_index = b.firstIndex
-      GROUP BY a.juz_no, a.hizb_fraction, a.surah, a.ayah
-      ORDER BY a.juz_no, a.hizb_fraction;
+        JOIN words w ON w.surah = a.surah AND w.ayah = a.ayah
+        INNER JOIN (
+          SELECT juz_no, hizb_fraction, MIN(global_index) AS firstIndex
+          FROM ayah_metas
+          GROUP BY juz_no, hizb_fraction
+        ) b ON a.global_index = b.firstIndex
+        ORDER BY a.juz_no, a.hizb_fraction, w.word;
       ''',
       readsFrom: {ayahMetas, words},
     ).get();
-    final result = rows.map((row) {
+
+    final grouped = <String, List<Map<String, dynamic>>>{};
+
+    for (final row in rows) {
+      final key =
+          "${row.read<int>('juz_no')}_${row.read<int>('hizb_fraction')}";
+      grouped.putIfAbsent(key, () => []).add(row.data);
+    }
+
+    return grouped.entries.map((entry) {
+      final first = entry.value.first;
       return HizbItem(
-        juzNumber: row.read<int>('juz_no'),
+        juzNumber: first['juz_no'] as int,
         fraction: const HizbFractionConverter().fromSql(
-          row.read<int>('hizb_fraction'),
+          first['hizb_fraction'] as int,
         ),
-        verseKey: VerseKey(row.read<int>('surah'), row.read<int>('ayah')),
-        ayahText: stripRules(row.read<String>('ayahText')),
+        verseKey: VerseKey(first['surah'] as int, first['ayah'] as int),
+        ayahWords: entry.value.map((r) => r['text'] as String).toList(),
       );
     }).toList();
-
-    return result;
   }
-}
-
-String stripRules(String input) {
-  final document = html.parseFragment(input);
-  return document.text ?? ''; // removes all HTML tags
 }

@@ -1,51 +1,74 @@
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_events.dart';
 
 /// Base class for all items in the listing (surahs, pages, juzs, etc.)
 abstract class PartitionItem {
   VerseKey get verseKey;
-  String get ayahText;
+  List<String> get ayahWords;
 }
 
 /// Page item
 class PageItem extends PartitionItem {
   final int pageNumber;
   final VerseKey _verseKey;
-  final String _ayahText;
+  final List<String> _ayahWords;
 
   PageItem({
     required this.pageNumber,
     required VerseKey verseKey,
-    required String ayahText,
+    required List<String> ayahWords,
   }) : _verseKey = verseKey,
-       _ayahText = ayahText;
+       _ayahWords = ayahWords;
 
   @override
   VerseKey get verseKey => _verseKey;
 
   @override
-  String get ayahText => _ayahText;
+  List<String> get ayahWords => _ayahWords;
+
+  Map<String, dynamic> toMap() => {
+    'pageNumber': pageNumber,
+    'verseKey': _verseKey.toString(),
+    'ayahWords': _ayahWords,
+  };
+
+  factory PageItem.fromMap(Map<String, dynamic> map) => PageItem(
+    pageNumber: map['pageNumber'] as int,
+    verseKey: VerseKey.parse(map['verseKey'] as String),
+    ayahWords: List<String>.from(map['ayahWords'] as List),
+  );
 }
 
 /// Juz item
 class JuzItem extends PartitionItem {
   final int juzNumber;
   final VerseKey _verseKey;
-  final String _ayahText;
+  final List<String> _ayahWords;
 
   JuzItem({
     required this.juzNumber,
     required VerseKey verseKey,
-    required String ayahText,
+    required List<String> ayahWords,
   }) : _verseKey = verseKey,
-       _ayahText = ayahText;
+       _ayahWords = ayahWords;
 
   @override
   VerseKey get verseKey => _verseKey;
 
   @override
-  String get ayahText => _ayahText;
+  List<String> get ayahWords => _ayahWords;
+
+  Map<String, dynamic> toMap() => {
+    'juzNumber': juzNumber,
+    'verseKey': _verseKey.toString(),
+    'ayahWords': _ayahWords,
+  };
+
+  factory JuzItem.fromMap(Map<String, dynamic> map) => JuzItem(
+    juzNumber: map['juzNumber'] as int,
+    verseKey: VerseKey.parse(map['verseKey'] as String),
+    ayahWords: List<String>.from(map['ayahWords'] as List),
+  );
 }
 
 /// Hizb item
@@ -53,41 +76,67 @@ class HizbItem extends PartitionItem {
   final int juzNumber;
   final HizbFraction fraction;
   final VerseKey _verseKey;
-  final String _ayahText;
+  final List<String> _ayahWords;
 
   HizbItem({
     required this.juzNumber,
     required this.fraction,
     required VerseKey verseKey,
-    required String ayahText,
+    required List<String> ayahWords,
   }) : _verseKey = verseKey,
-       _ayahText = ayahText;
+       _ayahWords = ayahWords;
 
   @override
   VerseKey get verseKey => _verseKey;
 
   @override
-  String get ayahText => _ayahText;
+  List<String> get ayahWords => _ayahWords;
+
+  Map<String, dynamic> toMap() => {
+    'juzNumber': juzNumber,
+    'fraction': fraction.index,
+    'verseKey': _verseKey.toString(),
+    'ayahWords': _ayahWords,
+  };
+
+  factory HizbItem.fromMap(Map<String, dynamic> map) => HizbItem(
+    juzNumber: map['juzNumber'] as int,
+    fraction: HizbFraction.values[map['fraction'] as int],
+    verseKey: VerseKey.parse(map['verseKey'] as String),
+    ayahWords: List<String>.from(map['ayahWords'] as List),
+  );
 }
 
 /// Ruku item
 class RukuItem extends PartitionItem {
   final int rukuNumber;
   final VerseKey _verseKey;
-  final String _ayahText;
+  final List<String> _ayahWords;
 
   RukuItem({
     required this.rukuNumber,
     required VerseKey verseKey,
-    required String ayahText,
+    required List<String> ayahWords,
   }) : _verseKey = verseKey,
-       _ayahText = ayahText;
+       _ayahWords = ayahWords;
 
   @override
   VerseKey get verseKey => _verseKey;
 
   @override
-  String get ayahText => _ayahText;
+  List<String> get ayahWords => _ayahWords;
+
+  Map<String, dynamic> toMap() => {
+    'rukuNumber': rukuNumber,
+    'verseKey': _verseKey.toString(),
+    'ayahWords': _ayahWords,
+  };
+
+  factory RukuItem.fromMap(Map<String, dynamic> map) => RukuItem(
+    rukuNumber: map['rukuNumber'] as int,
+    verseKey: VerseKey.parse(map['verseKey'] as String),
+    ayahWords: List<String>.from(map['ayahWords'] as List),
+  );
 }
 
 /// Chapter item
@@ -103,7 +152,7 @@ class ChapterItem extends PartitionItem {
   String nameGlyph;
 
   final VerseKey _verseKey;
-  final String _ayahText;
+  final List<String> _ayahWords;
 
   ChapterItem({
     required this.id,
@@ -116,9 +165,9 @@ class ChapterItem extends PartitionItem {
     required this.bismillahPre,
     required this.nameGlyph,
     required VerseKey verseKey,
-    required String ayahText,
+    required List<String> ayahWords,
   }) : _verseKey = verseKey,
-       _ayahText = ayahText;
+       _ayahWords = ayahWords;
 
   ChapterItem.fromChapterRow(ChapterRow another)
     : id = another.id,
@@ -131,69 +180,41 @@ class ChapterItem extends PartitionItem {
       revelationOrder = another.revelationOrder,
       revelationPlace = another.revelationPlace,
       versesCount = another.versesCount,
-
-      _ayahText = '';
+      _ayahWords = [];
 
   @override
   VerseKey get verseKey => _verseKey;
 
   @override
-  String get ayahText => _ayahText;
-}
+  List<String> get ayahWords => _ayahWords;
 
-/// Centralized helper to convert PartitionItems into domain actions/events
-/// and provide labels for display.
-final class PartitionHelper {
-  /// Convert a [PartitionItem] into an [SelectPartitionEvent] event.
-  static SelectPartitionEvent toSelectPartitionEvent(
-    PartitionItem item,
-    PartitionMode mode,
-  ) {
-    switch (mode) {
-      case PartitionMode.surah:
-        final c = item as ChapterItem;
-        return SelectPartitionEvent(partitionId: c.id, mode: mode);
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'name': name,
+    'nameSimple': nameSimple,
+    'nameArabic': nameArabic,
+    'revelationOrder': revelationOrder,
+    'revelationPlace': revelationPlace.name,
+    'versesCount': versesCount,
+    'bismillahPre': bismillahPre,
+    'nameGlyph': nameGlyph,
+    'verseKey': _verseKey.toString(),
+    'ayahWords': _ayahWords,
+  };
 
-      case PartitionMode.page:
-        final p = item as PageItem;
-        return SelectPartitionEvent(partitionId: p.pageNumber, mode: mode);
-
-      case PartitionMode.juz:
-        final j = item as JuzItem;
-        return SelectPartitionEvent(partitionId: j.juzNumber, mode: mode);
-
-      case PartitionMode.hizb:
-        final h = item as HizbItem;
-        return SelectPartitionEvent(
-          partitionId: h.juzNumber,
-          mode: mode,
-          fraction: h.fraction,
-        );
-
-      case PartitionMode.ruku:
-        final r = item as RukuItem;
-        return SelectPartitionEvent(partitionId: r.rukuNumber, mode: mode);
-    }
-  }
-
-  /// Provide a human-readable title for UI cards
-  static String titleForItem(PartitionItem item, PartitionMode mode) {
-    switch (mode) {
-      case PartitionMode.surah:
-        final c = item as ChapterItem;
-        return "Surah ${c.name}  ${c.name}";
-      case PartitionMode.page:
-        final p = item as PageItem;
-        return "Page ${p.pageNumber}";
-      case PartitionMode.juz:
-        final j = item as JuzItem;
-        return "Juz ${j.juzNumber}";
-      case PartitionMode.hizb:
-        final h = item as HizbItem;
-        return "Hizb ${h.juzNumber}  ${hizbFractionValues[h.fraction]}";
-      case PartitionMode.ruku:
-        final r = item as RukuItem;
-        return "Ruku ${r.rukuNumber}";
-    }
-  }
+  factory ChapterItem.fromMap(Map<String, dynamic> map) => ChapterItem(
+    id: map['id'] as int,
+    name: map['name'] as String,
+    nameSimple: map['nameSimple'] as String,
+    nameArabic: map['nameArabic'] as String,
+    revelationOrder: map['revelationOrder'] as int,
+    revelationPlace: (map['revelationPlace'] == 'makkah'
+        ? RevelationPlace.makkah
+        : RevelationPlace.madinah),
+    versesCount: map['versesCount'] as int,
+    bismillahPre: map['bismillahPre'] as bool,
+    nameGlyph: map['nameGlyph'] as String,
+    verseKey: VerseKey.parse(map['verseKey'] as String),
+    ayahWords: List<String>.from(map['ayahWords'] ?? []),
+  );
 }

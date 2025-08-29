@@ -26,15 +26,11 @@ final class QuranListingDatasourceImpl implements QuranListingDatasource {
 
     // 2) Fetch fresh
     final results = await Future.wait([
-      listingDao.getChapters(), // List<ChapterRow>
-      listingDao
-          .getPagesWithFirstAyah(), // List<({int pageNumber, VerseKey verseKey, String ayahText})>
-      listingDao
-          .getJuzsWithFirstAyah(), // List<({int juzNumber, VerseKey verseKey, String ayahText})>
-      listingDao
-          .getRukusWithFirstAyah(), // List<({int rukuNumber, VerseKey verseKey, String ayahText})>
-      listingDao
-          .getHizbsWithFirstAyah(), // List<({int juzNumber, HizbFraction fraction, VerseKey verseKey, String ayahText})>
+      listingDao.getChapters(),
+      listingDao.getPagesWithFirstAyah(),
+      listingDao.getJuzsWithFirstAyah(),
+      listingDao.getRukusWithFirstAyah(),
+      listingDao.getHizbsWithFirstAyah(),
     ]);
     final dto = ListingDataDto(
       chapters: (results[0] as List<ChapterRow>)

@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/common/widget/simple_parser.dart';
 import 'package:tajweed_ai/src/features/home/quran/screen/widgets/surah_name_card.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_model_helper.dart';
+import 'package:tajweed_ai/src/helpers/quran_text_parser.dart';
 
 class QuranListView extends StatelessWidget {
   final int itemCount;
@@ -51,18 +51,17 @@ class QuranListView extends StatelessWidget {
 
   Widget _buildPartitionItem(PartitionItem item, int index) {
     final String label = _getPartitionLabel(item);
+    final parsedWords = QuranTextParser.stripRulesList(item.ayahWords);
+    final noNumbers = QuranTextParser.removeAyahNumbersList(parsedWords);
+    final itemWordList = QuranTextParser.cutWordsAtFirstWaqf(noNumbers);
 
     return ListTile(
       leading: Text(label),
-      // title: Text(item.ayahText),
-      title: SimpleParser(
-        item.ayahText,
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.black,
 
-          fontFamily: 'UthmanicHafs',
-        ),
+      title: Text(
+        itemWordList.join('\u00A0'),
+        textDirection: TextDirection.rtl,
+        style: AppFonts.uthmanicHafsFont.withColor(AppColors.greyMedium),
       ),
       onTap: () => _handlePartitionTap(item),
     );
@@ -73,7 +72,7 @@ class QuranListView extends StatelessWidget {
     if (item is PageItem) return 'Page. ${item.pageNumber}';
     if (item is RukuItem) return 'Ruku. ${item.rukuNumber}';
     if (item is HizbItem)
-      return 'Hizb. ${item.juzNumber} fraction ${item.fraction}';
+      return '${item.fraction.label} Hizb. ${item.juzNumber}';
     return 'Partition';
   }
 
