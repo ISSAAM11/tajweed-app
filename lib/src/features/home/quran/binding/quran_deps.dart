@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tajweed_ai/src/base/dependencies/dependencies.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
@@ -16,7 +17,10 @@ class QuranDependencies implements Dependencies {
     di.registerLazySingleton<QuranDao>(() => QuranDao(get<AppDatabase>()));
     // Feature caches
     di.registerLazySingleton<PageCache>(
-      () => PageCache(cacheManager: get<CacheManager>(), capacity: 5),
+      () => PageCache(
+        cacheManager: get<CacheManager<SharedPreferences>>(),
+        capacity: 10,
+      ),
     );
     // Feature datasources
     di.registerLazySingleton<QuranMetaDatasource>(

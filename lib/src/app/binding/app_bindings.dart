@@ -36,9 +36,11 @@ final class AppBinding extends AppBindings {
     );
 
     // 📦 Cache
-    di.registerLazySingleton<CacheManager>(() => CacheManagerImpl(prefs));
+    di.registerLazySingleton<CacheManager<SharedPreferences>>(
+      () => CacheManagerImpl(prefs),
+    );
     di.registerLazySingleton<ListingCache>(
-      () => ListingCache(get<CacheManager>()),
+      () => ListingCache(get<CacheManager<SharedPreferences>>()),
     );
 
     // 📦 Datasource (prewarmed)
