@@ -61,3 +61,110 @@ class PageContentDto {
   final List<PageBlockDto> blocks;
   PageContentDto({required this.pageNo, required this.blocks});
 }
+
+class PartitionSnapshot {
+  // Totals
+  final int totalSurahs;
+  final int totalJuz;
+  final int totalHizb;
+  final int totalRuku;
+
+  // Partition → page list
+  final Map<int, List<int>> pagesBySurah;
+  final Map<int, List<int>> pagesByJuz;
+  final Map<int, List<int>> pagesByHizb;
+  final Map<int, List<int>> pagesByRuku;
+
+  // Page → partition (reverse map)
+  final Map<int, int> pageToSurah;
+  final Map<int, int> pageToJuz;
+  final Map<int, int> pageToHizb;
+  final Map<int, int> pageToRuku;
+
+  PartitionSnapshot({
+    required this.totalSurahs,
+    required this.totalJuz,
+    required this.totalHizb,
+    required this.totalRuku,
+    required this.pagesBySurah,
+    required this.pagesByJuz,
+    required this.pagesByHizb,
+    required this.pagesByRuku,
+    required this.pageToSurah,
+    required this.pageToJuz,
+    required this.pageToHizb,
+    required this.pageToRuku,
+  });
+
+  /// Factory constructor to generate snapshot from pagesBy* maps
+  factory PartitionSnapshot.fromPagesBy({
+    required Map<int, List<int>> pagesBySurah,
+    required Map<int, List<int>> pagesByJuz,
+    required Map<int, List<int>> pagesByHizb,
+    required Map<int, List<int>> pagesByRuku,
+  }) {
+    // Totals
+    final totalSurahs = pagesBySurah.length;
+    final totalJuz = pagesByJuz.length;
+    final totalHizb = pagesByHizb.length;
+    final totalRuku = pagesByRuku.length;
+
+    // Reverse maps
+    Map<int, int> buildReverse(Map<int, List<int>> pagesByPartition) {
+      final map = <int, int>{};
+      pagesByPartition.forEach((partitionId, pages) {
+        for (final pageNo in pages) {
+          map[pageNo] = partitionId;
+        }
+      });
+      return map;
+    }
+
+    return PartitionSnapshot(
+      totalSurahs: totalSurahs,
+      totalJuz: totalJuz,
+      totalHizb: totalHizb,
+      totalRuku: totalRuku,
+      pagesBySurah: pagesBySurah,
+      pagesByJuz: pagesByJuz,
+      pagesByHizb: pagesByHizb,
+      pagesByRuku: pagesByRuku,
+      pageToSurah: buildReverse(pagesBySurah),
+      pageToJuz: buildReverse(pagesByJuz),
+      pageToHizb: buildReverse(pagesByHizb),
+      pageToRuku: buildReverse(pagesByRuku),
+    );
+  }
+
+  /// Get partitionId for a given page in the given mode
+  int pageToPartition(PartitionMode mode, int pageNo) {
+    switch (mode) {
+      case PartitionMode.surah:
+        return pageToSurah[pageNo] ?? 1;
+      case PartitionMode.juz:
+        return pageToJuz[pageNo] ?? 1;
+      case PartitionMode.hizb:
+        return pageToHizb[pageNo] ?? 1;
+      case PartitionMode.ruku:
+        return pageToRuku[pageNo] ?? 1;
+      case PartitionMode.page:
+        return pageNo; // identity: partition == page
+    }
+  }
+
+  /// Get all pages belonging to a partition in the given mode
+  List<int> pagesByMode(PartitionMode mode, int partitionId) {
+    switch (mode) {
+      case PartitionMode.surah:
+        return pagesBySurah[partitionId] ?? const [];
+      case PartitionMode.juz:
+        return pagesByJuz[partitionId] ?? const [];
+      case PartitionMode.hizb:
+        return pagesByHizb[partitionId] ?? const [];
+      case PartitionMode.ruku:
+        return pagesByRuku[partitionId] ?? const [];
+      case PartitionMode.page:
+        return [partitionId]; // a single page
+    }
+  }
+}

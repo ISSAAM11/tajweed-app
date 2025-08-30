@@ -1,12 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tajweed_ai/src/base/dependencies/dependencies.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/database/app_database.dart';
-import 'package:tajweed_ai/src/database/daos/quran_dao.dart';
+import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/cache/page_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/meta/quran_meta_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/page/partition_snapshot_service.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/page/quran_page_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/quran_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_bloc.dart';
@@ -29,7 +28,7 @@ class QuranDependencies implements Dependencies {
 
     di.registerLazySingleton<QuranPageDatasource>(
       () => QuranPageDatasourceImpl(
-        dao: get<QuranDao>(),
+        pageDao: get<QuranPageDao>(),
         listingDatasource: get<QuranListingDatasource>(),
         pageCache: get<PageCache>(),
       ),
@@ -39,7 +38,6 @@ class QuranDependencies implements Dependencies {
       () => QuranDatasourceImpl(
         pageDatasource: get<QuranPageDatasource>(),
         listingDatasource: get<QuranListingDatasource>(),
-        metaDatasource: get<QuranMetaDatasource>(),
       ),
     );
 

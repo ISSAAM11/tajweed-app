@@ -6,8 +6,10 @@ import 'package:generic_requester/generic_requester.dart' show Dio;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
+import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/cache/listing_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/page/partition_snapshot_service.dart';
 
 import '../../core/dependency/get_it_container.dart';
 import '../../core/managers/cache/cache_manager_impl.dart';
@@ -34,6 +36,16 @@ final class AppBinding extends AppBindings {
     di.registerLazySingleton<QuranListingDao>(
       () => QuranListingDao(get<AppDatabase>()),
     );
+    di.registerLazySingleton<QuranPageDao>(
+      () => QuranPageDao(get<AppDatabase>()),
+    );
+    // register once at app startup
+    di.registerSingletonAsync<PartitionSnapshotService>(() async {
+      final dao = get<QuranPageDao>();
+      final svc = PartitionSnapshotService(dao);
+      await svc.load();
+      return svc;
+    });
 
     // 📦 Cache
     di.registerLazySingleton<CacheManager<SharedPreferences>>(

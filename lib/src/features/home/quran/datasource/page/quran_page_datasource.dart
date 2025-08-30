@@ -1,5 +1,5 @@
 import 'package:tajweed_ai/src/database/app_database.dart';
-import 'package:tajweed_ai/src/database/daos/quran_dao.dart';
+import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/cache/page_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart';
@@ -7,17 +7,30 @@ import 'package:tajweed_ai/src/features/home/quran/datasource/page/page_models.d
 
 abstract interface class QuranPageDatasource {
   Future<PageContentDto> getPageContent(int pageNo);
+  PageContentDto applyPipeline(PartitionMode mode, PageContentDto page);
+  Future<int> getPageForVerse(VerseKey verseKey);
 }
 
 final class QuranPageDatasourceImpl implements QuranPageDatasource {
   final QuranListingDatasource listingDatasource;
   final PageCache pageCache;
-  final QuranDao dao;
+  final QuranPageDao pageDao;
   QuranPageDatasourceImpl({
-    required this.dao,
+    required this.pageDao,
     required this.listingDatasource,
     required this.pageCache,
   });
+
+  @override
+  Future<int> getPageForVerse(VerseKey verseKey) async {
+    return pageDao.getPageForVerse(verseKey);
+  }
+
+  @override
+  PageContentDto applyPipeline(PartitionMode mode, PageContentDto page) {
+    // TODO: implement filter/pipeline chain
+    return page;
+  }
 
   /// Public entry point: builds or returns cached full page, then optionally filters for a surah.
   @override
@@ -38,7 +51,7 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
 
   /// Builds the full PageContentDto.
   Future<PageContentDto> _buildPageContent(int pageNo) async {
-    final metas = await dao.getPageAyatMetas(pageNo);
+    final metas = await pageDao.getPageAyatMetas(pageNo);
     final blocks = <PageBlockDto>[];
 
     if (metas.isNotEmpty) {
@@ -54,7 +67,7 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
     }
     // Collect words
     final ayatKeys = metas.map((m) => (VerseKey(m.surah, m.ayah))).toList();
-    final allWords = await dao.getWordsForAyat(ayatKeys);
+    final allWords = await pageDao.getWordsForAyat(ayatKeys);
     final wordsByAyah = <VerseKey, List<WordRow>>{};
     for (final w in allWords) {
       wordsByAyah.putIfAbsent(VerseKey(w.surah, w.ayah), () => []).add(w);
@@ -67,23 +80,20 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
       if (a.ayah == 1) {
         var header = chapterCacheMap[a.surah];
         if (header == null) {
-          final chap = await listingDatasource.getChapterById(a.surah);
-          if (chap != null) {
-            header = ChapterHeaderDto(
-              id: chap.id,
-              nameArabic: chap.nameArabic,
-              nameGlyph: chap.nameGlyph,
-              bismillahPre: chap.bismillahPre,
-              revelationPlace: chap.revelationPlace,
-            );
-            chapterCacheMap[a.surah] = header;
-          }
+          final chap = await pageDao.getChapterHeader(a.surah);
+
+          header = ChapterHeaderDto(
+            id: chap.id,
+            nameArabic: chap.nameArabic,
+            nameGlyph: chap.nameGlyph,
+            bismillahPre: chap.bismillahPre,
+            revelationPlace: chap.revelationPlace,
+          );
+          chapterCacheMap[a.surah] = header;
         }
-        if (header != null) {
-          blocks.add(SurahHeaderBlockDto(chapter: header));
-          if (header.bismillahPre) {
-            blocks.add(BasmalahBlockDto(surahId: header.id));
-          }
+        blocks.add(SurahHeaderBlockDto(chapter: header));
+        if (header.bismillahPre) {
+          blocks.add(BasmalahBlockDto(surahId: header.id));
         }
       }
       final words = wordsByAyah[VerseKey(a.surah, a.ayah)] ?? const [];
