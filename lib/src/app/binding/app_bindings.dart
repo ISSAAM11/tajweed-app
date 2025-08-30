@@ -4,6 +4,10 @@ import 'package:flutter/material.dart' show WidgetsFlutterBinding;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:generic_requester/generic_requester.dart' show Dio;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tajweed_ai/src/database/app_database.dart';
+import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/cache/listing_cache.dart';
+import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart';
 
 import '../../core/dependency/get_it_container.dart';
 import '../../core/managers/cache/cache_manager_impl.dart';
@@ -19,20 +23,39 @@ final class AppBinding extends AppBindings {
   @override
   Future<void> asynchronous() async {
     WidgetsFlutterBinding.ensureInitialized();
-
-    //& Packages - Initialize SharedPreferences first
     final prefs = await SharedPreferences.getInstance();
-    di.registerInstance<SharedPreferences>(prefs);
+    // 📦 External packages
+    di.registerSingleton<SharedPreferences>(prefs);
+
+    // 📦 Database
+    di.registerLazySingleton<AppDatabase>(() => AppDatabase());
+
+    // 📦 DAOs
+    di.registerLazySingleton<QuranListingDao>(
+      () => QuranListingDao(get<AppDatabase>()),
+    );
+
+    // 📦 Cache
+    di.registerLazySingleton<CacheManager>(() => CacheManagerImpl(prefs));
+    di.registerLazySingleton<ListingCache>(
+      () => ListingCache(get<CacheManager>()),
+    );
+
+    // 📦 Datasource (prewarmed)
+    di.registerSingletonAsync<QuranListingDatasource>(() async {
+      final ds = QuranListingDatasourceImpl(
+        listingDao: get<QuranListingDao>(),
+        listingCache: get<ListingCache>(),
+      );
+      await ds.getListingData(); // preload data into cache
+      return ds;
+    });
   }
 
   @override
   void synchronous() {
     //? Managers
     di.registerLazySingleton(() => FlutterSecureStorage());
-    di.registerLazySingleton<CacheManager<SharedPreferences>>(
-      () => CacheManagerImpl(),
-    );
-
     //& Packages
     di.registerLazySingleton(() => Dio());
     di.registerLazySingleton<ConnectivityMonitor>(
