@@ -1,5 +1,5 @@
 import 'package:tajweed_ai/src/database/app_database.dart'
-    show WordRow, AyahMetaRow;
+    show WordRow, AyahMetaRow, ChapterRow;
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 
 class ChapterHeaderDto {
@@ -15,6 +15,12 @@ class ChapterHeaderDto {
     required this.bismillahPre,
     required this.revelationPlace,
   });
+  ChapterHeaderDto.fromChapterRow(ChapterRow row)
+    : id = row.id,
+      nameArabic = row.nameArabic,
+      nameGlyph = row.nameGlyph,
+      bismillahPre = row.bismillahPre,
+      revelationPlace = row.revelationPlace;
 }
 
 abstract class PageBlockDto {}

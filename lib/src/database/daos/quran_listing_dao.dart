@@ -7,7 +7,7 @@ import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listin
 import '../app_database.dart';
 import '../tables/quran/words.dart';
 
-part 'quran_listing_dao.g.dart';
+part 'generated/quran_listing_dao.g.dart';
 
 @DriftAccessor(tables: [AyahMetas, Words, Chapters])
 class QuranListingDao extends DatabaseAccessor<AppDatabase>

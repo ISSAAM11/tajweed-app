@@ -1,8 +1,5 @@
-import 'package:tajweed_ai/src/database/app_database.dart';
-import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart'
     show ListingDataDto, QuranListingDatasource;
-import 'package:tajweed_ai/src/features/home/quran/datasource/meta/quran_meta_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/page/page_models.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/page/quran_page_datasource.dart';
 
@@ -23,13 +20,6 @@ abstract interface class QuranDatasource {
   // Meta operations
   // -------------------
 
-  /// Watches metadata for a specific page (async stream of updates).
-  Stream<AyahMetaRow?> watchPageMeta(int pageNo);
-
-  /// Returns the partition number (e.g., juz, hizb, etc.)
-  /// for a given ayah by its global index.
-  Future<int?> getPartitionForAyah(PartitionMode mode, VerseKey key);
-
   // -------------------
   // Content operations
   // -------------------
@@ -47,12 +37,10 @@ abstract interface class QuranDatasource {
 final class QuranDatasourceImpl implements QuranDatasource {
   final QuranListingDatasource listingDatasource;
   final QuranPageDatasource pageDatasource;
-  final QuranMetaDatasource metaDatasource;
 
   QuranDatasourceImpl({
     required this.pageDatasource,
     required this.listingDatasource,
-    required this.metaDatasource,
   });
 
   // -------------------
@@ -75,14 +63,4 @@ final class QuranDatasourceImpl implements QuranDatasource {
   // -------------------
   // Meta delegation
   // -------------------
-
-  @override
-  Future<int?> getPartitionForAyah(PartitionMode mode, VerseKey key) {
-    return metaDatasource.getPartitionForAyah(mode, key);
-  }
-
-  @override
-  Stream<AyahMetaRow?> watchPageMeta(int pageNo) {
-    return metaDatasource.watchPageMeta(pageNo);
-  }
 }

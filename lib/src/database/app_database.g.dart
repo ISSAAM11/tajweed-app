@@ -2941,10 +2941,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RukusTable rukus = $RukusTable(this);
   late final $SajdahsTable sajdahs = $SajdahsTable(this);
   late final $AyahMetasTable ayahMetas = $AyahMetasTable(this);
-  late final QuranDao quranDao = QuranDao(this as AppDatabase);
   late final QuranListingDao quranListingDao = QuranListingDao(
     this as AppDatabase,
   );
+  late final QuranPageDao quranPageDao = QuranPageDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
