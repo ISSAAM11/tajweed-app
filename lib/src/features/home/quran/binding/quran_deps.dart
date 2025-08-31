@@ -9,21 +9,17 @@ import 'package:tajweed_ai/src/features/home/quran/datasource/page/partition_sna
 import 'package:tajweed_ai/src/features/home/quran/datasource/page/quran_page_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/quran_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/vm/quran_page/quran_page_bloc.dart';
 
 class QuranDependencies implements Dependencies {
   @override
   void inject() {
-    di.registerLazySingleton<QuranDao>(() => QuranDao(get<AppDatabase>()));
     // Feature caches
     di.registerLazySingleton<PageCache>(
       () => PageCache(
         cacheManager: get<CacheManager<SharedPreferences>>(),
         capacity: 10,
       ),
-    );
-    // Feature datasources
-    di.registerLazySingleton<QuranMetaDatasource>(
-      () => QuranMetaDatasourceImpl(dao: get<QuranDao>()),
     );
 
     di.registerLazySingleton<QuranPageDatasource>(
@@ -44,6 +40,14 @@ class QuranDependencies implements Dependencies {
     // Feature bloc
     di.registerLazySingleton<QuranListingBloc>(
       () => QuranListingBloc(get<QuranDatasource>(), PartitionMode.surah),
+    );
+
+    // each screen gets a fresh Bloc
+    di.registerFactory<QuranPageBloc>(
+      () => QuranPageBloc(
+        get<QuranPageDatasource>(),
+        get<PartitionSnapshotService>(),
+      ),
     );
   }
 }

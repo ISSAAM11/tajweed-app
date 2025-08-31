@@ -60,6 +60,11 @@ class PageContentDto {
   final int pageNo;
   final List<PageBlockDto> blocks;
   PageContentDto({required this.pageNo, required this.blocks});
+  // Getter for pageNo
+  int get getPageNo => pageNo;
+
+  // Getter for blocks
+  List<PageBlockDto> get getBlocks => blocks;
 }
 
 class PartitionSnapshot {
