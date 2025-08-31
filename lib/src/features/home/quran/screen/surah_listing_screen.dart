@@ -1,5 +1,5 @@
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/features/home/quran/binding/quran_deps.dart';
+import 'package:tajweed_ai/src/features/home/quran/binding/quran_listing_deps.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_state.dart';
 
@@ -9,7 +9,7 @@ final class SurahListingScreen
     extends Feature<QuranListingBloc, QuranListingState> {
   SurahListingScreen({super.key})
     : super(
-        dependencies: QuranDependencies().inject,
+        dependencies: QuranListingDependencies().inject,
         onUpdate: (context, state) => switch (state) {
           _ => null,
         },

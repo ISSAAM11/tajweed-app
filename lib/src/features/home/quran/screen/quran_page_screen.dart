@@ -1,5 +1,5 @@
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/features/home/quran/binding/quran_deps.dart';
+import 'package:tajweed_ai/src/features/home/quran/binding/quran_page_deps.dart';
 import 'package:tajweed_ai/src/features/home/quran/screen/router/quran_page_router.dart';
 import 'package:tajweed_ai/src/features/home/quran/screen/widgets/quran_page_body.dart';
 import 'package:tajweed_ai/src/features/home/quran/vm/quran_page/quran_page_bloc.dart';
@@ -10,7 +10,7 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
   QuranPageScreen({super.key, required this.args})
     : super(
         // TODO: separate dependencies
-        dependencies: QuranDependencies().inject,
+        dependencies: QuranPageDependencies().inject,
         onUpdate: (context, state) => switch (state) {
           _ => null,
         },

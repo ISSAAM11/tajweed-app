@@ -9,7 +9,7 @@ part '../usecases/quran_listing_uc.dart';
 
 class QuranListingBloc extends BaseBloc<QuranListingEvent, QuranListingState> {
   //! Data Sources
-  final QuranDatasource _datasource;
+  final QuranListingDatasource _datasource;
   PartitionMode currentListingMode;
 
   void changeListingMode(PartitionMode mode) =>

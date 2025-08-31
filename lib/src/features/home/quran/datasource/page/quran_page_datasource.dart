@@ -2,7 +2,6 @@ import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/cache/page_cache.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/listing/quran_listing_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/datasource/page/page_models.dart';
 
 abstract interface class QuranPageDatasource {
@@ -12,14 +11,9 @@ abstract interface class QuranPageDatasource {
 }
 
 final class QuranPageDatasourceImpl implements QuranPageDatasource {
-  final QuranListingDatasource listingDatasource;
   final PageCache pageCache;
   final QuranPageDao pageDao;
-  QuranPageDatasourceImpl({
-    required this.pageDao,
-    required this.listingDatasource,
-    required this.pageCache,
-  });
+  QuranPageDatasourceImpl({required this.pageDao, required this.pageCache});
 
   @override
   Future<int> getPageForVerse(VerseKey verseKey) async {

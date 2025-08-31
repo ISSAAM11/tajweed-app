@@ -39,7 +39,7 @@ final class AppBinding extends AppBindings {
     di.registerLazySingleton<QuranPageDao>(
       () => QuranPageDao(get<AppDatabase>()),
     );
-    // register once at app startup
+    // 📦 PartitionSnapshotService (prewarmed)
     di.registerSingletonAsync<PartitionSnapshotService>(() async {
       final dao = get<QuranPageDao>();
       final svc = PartitionSnapshotService(dao);
