@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:tajweed_ai/src/database/tables/quran/ayah_metas.dart';
 import 'package:tajweed_ai/src/database/tables/quran/chapters.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/vm/quran_listing/quran_listing_model_helper.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 
 import '../app_database.dart';
 import '../tables/quran/words.dart';

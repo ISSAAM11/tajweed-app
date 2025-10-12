@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:tajweed_ai/src/database/tables/quran/ayah_metas.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/datasource/page/page_models.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 
 import '../app_database.dart';
 import '../tables/quran/chapters.dart';
@@ -14,7 +14,6 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
     with _$QuranPageDaoMixin {
   QuranPageDao(super.db);
 
-  // ****************** Validated
   Future<List<WordRow>> getWordsForAyat(List<VerseKey> ayat) {
     if (ayat.isEmpty) return Future.value([]);
 
@@ -117,6 +116,12 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
       chapters,
     )..where((c) => c.id.equals(surahId))).getSingle();
     return ChapterHeaderDto.fromChapterRow(row);
+  }
+
+  Future<int> buildPages() async {
+    final query = selectOnly(ayahMetas)..addColumns([ayahMetas.pageNo.max()]);
+    final result = await query.getSingle();
+    return result.read(ayahMetas.pageNo.max()) ?? 0;
   }
 
   Future<int> getPageForVerse(VerseKey key) async {

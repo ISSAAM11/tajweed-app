@@ -1,6 +1,5 @@
 import '../bloc/base_bloc.dart';
 import '../dependencies/dependencies.dart';
-
 import 'exports.dart';
 
 /// A base widget for providing a Bloc to its child widget tree. It allows you to inject
@@ -52,6 +51,7 @@ abstract class Feature<B extends BaseBloc<dynamic, S>, S>
     this.lazy = true,
     this.updateWhen,
     this.onUpdate,
+    this.onInit,
     this.fullRebuildWhen,
     this.debugStateChanges = false,
   });
@@ -66,6 +66,7 @@ abstract class Feature<B extends BaseBloc<dynamic, S>, S>
   final BlocBuilderCondition<dynamic>? updateWhen;
 
   final void Function(BuildContext, dynamic)? onUpdate;
+  final void Function(BuildContext, B bloc)? onInit;
   final bool Function(BuildContext, dynamic)? fullRebuildWhen;
 
   /// Whether to print state changes to the console. Defaults to `false`.
@@ -95,6 +96,10 @@ class _State<B extends BaseBloc<dynamic, S>, S> extends State<Feature<B, S>> {
     widget._state = this;
     widget.dependencies?.call();
     bloc = get<B>(); // Initialize bloc only once
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onInit?.call(context, bloc);
+    });
   }
 
   @override
