@@ -21,6 +21,36 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
   @override
   Widget build(BuildContext context, QuranPageState state) {
     return Scaffold(
+      appBar: AppBar(
+        title: BlocBuilder<QuranPageBloc, QuranPageState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                Text(
+                  state.surahName,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    height: 1,
+                  ),
+                ),
+                Text(
+                  "${state.partitionMode.label} ${state.partitionId}",
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(color: Colors.white),
+                ),
+              ],
+            );
+          },
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       backgroundColor: AppColors.scaffold,
       body: QuranPageBody(state),
     );

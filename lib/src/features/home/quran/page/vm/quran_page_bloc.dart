@@ -1,4 +1,5 @@
 import 'package:tajweed_ai/src/base/bloc/exports.dart';
+import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/quran_page_datasource.dart';
@@ -18,8 +19,11 @@ class QuranPageBloc extends BaseBloc<QuranPageEvent, QuranPageState> {
   void prefetchPages(List<int> pagesToPrefetch) =>
       add(PrefetchPages(pagesToPrefetch));
 
-  void partitionChanged(int newPartition) =>
-      add(PartitionChanged(newPartition));
+  void partitionChanged(int newPartition, partitionMode) =>
+      add(PartitionChanged(newPartition, partitionMode));
+
+  void fetchPartitionContent(int newPartition, partitionMode) =>
+      add(FetchPartitionContent(newPartition, partitionMode));
 
   void prefetchNeighborPartitions(PartitionMode mode, int newPartitionId) =>
       add(PrefetchNeighborPartitions(mode, newPartitionId));
@@ -42,6 +46,7 @@ class QuranPageBloc extends BaseBloc<QuranPageEvent, QuranPageState> {
     on<ChangePartitionMode>(_onChangePartitionMode);
 
     on<PartitionChanged>(_onPartitionChanged);
+    on<FetchPartitionContent>(_onfetchPartitionContent);
     on<PrefetchPages>(_onPrefetchPages);
 
     on<PrefetchNeighborPartitions>(_prefetchNeighborPartitions);

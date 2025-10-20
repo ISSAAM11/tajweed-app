@@ -111,10 +111,14 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
     return result;
   }
 
-  Future<ChapterHeaderDto> getChapterHeader(int surahId) async {
+  Future<ChapterHeaderDto> getChapterHeader(int pageNo) async {
+    final firstAyat = await (select(
+      ayahMetas,
+    )..where((a) => a.pageNo.equals(pageNo))).get();
+
     final row = await (select(
       chapters,
-    )..where((c) => c.id.equals(surahId))).getSingle();
+    )..where((c) => c.id.equals(firstAyat.first.surah))).getSingle();
     return ChapterHeaderDto.fromChapterRow(row);
   }
 

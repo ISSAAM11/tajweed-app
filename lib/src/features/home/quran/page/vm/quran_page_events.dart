@@ -32,7 +32,18 @@ class ChangePartitionMode extends QuranPageEvent {
 // user swiped horizontally
 class PartitionChanged extends QuranPageEvent {
   final int newPartitionId;
-  const PartitionChanged(this.newPartitionId);
+  final PartitionMode partitionMode;
+
+  const PartitionChanged(this.newPartitionId, this.partitionMode);
+  @override
+  List<Object?> get props => [newPartitionId];
+}
+
+class FetchPartitionContent extends QuranPageEvent {
+  final int newPartitionId;
+  final PartitionMode partitionMode;
+
+  const FetchPartitionContent(this.newPartitionId, this.partitionMode);
   @override
   List<Object?> get props => [newPartitionId];
 }

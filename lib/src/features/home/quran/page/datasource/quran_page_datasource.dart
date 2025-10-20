@@ -7,6 +7,7 @@ import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.d
 abstract interface class QuranPageDatasource {
   Future<PageContentDto> getPageContent(int pageNo);
   Future<int> getPageForVerse(VerseKey verseKey);
+  Future<ChapterHeaderDto> getChapterHeader(int surahIndex);
 }
 
 final class QuranPageDatasourceImpl implements QuranPageDatasource {
@@ -17,6 +18,11 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
   @override
   Future<int> getPageForVerse(VerseKey verseKey) async {
     return pageDao.getPageForVerse(verseKey);
+  }
+
+  @override
+  Future<ChapterHeaderDto> getChapterHeader(int surahIndex) async {
+    return pageDao.getChapterHeader(surahIndex);
   }
 
   /// Public entry point: builds or returns cached full page, then optionally filters for a surah.

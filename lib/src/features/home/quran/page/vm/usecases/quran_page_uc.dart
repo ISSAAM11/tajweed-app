@@ -10,10 +10,11 @@ extension QuranPageUc on QuranPageBloc {
       snapshot,
       event.mode,
     );
-
     // 1. Resolve the page containing the verse
     final pageNo = await pageDataSource.getPageForVerse(event.verseKey);
 
+    // 1. get surah arabic Name
+    final chap = await pageDataSource.getChapterHeader(event.verseKey.surah);
     // 2. Find the partition that contains this page
     final partitionId = snapshot.pageToPartition(event.mode, pageNo);
 
@@ -26,6 +27,7 @@ extension QuranPageUc on QuranPageBloc {
     // 5. Emit loaded state with the index hint for UI
     emit(
       QuranPageLoaded(
+        surahName: chap.nameArabic,
         partitionMode: event.mode,
         partitionId: partitionId,
         currentPartitionPages: partitionPages,
@@ -108,22 +110,35 @@ extension QuranPageUc on QuranPageBloc {
     Emitter<QuranPageState> emit,
   ) async {
     final newPartitionId = event.newPartitionId;
-
-    // 1) Get pages for new partition
+    // Get first page to retrieve surah name
     final newPages = snapshotService.snapshot.pagesByMode(
-      state.partitionMode,
-      newPartitionId,
+      event.partitionMode,
+      event.newPartitionId,
+    );
+    // retrieve surah name
+    final chap = await pageDataSource.getChapterHeader(newPages.first);
+
+    emit(
+      state.copyWith(surahName: chap.nameArabic, partitionId: newPartitionId),
+    );
+  }
+
+  Future<void> _onfetchPartitionContent(
+    FetchPartitionContent event,
+    Emitter<QuranPageState> emit,
+  ) async {
+    final newPages = snapshotService.snapshot.pagesByMode(
+      event.partitionMode,
+      event.newPartitionId,
     );
 
-    // 4) Emit updated state
     emit(
       state.copyWith(
-        partitionId: newPartitionId,
+        partitionId: event.newPartitionId,
         currentPartitionPages: newPages,
       ),
     );
 
-    // 5) Prefetch first page(s)
     add(PrefetchPages(newPages));
   }
 }

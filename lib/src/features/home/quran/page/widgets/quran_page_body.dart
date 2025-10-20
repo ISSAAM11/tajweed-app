@@ -102,7 +102,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
                 (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
                 ? _orderedPartitionIds[uiIndex]
                 : _orderedPartitionIds.first;
-            bloc.partitionChanged(newPartitionId);
+            bloc.partitionChanged(newPartitionId, data.partitionMode);
           },
           itemBuilder: (context, uiIndex) {
             final partitionId =
@@ -110,13 +110,20 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
                 ? _orderedPartitionIds[uiIndex]
                 : _orderedPartitionIds.first;
 
-            // only build near the current partition to reduce rebuilds
             if ((partitionId < data.partitionId - 1) ||
                 (partitionId > data.partitionId + 1)) {
               return const SizedBox.shrink();
             }
-            // TODO: update initialIndex impl
-            return PartitionView(partitionIndex: partitionId, initialIndex: 0);
+
+            return BlocProvider(
+              create: (context) =>
+                  QuranPageBloc(bloc.pageDataSource, bloc.snapshotService),
+              child: PartitionView(
+                partitionMode: data.partitionMode,
+                partitionIndex: partitionId,
+                initialIndex: 0,
+              ),
+            );
           },
         );
       },

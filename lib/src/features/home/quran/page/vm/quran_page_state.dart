@@ -5,6 +5,7 @@ import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 
 sealed class QuranPageState extends Equatable {
+  final String surahName;
   final PartitionMode partitionMode;
   final int partitionId;
   final List<int> currentPartitionPages;
@@ -14,6 +15,7 @@ sealed class QuranPageState extends Equatable {
   final Set<int> loadingPages;
 
   const QuranPageState({
+    required this.surahName,
     required this.partitionMode,
     required this.partitionId,
     required this.currentPartitionPages,
@@ -23,6 +25,7 @@ sealed class QuranPageState extends Equatable {
     required this.loadingPages,
   });
   QuranPageState copyWith({
+    String? surahName,
     PartitionMode? partitionMode,
     int? partitionId,
     List<int>? currentPartitionPages,
@@ -34,6 +37,7 @@ sealed class QuranPageState extends Equatable {
 
   @override
   List<Object?> get props => [
+    surahName,
     partitionMode,
     partitionId,
     currentPartitionPages,
@@ -47,6 +51,7 @@ sealed class QuranPageState extends Equatable {
 class QuranPageInitial extends QuranPageState {
   const QuranPageInitial()
     : super(
+        surahName: '',
         partitionMode: PartitionMode.surah,
         partitionId: 1,
         totalPartitions: 114,
@@ -58,6 +63,7 @@ class QuranPageInitial extends QuranPageState {
 
   @override
   QuranPageLoaded copyWith({
+    String? surahName,
     PartitionMode? partitionMode,
     int? partitionId,
     List<int>? currentPartitionPages,
@@ -67,6 +73,7 @@ class QuranPageInitial extends QuranPageState {
     int? totalPartitions,
   }) {
     return QuranPageLoaded(
+      surahName: surahName ?? this.surahName,
       partitionMode: partitionMode ?? this.partitionMode,
       partitionId: partitionId ?? this.partitionId,
       currentPartitionPages:
@@ -82,6 +89,7 @@ class QuranPageInitial extends QuranPageState {
 // loaded / normal state
 class QuranPageLoaded extends QuranPageState {
   const QuranPageLoaded({
+    required super.surahName,
     required super.partitionMode,
     required super.partitionId,
     required super.currentPartitionPages,
@@ -93,6 +101,7 @@ class QuranPageLoaded extends QuranPageState {
 
   @override
   QuranPageLoaded copyWith({
+    String? surahName,
     PartitionMode? partitionMode,
     int? partitionId,
     List<int>? currentPartitionPages,
@@ -104,6 +113,7 @@ class QuranPageLoaded extends QuranPageState {
     ItemScrollController? verticalController,
   }) {
     return QuranPageLoaded(
+      surahName: surahName ?? this.surahName,
       partitionMode: partitionMode ?? this.partitionMode,
       partitionId: partitionId ?? this.partitionId,
       currentPartitionPages:
