@@ -55,6 +55,25 @@ class PageCodec {
         };
       } else if (b is PartitionMarkerBlockDto) {
         return {'t': 'marker', 'mode': b.mode.index, 'pid': b.partitionId};
+      } else if (b is PageAyatsBlockDto) {
+        return {
+          't': 'pageAyahs',
+          'ayahs': b.pageAyahs
+              .map(
+                (a) => a
+                    .map(
+                      (w) => {
+                        'id': w.id,
+                        's': w.surah,
+                        'a': w.ayah,
+                        'w': w.word,
+                        't': w.text_,
+                      },
+                    )
+                    .toList(),
+              )
+              .toList(),
+        };
       }
       throw UnsupportedError('Unknown PageBlock $b');
     }).toList();
@@ -137,6 +156,28 @@ class PageCodec {
             ),
           );
           break;
+
+        case 'pageAyahs':
+          final raw = o['ayahs'] as List;
+          final pageAyahs = raw.map<List<WordRow>>((item) {
+            final inner = item as List;
+            return inner
+                .map(
+                  (w) => WordRow(
+                    id: w['id'],
+                    location: WordLocation(w['s'], w['a'], w['w']),
+                    surah: w['s'],
+                    ayah: w['a'],
+                    word: w['w'],
+                    text_: w['t'],
+                  ),
+                )
+                .toList();
+          }).toList();
+
+          blocks.add(PageAyatsBlockDto(pageAyahs: pageAyahs));
+          break;
+
         default:
           throw UnsupportedError('Unknown block type $t');
       }

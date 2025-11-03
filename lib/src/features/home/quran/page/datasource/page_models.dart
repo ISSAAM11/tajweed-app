@@ -30,6 +30,11 @@ class SurahHeaderBlockDto extends PageBlockDto {
   SurahHeaderBlockDto({required this.chapter});
 }
 
+class PageAyatsBlockDto extends PageBlockDto {
+  final List<List<WordRow>> pageAyahs;
+  PageAyatsBlockDto({required this.pageAyahs});
+}
+
 class BasmalahBlockDto extends PageBlockDto {
   final int surahId;
   BasmalahBlockDto({required this.surahId});

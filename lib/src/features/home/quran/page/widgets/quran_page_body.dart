@@ -89,6 +89,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
         });
 
         return PageView.builder(
+          reverse: true,
           controller: _pageController,
           itemCount: _orderedPartitionIds.length,
           onPageChanged: (uiIndex) {

@@ -122,6 +122,13 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
     return ChapterHeaderDto.fromChapterRow(row);
   }
 
+  Future<ChapterHeaderDto> getSurahName(int surahIndex) async {
+    final row = await (select(
+      chapters,
+    )..where((c) => c.id.equals(surahIndex))).getSingle();
+    return ChapterHeaderDto.fromChapterRow(row);
+  }
+
   Future<int> buildPages() async {
     final query = selectOnly(ayahMetas)..addColumns([ayahMetas.pageNo.max()]);
     final result = await query.getSingle();

@@ -67,13 +67,17 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
     }
     // Render ayat with inline headers/basmalah on surah starts
     final chapterCacheMap = <int, ChapterHeaderDto>{};
-
+    final List<List<WordRow>> ayatList = [];
     for (final a in metas) {
       // Surah start
       if (a.ayah == 1) {
+        if (ayatList.isNotEmpty) {
+          blocks.add(PageAyatsBlockDto(pageAyahs: List.of(ayatList)));
+          ayatList.clear();
+        }
         var header = chapterCacheMap[a.surah];
         if (header == null) {
-          final chap = await pageDao.getChapterHeader(a.surah);
+          final chap = await pageDao.getSurahName(a.surah);
 
           header = ChapterHeaderDto(
             id: chap.id,
@@ -91,7 +95,10 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
       }
       final words = wordsByAyah[VerseKey(a.surah, a.ayah)] ?? const [];
       blocks.add(AyahBlockDto(ayah: a, words: words));
+      ayatList.add(words);
     }
+    blocks.add(PageAyatsBlockDto(pageAyahs: List.of(ayatList)));
+
     return PageContentDto(pageNo: pageNo, blocks: blocks);
   }
 }

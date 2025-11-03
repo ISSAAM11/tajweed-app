@@ -47,7 +47,7 @@ flutter:
   generate: true
   assets:
     - assets/images/
-    - assets/json/
+    # - assets/json/
     - assets/fonts/
     - assets/db/prebuilt.db
   fonts:

@@ -26,7 +26,6 @@ class PageCache {
       _touch(pageNo, mem);
       return mem;
     }
-
     // 2. Check persistent cache
     final raw = cacheManager.getString(_kPageKey(pageNo));
     if (raw != null) {

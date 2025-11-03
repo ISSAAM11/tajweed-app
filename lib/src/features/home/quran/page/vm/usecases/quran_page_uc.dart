@@ -14,7 +14,7 @@ extension QuranPageUc on QuranPageBloc {
     final pageNo = await pageDataSource.getPageForVerse(event.verseKey);
 
     // 1. get surah arabic Name
-    final chap = await pageDataSource.getChapterHeader(event.verseKey.surah);
+    final chap = await pageDataSource.getChapterHeader(pageNo);
     // 2. Find the partition that contains this page
     final partitionId = snapshot.pageToPartition(event.mode, pageNo);
 

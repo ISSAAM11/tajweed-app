@@ -59,13 +59,27 @@ class SajdahTypeConverter extends TypeConverter<SajdahType, String> {
 class VerseKey {
   final int surah;
   final int ayah;
+
   VerseKey(this.surah, this.ayah);
+
   factory VerseKey.parse(String key) {
     final parts = key.split(':');
     return VerseKey(int.parse(parts[0]), int.parse(parts[1]));
   }
+
   @override
   String toString() => '$surah:$ayah';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is VerseKey &&
+          runtimeType == other.runtimeType &&
+          surah == other.surah &&
+          ayah == other.ayah;
+
+  @override
+  int get hashCode => Object.hash(surah, ayah);
 }
 
 class VerseRange {
