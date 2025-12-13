@@ -50,6 +50,11 @@ flutter:
     # - assets/json/
     - assets/fonts/
     - assets/db/prebuilt.db
+    - assets/images/background/left_background.jpg
+    - assets/images/background/right_background.jpg
+    - assets/images/background/surah-header-background1.png
+    - assets/images/background/tajweed-rules.png
+
   fonts:
     - family: SurahNameV4
       fonts:

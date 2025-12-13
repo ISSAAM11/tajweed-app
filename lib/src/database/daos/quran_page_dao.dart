@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:tajweed_ai/src/database/tables/quran/ayah_metas.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/database/tables/quran/page_lines.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 
 import '../app_database.dart';
@@ -9,7 +10,7 @@ import '../tables/quran/words.dart';
 
 part 'generated/quran_page_dao.g.dart';
 
-@DriftAccessor(tables: [AyahMetas, Words, Chapters])
+@DriftAccessor(tables: [AyahMetas, Words, Chapters, PageLines])
 class QuranPageDao extends DatabaseAccessor<AppDatabase>
     with _$QuranPageDaoMixin {
   QuranPageDao(super.db);
@@ -150,5 +151,46 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
           ..where((a) => a.pageNo.equals(pageNo))
           ..orderBy([(a) => OrderingTerm.asc(a.globalIndex)]))
         .get();
+  }
+
+  Future<List<PageLinesDto>> getPageLines(int pageNo) async {
+    final rows = await customSelect(
+      '''
+      SELECT page_number, line_number, line_type, is_centered, 
+             first_word_id, last_word_id, surah_number
+      FROM page_lines
+      WHERE page_number = ?
+      ORDER BY line_number ASC
+    ''',
+      variables: [Variable.withInt(pageNo)],
+      readsFrom: {pageLines},
+    ).get();
+
+    final result = rows.map((row) {
+      // Fonction helper pour lire int nullable en toute sécurité
+      int? safeReadInt(String column) {
+        try {
+          return row.readNullable<int>(column);
+        } catch (e) {
+          // Si c'est stocké comme string, essayer de parser
+          final strValue = row.readNullable<String>(column);
+          return strValue != null ? int.tryParse(strValue) : null;
+        }
+      }
+
+      final pageLineRow = PageLinesDto(
+        pageNumber: row.read<int>('page_number'),
+        lineNumber: row.read<int>('line_number'),
+        lineType: row.read<String>('line_type'),
+        isCentered: row.read<bool>('is_centered'),
+        firstWordId: safeReadInt('first_word_id'),
+        lastWordId: safeReadInt('last_word_id'),
+        surahNumber: safeReadInt('surah_number'),
+      );
+
+      return pageLineRow;
+    }).toList();
+
+    return result;
   }
 }

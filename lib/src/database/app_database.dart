@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/ayah_metas.dart';
+import 'package:tajweed_ai/src/database/tables/quran/page_lines.dart';
 
 import 'migrations/migrations.dart';
 import 'tables/quran/chapters.dart';
@@ -21,7 +22,7 @@ import 'tables/quran/words.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [Words, Chapters, Hizbs, Juzs, Rukus, Sajdahs, AyahMetas],
+  tables: [Words, Chapters, Hizbs, Juzs, Rukus, Sajdahs, AyahMetas, PageLines],
   daos: [QuranListingDao, QuranPageDao],
 )
 class AppDatabase extends _$AppDatabase {
@@ -29,7 +30,7 @@ class AppDatabase extends _$AppDatabase {
 
   // 👇 IMPORTANT: Match this with the schema version of prebuilt.db
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => buildMigrationStrategy(this);

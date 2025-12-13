@@ -2931,6 +2931,502 @@ class AyahMetasCompanion extends UpdateCompanion<AyahMetaRow> {
   }
 }
 
+class $PageLinesTable extends PageLines
+    with TableInfo<$PageLinesTable, PageLineRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PageLinesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _pageNumberMeta = const VerificationMeta(
+    'pageNumber',
+  );
+  @override
+  late final GeneratedColumn<int> pageNumber = GeneratedColumn<int>(
+    'page_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lineNumberMeta = const VerificationMeta(
+    'lineNumber',
+  );
+  @override
+  late final GeneratedColumn<int> lineNumber = GeneratedColumn<int>(
+    'line_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lineTypeMeta = const VerificationMeta(
+    'lineType',
+  );
+  @override
+  late final GeneratedColumn<String> lineType = GeneratedColumn<String>(
+    'line_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isCenteredMeta = const VerificationMeta(
+    'isCentered',
+  );
+  @override
+  late final GeneratedColumn<bool> isCentered = GeneratedColumn<bool>(
+    'is_centered',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_centered" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _firstWordIdMeta = const VerificationMeta(
+    'firstWordId',
+  );
+  @override
+  late final GeneratedColumn<int> firstWordId = GeneratedColumn<int>(
+    'first_word_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastWordIdMeta = const VerificationMeta(
+    'lastWordId',
+  );
+  @override
+  late final GeneratedColumn<int> lastWordId = GeneratedColumn<int>(
+    'last_word_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _surahNumberMeta = const VerificationMeta(
+    'surahNumber',
+  );
+  @override
+  late final GeneratedColumn<int> surahNumber = GeneratedColumn<int>(
+    'surah_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    pageNumber,
+    lineNumber,
+    lineType,
+    isCentered,
+    firstWordId,
+    lastWordId,
+    surahNumber,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'page_lines';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PageLineRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('page_number')) {
+      context.handle(
+        _pageNumberMeta,
+        pageNumber.isAcceptableOrUnknown(data['page_number']!, _pageNumberMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_pageNumberMeta);
+    }
+    if (data.containsKey('line_number')) {
+      context.handle(
+        _lineNumberMeta,
+        lineNumber.isAcceptableOrUnknown(data['line_number']!, _lineNumberMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lineNumberMeta);
+    }
+    if (data.containsKey('line_type')) {
+      context.handle(
+        _lineTypeMeta,
+        lineType.isAcceptableOrUnknown(data['line_type']!, _lineTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lineTypeMeta);
+    }
+    if (data.containsKey('is_centered')) {
+      context.handle(
+        _isCenteredMeta,
+        isCentered.isAcceptableOrUnknown(data['is_centered']!, _isCenteredMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isCenteredMeta);
+    }
+    if (data.containsKey('first_word_id')) {
+      context.handle(
+        _firstWordIdMeta,
+        firstWordId.isAcceptableOrUnknown(
+          data['first_word_id']!,
+          _firstWordIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_word_id')) {
+      context.handle(
+        _lastWordIdMeta,
+        lastWordId.isAcceptableOrUnknown(
+          data['last_word_id']!,
+          _lastWordIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('surah_number')) {
+      context.handle(
+        _surahNumberMeta,
+        surahNumber.isAcceptableOrUnknown(
+          data['surah_number']!,
+          _surahNumberMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {pageNumber, lineNumber};
+  @override
+  PageLineRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PageLineRow(
+      pageNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}page_number'],
+      )!,
+      lineNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}line_number'],
+      )!,
+      lineType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}line_type'],
+      )!,
+      isCentered: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_centered'],
+      )!,
+      firstWordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}first_word_id'],
+      ),
+      lastWordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_word_id'],
+      ),
+      surahNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}surah_number'],
+      ),
+    );
+  }
+
+  @override
+  $PageLinesTable createAlias(String alias) {
+    return $PageLinesTable(attachedDatabase, alias);
+  }
+}
+
+class PageLineRow extends DataClass implements Insertable<PageLineRow> {
+  final int pageNumber;
+  final int lineNumber;
+  final String lineType;
+  final bool isCentered;
+  final int? firstWordId;
+  final int? lastWordId;
+  final int? surahNumber;
+  const PageLineRow({
+    required this.pageNumber,
+    required this.lineNumber,
+    required this.lineType,
+    required this.isCentered,
+    this.firstWordId,
+    this.lastWordId,
+    this.surahNumber,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['page_number'] = Variable<int>(pageNumber);
+    map['line_number'] = Variable<int>(lineNumber);
+    map['line_type'] = Variable<String>(lineType);
+    map['is_centered'] = Variable<bool>(isCentered);
+    if (!nullToAbsent || firstWordId != null) {
+      map['first_word_id'] = Variable<int>(firstWordId);
+    }
+    if (!nullToAbsent || lastWordId != null) {
+      map['last_word_id'] = Variable<int>(lastWordId);
+    }
+    if (!nullToAbsent || surahNumber != null) {
+      map['surah_number'] = Variable<int>(surahNumber);
+    }
+    return map;
+  }
+
+  PageLinesCompanion toCompanion(bool nullToAbsent) {
+    return PageLinesCompanion(
+      pageNumber: Value(pageNumber),
+      lineNumber: Value(lineNumber),
+      lineType: Value(lineType),
+      isCentered: Value(isCentered),
+      firstWordId: firstWordId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firstWordId),
+      lastWordId: lastWordId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastWordId),
+      surahNumber: surahNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(surahNumber),
+    );
+  }
+
+  factory PageLineRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PageLineRow(
+      pageNumber: serializer.fromJson<int>(json['pageNumber']),
+      lineNumber: serializer.fromJson<int>(json['lineNumber']),
+      lineType: serializer.fromJson<String>(json['lineType']),
+      isCentered: serializer.fromJson<bool>(json['isCentered']),
+      firstWordId: serializer.fromJson<int?>(json['firstWordId']),
+      lastWordId: serializer.fromJson<int?>(json['lastWordId']),
+      surahNumber: serializer.fromJson<int?>(json['surahNumber']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'pageNumber': serializer.toJson<int>(pageNumber),
+      'lineNumber': serializer.toJson<int>(lineNumber),
+      'lineType': serializer.toJson<String>(lineType),
+      'isCentered': serializer.toJson<bool>(isCentered),
+      'firstWordId': serializer.toJson<int?>(firstWordId),
+      'lastWordId': serializer.toJson<int?>(lastWordId),
+      'surahNumber': serializer.toJson<int?>(surahNumber),
+    };
+  }
+
+  PageLineRow copyWith({
+    int? pageNumber,
+    int? lineNumber,
+    String? lineType,
+    bool? isCentered,
+    Value<int?> firstWordId = const Value.absent(),
+    Value<int?> lastWordId = const Value.absent(),
+    Value<int?> surahNumber = const Value.absent(),
+  }) => PageLineRow(
+    pageNumber: pageNumber ?? this.pageNumber,
+    lineNumber: lineNumber ?? this.lineNumber,
+    lineType: lineType ?? this.lineType,
+    isCentered: isCentered ?? this.isCentered,
+    firstWordId: firstWordId.present ? firstWordId.value : this.firstWordId,
+    lastWordId: lastWordId.present ? lastWordId.value : this.lastWordId,
+    surahNumber: surahNumber.present ? surahNumber.value : this.surahNumber,
+  );
+  PageLineRow copyWithCompanion(PageLinesCompanion data) {
+    return PageLineRow(
+      pageNumber: data.pageNumber.present
+          ? data.pageNumber.value
+          : this.pageNumber,
+      lineNumber: data.lineNumber.present
+          ? data.lineNumber.value
+          : this.lineNumber,
+      lineType: data.lineType.present ? data.lineType.value : this.lineType,
+      isCentered: data.isCentered.present
+          ? data.isCentered.value
+          : this.isCentered,
+      firstWordId: data.firstWordId.present
+          ? data.firstWordId.value
+          : this.firstWordId,
+      lastWordId: data.lastWordId.present
+          ? data.lastWordId.value
+          : this.lastWordId,
+      surahNumber: data.surahNumber.present
+          ? data.surahNumber.value
+          : this.surahNumber,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PageLineRow(')
+          ..write('pageNumber: $pageNumber, ')
+          ..write('lineNumber: $lineNumber, ')
+          ..write('lineType: $lineType, ')
+          ..write('isCentered: $isCentered, ')
+          ..write('firstWordId: $firstWordId, ')
+          ..write('lastWordId: $lastWordId, ')
+          ..write('surahNumber: $surahNumber')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    pageNumber,
+    lineNumber,
+    lineType,
+    isCentered,
+    firstWordId,
+    lastWordId,
+    surahNumber,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PageLineRow &&
+          other.pageNumber == this.pageNumber &&
+          other.lineNumber == this.lineNumber &&
+          other.lineType == this.lineType &&
+          other.isCentered == this.isCentered &&
+          other.firstWordId == this.firstWordId &&
+          other.lastWordId == this.lastWordId &&
+          other.surahNumber == this.surahNumber);
+}
+
+class PageLinesCompanion extends UpdateCompanion<PageLineRow> {
+  final Value<int> pageNumber;
+  final Value<int> lineNumber;
+  final Value<String> lineType;
+  final Value<bool> isCentered;
+  final Value<int?> firstWordId;
+  final Value<int?> lastWordId;
+  final Value<int?> surahNumber;
+  final Value<int> rowid;
+  const PageLinesCompanion({
+    this.pageNumber = const Value.absent(),
+    this.lineNumber = const Value.absent(),
+    this.lineType = const Value.absent(),
+    this.isCentered = const Value.absent(),
+    this.firstWordId = const Value.absent(),
+    this.lastWordId = const Value.absent(),
+    this.surahNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PageLinesCompanion.insert({
+    required int pageNumber,
+    required int lineNumber,
+    required String lineType,
+    required bool isCentered,
+    this.firstWordId = const Value.absent(),
+    this.lastWordId = const Value.absent(),
+    this.surahNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : pageNumber = Value(pageNumber),
+       lineNumber = Value(lineNumber),
+       lineType = Value(lineType),
+       isCentered = Value(isCentered);
+  static Insertable<PageLineRow> custom({
+    Expression<int>? pageNumber,
+    Expression<int>? lineNumber,
+    Expression<String>? lineType,
+    Expression<bool>? isCentered,
+    Expression<int>? firstWordId,
+    Expression<int>? lastWordId,
+    Expression<int>? surahNumber,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (pageNumber != null) 'page_number': pageNumber,
+      if (lineNumber != null) 'line_number': lineNumber,
+      if (lineType != null) 'line_type': lineType,
+      if (isCentered != null) 'is_centered': isCentered,
+      if (firstWordId != null) 'first_word_id': firstWordId,
+      if (lastWordId != null) 'last_word_id': lastWordId,
+      if (surahNumber != null) 'surah_number': surahNumber,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PageLinesCompanion copyWith({
+    Value<int>? pageNumber,
+    Value<int>? lineNumber,
+    Value<String>? lineType,
+    Value<bool>? isCentered,
+    Value<int?>? firstWordId,
+    Value<int?>? lastWordId,
+    Value<int?>? surahNumber,
+    Value<int>? rowid,
+  }) {
+    return PageLinesCompanion(
+      pageNumber: pageNumber ?? this.pageNumber,
+      lineNumber: lineNumber ?? this.lineNumber,
+      lineType: lineType ?? this.lineType,
+      isCentered: isCentered ?? this.isCentered,
+      firstWordId: firstWordId ?? this.firstWordId,
+      lastWordId: lastWordId ?? this.lastWordId,
+      surahNumber: surahNumber ?? this.surahNumber,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (pageNumber.present) {
+      map['page_number'] = Variable<int>(pageNumber.value);
+    }
+    if (lineNumber.present) {
+      map['line_number'] = Variable<int>(lineNumber.value);
+    }
+    if (lineType.present) {
+      map['line_type'] = Variable<String>(lineType.value);
+    }
+    if (isCentered.present) {
+      map['is_centered'] = Variable<bool>(isCentered.value);
+    }
+    if (firstWordId.present) {
+      map['first_word_id'] = Variable<int>(firstWordId.value);
+    }
+    if (lastWordId.present) {
+      map['last_word_id'] = Variable<int>(lastWordId.value);
+    }
+    if (surahNumber.present) {
+      map['surah_number'] = Variable<int>(surahNumber.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PageLinesCompanion(')
+          ..write('pageNumber: $pageNumber, ')
+          ..write('lineNumber: $lineNumber, ')
+          ..write('lineType: $lineType, ')
+          ..write('isCentered: $isCentered, ')
+          ..write('firstWordId: $firstWordId, ')
+          ..write('lastWordId: $lastWordId, ')
+          ..write('surahNumber: $surahNumber, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2941,6 +3437,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RukusTable rukus = $RukusTable(this);
   late final $SajdahsTable sajdahs = $SajdahsTable(this);
   late final $AyahMetasTable ayahMetas = $AyahMetasTable(this);
+  late final $PageLinesTable pageLines = $PageLinesTable(this);
   late final QuranListingDao quranListingDao = QuranListingDao(
     this as AppDatabase,
   );
@@ -2957,6 +3454,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     rukus,
     sajdahs,
     ayahMetas,
+    pageLines,
   ];
 }
 
@@ -4511,6 +5009,256 @@ typedef $$AyahMetasTableProcessedTableManager =
       AyahMetaRow,
       PrefetchHooks Function()
     >;
+typedef $$PageLinesTableCreateCompanionBuilder =
+    PageLinesCompanion Function({
+      required int pageNumber,
+      required int lineNumber,
+      required String lineType,
+      required bool isCentered,
+      Value<int?> firstWordId,
+      Value<int?> lastWordId,
+      Value<int?> surahNumber,
+      Value<int> rowid,
+    });
+typedef $$PageLinesTableUpdateCompanionBuilder =
+    PageLinesCompanion Function({
+      Value<int> pageNumber,
+      Value<int> lineNumber,
+      Value<String> lineType,
+      Value<bool> isCentered,
+      Value<int?> firstWordId,
+      Value<int?> lastWordId,
+      Value<int?> surahNumber,
+      Value<int> rowid,
+    });
+
+class $$PageLinesTableFilterComposer
+    extends Composer<_$AppDatabase, $PageLinesTable> {
+  $$PageLinesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get pageNumber => $composableBuilder(
+    column: $table.pageNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lineNumber => $composableBuilder(
+    column: $table.lineNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lineType => $composableBuilder(
+    column: $table.lineType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isCentered => $composableBuilder(
+    column: $table.isCentered,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get firstWordId => $composableBuilder(
+    column: $table.firstWordId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastWordId => $composableBuilder(
+    column: $table.lastWordId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get surahNumber => $composableBuilder(
+    column: $table.surahNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PageLinesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PageLinesTable> {
+  $$PageLinesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get pageNumber => $composableBuilder(
+    column: $table.pageNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lineNumber => $composableBuilder(
+    column: $table.lineNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lineType => $composableBuilder(
+    column: $table.lineType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isCentered => $composableBuilder(
+    column: $table.isCentered,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get firstWordId => $composableBuilder(
+    column: $table.firstWordId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lastWordId => $composableBuilder(
+    column: $table.lastWordId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get surahNumber => $composableBuilder(
+    column: $table.surahNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PageLinesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PageLinesTable> {
+  $$PageLinesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get pageNumber => $composableBuilder(
+    column: $table.pageNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get lineNumber => $composableBuilder(
+    column: $table.lineNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lineType =>
+      $composableBuilder(column: $table.lineType, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCentered => $composableBuilder(
+    column: $table.isCentered,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get firstWordId => $composableBuilder(
+    column: $table.firstWordId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get lastWordId => $composableBuilder(
+    column: $table.lastWordId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get surahNumber => $composableBuilder(
+    column: $table.surahNumber,
+    builder: (column) => column,
+  );
+}
+
+class $$PageLinesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PageLinesTable,
+          PageLineRow,
+          $$PageLinesTableFilterComposer,
+          $$PageLinesTableOrderingComposer,
+          $$PageLinesTableAnnotationComposer,
+          $$PageLinesTableCreateCompanionBuilder,
+          $$PageLinesTableUpdateCompanionBuilder,
+          (
+            PageLineRow,
+            BaseReferences<_$AppDatabase, $PageLinesTable, PageLineRow>,
+          ),
+          PageLineRow,
+          PrefetchHooks Function()
+        > {
+  $$PageLinesTableTableManager(_$AppDatabase db, $PageLinesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PageLinesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PageLinesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PageLinesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> pageNumber = const Value.absent(),
+                Value<int> lineNumber = const Value.absent(),
+                Value<String> lineType = const Value.absent(),
+                Value<bool> isCentered = const Value.absent(),
+                Value<int?> firstWordId = const Value.absent(),
+                Value<int?> lastWordId = const Value.absent(),
+                Value<int?> surahNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PageLinesCompanion(
+                pageNumber: pageNumber,
+                lineNumber: lineNumber,
+                lineType: lineType,
+                isCentered: isCentered,
+                firstWordId: firstWordId,
+                lastWordId: lastWordId,
+                surahNumber: surahNumber,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int pageNumber,
+                required int lineNumber,
+                required String lineType,
+                required bool isCentered,
+                Value<int?> firstWordId = const Value.absent(),
+                Value<int?> lastWordId = const Value.absent(),
+                Value<int?> surahNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PageLinesCompanion.insert(
+                pageNumber: pageNumber,
+                lineNumber: lineNumber,
+                lineType: lineType,
+                isCentered: isCentered,
+                firstWordId: firstWordId,
+                lastWordId: lastWordId,
+                surahNumber: surahNumber,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PageLinesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PageLinesTable,
+      PageLineRow,
+      $$PageLinesTableFilterComposer,
+      $$PageLinesTableOrderingComposer,
+      $$PageLinesTableAnnotationComposer,
+      $$PageLinesTableCreateCompanionBuilder,
+      $$PageLinesTableUpdateCompanionBuilder,
+      (
+        PageLineRow,
+        BaseReferences<_$AppDatabase, $PageLinesTable, PageLineRow>,
+      ),
+      PageLineRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4528,4 +5276,6 @@ class $AppDatabaseManager {
       $$SajdahsTableTableManager(_db, _db.sajdahs);
   $$AyahMetasTableTableManager get ayahMetas =>
       $$AyahMetasTableTableManager(_db, _db.ayahMetas);
+  $$PageLinesTableTableManager get pageLines =>
+      $$PageLinesTableTableManager(_db, _db.pageLines);
 }

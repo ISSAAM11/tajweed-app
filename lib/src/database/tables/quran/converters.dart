@@ -19,8 +19,8 @@ enum HizbFraction {
 
 enum PartitionMode {
   surah('Surah'),
-  page('Page'),
   juz('Juz'),
+  page('Page'),
   hizb('Hizb'),
   ruku("Ruku");
 

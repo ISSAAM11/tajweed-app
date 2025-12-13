@@ -74,6 +74,22 @@ class PageCodec {
               )
               .toList(),
         };
+      } else if (b is LineWordsBlockDto) {
+        return {
+          't': 'lineWords',
+          'lineWords': b.lineWords
+              .map(
+                (w) => {
+                  'id': w.id,
+                  's': w.surah,
+                  'a': w.ayah,
+                  'w': w.word,
+                  't': w.text_,
+                },
+              )
+              .toList(),
+          'isCentered': b.isCentered,
+        };
       }
       throw UnsupportedError('Unknown PageBlock $b');
     }).toList();
@@ -176,6 +192,26 @@ class PageCodec {
           }).toList();
 
           blocks.add(PageAyatsBlockDto(pageAyahs: pageAyahs));
+          break;
+
+        case 'lineWords':
+          final raw = o['lineWords'] as List;
+          final isCentered = o['isCentered'] as bool;
+          final lineWords = raw
+              .map(
+                (w) => WordRow(
+                  id: w['id'],
+                  location: WordLocation(w['s'], w['a'], w['w']),
+                  surah: w['s'],
+                  ayah: w['a'],
+                  word: w['w'],
+                  text_: w['t'],
+                ),
+              )
+              .toList();
+          blocks.add(
+            LineWordsBlockDto(lineWords: lineWords, isCentered: isCentered),
+          );
           break;
 
         default:

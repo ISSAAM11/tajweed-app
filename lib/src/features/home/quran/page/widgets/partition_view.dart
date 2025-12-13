@@ -27,58 +27,17 @@ class PartitionView extends StatefulWidget {
 
 class _PartitionListWidgetState extends State<PartitionView>
     with AutomaticKeepAliveClientMixin {
-  late final ItemScrollController scrollController;
   late final ItemPositionsListener positionsListener;
 
   @override
   void initState() {
     super.initState();
-    scrollController = ItemScrollController();
     positionsListener = ItemPositionsListener.create();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.isAttached) {
-        scrollController.jumpTo(index: widget.initialIndex);
-      }
-    });
-
-    positionsListener.itemPositions.addListener(_onScroll);
     context.read<QuranPageBloc>().fetchPartitionContent(
       widget.partitionIndex,
       widget.partitionMode,
     );
-  }
-
-  int? _lastIndex;
-
-  void _onScroll() {
-    final bloc = context.read<QuranPageBloc>();
-    final visible = positionsListener.itemPositions.value;
-
-    if (visible.isNotEmpty) {
-      // pick the smallest visible index (top item) instead of center
-      final minIndex = visible
-          .map((e) => e.index)
-          .reduce((a, b) => a < b ? a : b);
-
-      if (_lastIndex != minIndex) {
-        final direction = (_lastIndex == null || minIndex > _lastIndex!)
-            ? ScrollDirection.down
-            : ScrollDirection.up;
-
-        bloc.partitionScrollUpdated(
-          partitionId: widget.partitionIndex,
-          pageIndex: minIndex,
-          direction: direction,
-        );
-
-        Debugger.orange(
-          'partition:${widget.partitionIndex} idx:$minIndex dir:$direction',
-        );
-
-        _lastIndex = minIndex;
-      }
-    }
   }
 
   @override
@@ -88,16 +47,10 @@ class _PartitionListWidgetState extends State<PartitionView>
     final pageNos = blocState.currentPartitionPages;
     if (blocState is QuranPageInitial || blocState.pages[pageNos[0]] == null)
       return const CircularProgressIndicator().center();
-    return ScrollablePositionedList.builder(
-      itemCount: pageNos.length,
-      itemScrollController: scrollController,
-      itemPositionsListener: positionsListener,
-      itemBuilder: (_, index) {
-        final pageNo = pageNos[index];
-        final page = blocState.pages[pageNo];
 
-        return PageViewer(page: page!);
-      },
+    return PageViewer(
+      page: blocState.pages[pageNos[0]]!,
+      pageLines: blocState.pageLines,
     );
   }
 

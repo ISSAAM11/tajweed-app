@@ -4,36 +4,69 @@ import 'package:html/dom.dart' as dom;
 import 'package:tajweed_ai/src/app/design/styles/tajweed_styles.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 
-class QuranParagraph extends StatelessWidget {
-  final List<List<WordRow>> ayahs;
-  const QuranParagraph({super.key, required this.ayahs});
+class QuranLineText extends StatelessWidget {
+  final List<WordRow> lineWords;
+  final bool isCentered;
+
+  const QuranLineText({
+    super.key,
+    required this.lineWords,
+    this.isCentered = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     const TextStyle baseTextStyle = TextStyle(
-      fontSize: 25,
+      fontSize: 19,
       fontFamily: 'UthmanicHafsV18',
       color: Colors.black87,
-      height: 1.8,
+      height: 1.75,
     );
 
-    // Combine all words into a single HTML string
-    final paragraphHtml = ayahs
-        .map((List<WordRow> ayah) => ayah.map((word) => word.text_).join(' '))
-        .toList()
-        .join(' ');
-
-    final document = html_parser.parse('<span>$paragraphHtml</span>');
-    final spans = _parseNode(document.body!.firstChild!, baseTextStyle);
+    if (lineWords.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
-      child: RichText(
-        text: TextSpan(children: spans),
-        textAlign: TextAlign.justify,
-        textDirection: TextDirection.rtl,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 2),
+      child: _buildLineWithSpacing(lineWords, baseTextStyle),
+    );
+  }
+
+  Widget _buildLineWithSpacing(List<WordRow> words, TextStyle baseStyle) {
+    final wordWidgets = <Widget>[];
+
+    for (int i = 0; i < words.length; i++) {
+      final word = words[i];
+      final document = html_parser.parse('<span>${word.text_}</span>');
+      final spans = _parseNode(document.body!.firstChild!, baseStyle);
+
+      wordWidgets.add(
+        RichText(
+          text: TextSpan(children: spans),
+          textDirection: TextDirection.rtl,
+        ),
+      );
+
+      if (isCentered) {
+        if (i < words.length - 1) {
+          wordWidgets.add(const Text(' '));
+        }
+      } else {
+        // Justified lines use flexible spacing
+        if (i < words.length - 1) {
+          wordWidgets.add(const Spacer());
+        }
+      }
+    }
+
+    return Row(
+      mainAxisAlignment: isCentered
+          ? MainAxisAlignment.center
+          : MainAxisAlignment.spaceBetween,
+      textDirection: TextDirection.rtl,
+      children: wordWidgets,
     );
   }
 

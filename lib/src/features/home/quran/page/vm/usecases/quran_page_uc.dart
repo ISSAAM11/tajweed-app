@@ -15,6 +15,8 @@ extension QuranPageUc on QuranPageBloc {
 
     // 1. get surah arabic Name
     final chap = await pageDataSource.getChapterHeader(pageNo);
+
+    final pagelines = await pageDataSource.getPageLines(pageNo);
     // 2. Find the partition that contains this page
     final partitionId = snapshot.pageToPartition(event.mode, pageNo);
 
@@ -28,6 +30,7 @@ extension QuranPageUc on QuranPageBloc {
     emit(
       QuranPageLoaded(
         surahName: chap.nameArabic,
+        pageLines: pagelines,
         partitionMode: event.mode,
         partitionId: partitionId,
         currentPartitionPages: partitionPages,
@@ -116,10 +119,16 @@ extension QuranPageUc on QuranPageBloc {
       event.newPartitionId,
     );
     // retrieve surah name
+    final pageLines = await pageDataSource.getPageLines(newPages.first);
+
     final chap = await pageDataSource.getChapterHeader(newPages.first);
 
     emit(
-      state.copyWith(surahName: chap.nameArabic, partitionId: newPartitionId),
+      state.copyWith(
+        pageLines: pageLines,
+        surahName: chap.nameArabic,
+        partitionId: newPartitionId,
+      ),
     );
   }
 
@@ -128,12 +137,13 @@ extension QuranPageUc on QuranPageBloc {
     Emitter<QuranPageState> emit,
   ) async {
     final newPages = snapshotService.snapshot.pagesByMode(
-      event.partitionMode,
+      PartitionMode.page, // event.partitionMode,
       event.newPartitionId,
     );
-
+    final pageLines = await pageDataSource.getPageLines(newPages.first);
     emit(
       state.copyWith(
+        pageLines: pageLines,
         partitionId: event.newPartitionId,
         currentPartitionPages: newPages,
       ),

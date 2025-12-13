@@ -46,7 +46,7 @@ class QuranListView extends StatelessWidget {
       orderNumber: chapterItem.id,
       onTap: () => onTap(
         verseKey: VerseKey(chapterItem.id, 1),
-        mode: PartitionMode.surah,
+        mode: PartitionMode.page,
       ),
     );
   }
@@ -94,10 +94,10 @@ class QuranListView extends StatelessWidget {
     if (item is PageItem)
       onTap(mode: PartitionMode.page, verseKey: item.verseKey);
     if (item is JuzItem)
-      onTap(mode: PartitionMode.juz, verseKey: item.verseKey);
+      onTap(mode: PartitionMode.page, verseKey: item.verseKey);
     if (item is RukuItem)
-      onTap(mode: PartitionMode.ruku, verseKey: item.verseKey);
+      onTap(mode: PartitionMode.page, verseKey: item.verseKey);
     if (item is HizbItem)
-      onTap(mode: PartitionMode.juz, verseKey: item.verseKey);
+      onTap(mode: PartitionMode.page, verseKey: item.verseKey);
   }
 }

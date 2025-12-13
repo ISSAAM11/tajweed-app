@@ -7,4 +7,5 @@ mixin _$QuranPageDaoMixin on DatabaseAccessor<AppDatabase> {
   $AyahMetasTable get ayahMetas => attachedDatabase.ayahMetas;
   $WordsTable get words => attachedDatabase.words;
   $ChaptersTable get chapters => attachedDatabase.chapters;
+  $PageLinesTable get pageLines => attachedDatabase.pageLines;
 }

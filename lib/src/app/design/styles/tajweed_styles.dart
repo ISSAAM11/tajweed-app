@@ -4,13 +4,16 @@ class TajweedStyles {
   static const TextStyle hamWasl = TextStyle(color: Color(0xFFAAAAAA));
   static const TextStyle slnt = TextStyle(color: Color(0xFFAAAAAA));
   static const TextStyle laamShamsiyah = TextStyle(color: Color(0xFFAAAAAA));
-  static const TextStyle maddaNormal = TextStyle(color: Color(0xFF537FFF));
-  static const TextStyle maddaPermissible = TextStyle(color: Color(0xFF4050FF));
-  static const TextStyle maddaNecessary = TextStyle(color: Color(0xFF000EBC));
-  static const TextStyle maddaObligatory = TextStyle(color: Color(0xFF2144C1));
-  static const TextStyle qalaqah = TextStyle(color: Color(0xFFDD0008));
-  static const TextStyle ikhafaShafawi = TextStyle(color: Color(0xFFD500B7));
-  static const TextStyle ikhafa = TextStyle(color: Color(0xFF9400A8));
+
+  static const TextStyle maddaObligatory = TextStyle(color: Color(0xFFb50568));
+  static const TextStyle maddaNecessary = TextStyle(color: Color(0xFFf90792));
+  static const TextStyle maddaPermissible = TextStyle(color: Color(0xFFfa8b2f));
+  static const TextStyle maddaNormal = TextStyle(color: Color(0xFFfab414));
+
+  static const TextStyle qalaqah = TextStyle(color: Color(0xFF17bbff));
+  static const TextStyle ikhafa = TextStyle(color: Color(0xFF00b360));
+  static const TextStyle ikhafaShafawi = TextStyle(color: Color(0xFF00b360));
+
   static const TextStyle iqlab = TextStyle(color: Color(0xFF26BFFD));
   static const TextStyle idghamShafawi = TextStyle(color: Color(0xFF58B800));
   static const TextStyle idghamGhunnah = TextStyle(color: Color(0xFF169200));

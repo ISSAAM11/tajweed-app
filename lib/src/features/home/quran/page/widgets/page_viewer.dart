@@ -1,38 +1,94 @@
 import 'package:cg_core_defs/helpers/debugging_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:tajweed_ai/src/app/design/styles/app_fonts.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/tajweed_text.dart';
 
 class PageViewer extends StatelessWidget {
   final PageContentDto page;
-  const PageViewer({super.key, required this.page});
+  final List<PageLinesDto> pageLines;
+  const PageViewer({super.key, required this.page, required this.pageLines});
+
+  List<Widget> _buildPageWidgets() {
+    final widgets = <Widget>[];
+
+    for (final block in page.blocks) {
+      final widget = switch (block) {
+        PageMetaBlockDto() => PageMetaBar(
+          pageMetaBlock: block,
+          pageNo: page.pageNo,
+        ),
+        SurahHeaderBlockDto() => SurahHeader(headerBlock: block),
+        LineWordsBlockDto() => QuranLineText(
+          lineWords: block.lineWords,
+          isCentered: block.isCentered,
+        ),
+        BasmalahBlockDto() => BasmalahWidget(),
+        _ => SizedBox.shrink(),
+      };
+      widgets.add(widget);
+    }
+
+    return widgets;
+  }
 
   @override
   Widget build(BuildContext context) {
     Debugger.blue('should render Page ${page.pageNo}');
+
+    final allWidgets = _buildPageWidgets();
+
+    // Separate PageMetaBar from other widgets
+    final pageMetaBar = allWidgets.firstWhere(
+      (widget) => widget is PageMetaBar,
+      orElse: () => SizedBox.shrink(),
+    );
+
+    final contentWidgets = allWidgets
+        .where((widget) => widget is! PageMetaBar)
+        .toList();
+
     return Container(
-      padding: const EdgeInsets.only(bottom: 35),
-      color: Colors.white,
-      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: ResizeImage(
+            AssetImage(
+              page.pageNo % 2 == 0
+                  ? 'assets/images/background/left_background.jpg'
+                  : 'assets/images/background/right_background.jpg',
+            ),
+            height: 110,
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+
+      padding: const EdgeInsets.only(bottom: 60),
       child: Column(
         children: [
-          ...page.blocks.map((block) {
-            if (block is PageMetaBlockDto) {
-              return PageMetaBar(pageMetaBlock: block, pageNo: page.pageNo);
-            } else if (block is SurahHeaderBlockDto) {
-              return SurahHeader(headerBlock: block);
-            } else if (block is PageAyatsBlockDto) {
-              return QuranParagraph(ayahs: block.pageAyahs);
-            } else if (block is BasmalahBlockDto) {
-              return BasmalahWidget();
-            } else if (block is PageMetaBlockDto) {
-              return SizedBox.shrink();
-            } else {
-              return SizedBox.shrink();
-            }
-          }),
+          pageMetaBar,
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [...contentWidgets, TajweedRulesWidget()],
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class TajweedRulesWidget extends StatelessWidget {
+  const TajweedRulesWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, right: 5, top: 13),
+      child: Image.asset('assets/images/background/tajweed-rules.png'),
     );
   }
 }
@@ -44,36 +100,29 @@ class SurahHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(8),
-            padding: const EdgeInsets.all(3.0),
-            decoration: const BoxDecoration(
-              color: Colors.black12,
-              shape: BoxShape.circle,
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              headerBlock.chapter.id.toString(),
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 10.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+    return Container(
+      margin: const EdgeInsets.only(left: 10, right: 10),
+      width: double.infinity + 10,
+      height: 42,
+      padding: const EdgeInsets.only(bottom: 4.0),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            'assets/images/background/surah-header-background1.png',
           ),
-          Text(
-            headerBlock.chapter.nameArabic,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontSize: 28,
-              color: Colors.blueGrey,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+          fit: BoxFit.contain,
+        ),
+      ),
+      alignment: Alignment.center,
+
+      child: Text(
+        String.fromCharCode(
+          int.parse(headerBlock.chapter.nameGlyph, radix: 16),
+        ),
+        style: AppFonts.surahNamesFont.copyWith(
+          color: Colors.black,
+          fontSize: 20,
+        ),
       ),
     );
   }
@@ -96,7 +145,6 @@ class PageMetaBar extends StatelessWidget {
       height: 35,
       width: double.infinity,
       alignment: Alignment.center,
-      color: const Color.fromARGB(220, 240, 233, 207),
       padding: const EdgeInsets.all(8.0),
       child: Text(
         "Juz ${pageMetaBlock.juz}, Hizb ${pageMetaBlock.hizb}, Page $pageNo",
@@ -112,14 +160,12 @@ class BasmalahWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8.0),
-      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 3.0),
       child: Text(
         "بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ",
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-          fontSize: 25,
-          fontFamily: "SurahNameV4",
+          fontSize: 19,
+          fontFamily: "UthmanicHafsV18",
         ),
         textAlign: TextAlign.center,
       ),

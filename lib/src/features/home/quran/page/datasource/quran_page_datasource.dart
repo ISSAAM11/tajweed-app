@@ -8,6 +8,7 @@ abstract interface class QuranPageDatasource {
   Future<PageContentDto> getPageContent(int pageNo);
   Future<int> getPageForVerse(VerseKey verseKey);
   Future<ChapterHeaderDto> getChapterHeader(int surahIndex);
+  Future<List<PageLinesDto>> getPageLines(int surahIndex);
 }
 
 final class QuranPageDatasourceImpl implements QuranPageDatasource {
@@ -23,6 +24,11 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
   @override
   Future<ChapterHeaderDto> getChapterHeader(int surahIndex) async {
     return pageDao.getChapterHeader(surahIndex);
+  }
+
+  @override
+  Future<List<PageLinesDto>> getPageLines(int surahIndex) async {
+    return pageDao.getPageLines(surahIndex);
   }
 
   /// Public entry point: builds or returns cached full page, then optionally filters for a surah.
@@ -44,9 +50,11 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
 
   /// Builds the full PageContentDto.
   Future<PageContentDto> _buildPageContent(int pageNo) async {
-    final metas = await pageDao.getPageAyatMetas(pageNo);
+    final pageLines = await pageDao.getPageLines(pageNo);
     final blocks = <PageBlockDto>[];
 
+    // Get page meta for the first line (juz, hizb, ruku info)
+    final metas = await pageDao.getPageAyatMetas(pageNo);
     if (metas.isNotEmpty) {
       final first = metas.first;
       blocks.add(
@@ -58,46 +66,75 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
         ),
       );
     }
-    // Collect words
-    final ayatKeys = metas.map((m) => (VerseKey(m.surah, m.ayah))).toList();
-    final allWords = await pageDao.getWordsForAyat(ayatKeys);
-    final wordsByAyah = <VerseKey, List<WordRow>>{};
-    for (final w in allWords) {
-      wordsByAyah.putIfAbsent(VerseKey(w.surah, w.ayah), () => []).add(w);
-    }
-    // Render ayat with inline headers/basmalah on surah starts
-    final chapterCacheMap = <int, ChapterHeaderDto>{};
-    final List<List<WordRow>> ayatList = [];
-    for (final a in metas) {
-      // Surah start
-      if (a.ayah == 1) {
-        if (ayatList.isNotEmpty) {
-          blocks.add(PageAyatsBlockDto(pageAyahs: List.of(ayatList)));
-          ayatList.clear();
-        }
-        var header = chapterCacheMap[a.surah];
-        if (header == null) {
-          final chap = await pageDao.getSurahName(a.surah);
 
-          header = ChapterHeaderDto(
-            id: chap.id,
-            nameArabic: chap.nameArabic,
-            nameGlyph: chap.nameGlyph,
-            bismillahPre: chap.bismillahPre,
-            revelationPlace: chap.revelationPlace,
-          );
-          chapterCacheMap[a.surah] = header;
-        }
-        blocks.add(SurahHeaderBlockDto(chapter: header));
-        if (header.bismillahPre) {
-          blocks.add(BasmalahBlockDto(surahId: header.id));
-        }
+    // Get all words for the page at once
+    final ayatKeys = metas.map((m) => VerseKey(m.surah, m.ayah)).toList();
+    final allWords = await pageDao.getWordsForAyat(ayatKeys);
+    allWords.sort((a, b) {
+      if (a.surah != b.surah) return a.surah.compareTo(b.surah);
+      if (a.ayah != b.ayah) return a.ayah.compareTo(b.ayah);
+      return a.word.compareTo(b.word);
+    });
+
+    final chapterCacheMap = <int, ChapterHeaderDto>{};
+    // List<List<WordRow>> currentAyatList = [];
+    int currentWordIndex = 0; // Track position in allWords list
+
+    for (final line in pageLines) {
+      switch (line.lineType) {
+        case 'surah_name':
+          // Flush any accumulated ayat before adding surah header
+          // if (currentAyatList.isNotEmpty) {
+          //   blocks.add(PageAyatsBlockDto(pageAyahs: List.of(currentAyatList)));
+          //   currentAyatList.clear();
+          // }
+          var header = chapterCacheMap[line.surahNumber!];
+          if (header == null) {
+            final chap = await pageDao.getSurahName(line.surahNumber!);
+            header = ChapterHeaderDto(
+              id: chap.id,
+              nameArabic: chap.nameArabic,
+              nameGlyph: chap.nameGlyph,
+              bismillahPre: chap.bismillahPre,
+              revelationPlace: chap.revelationPlace,
+            );
+            chapterCacheMap[line.surahNumber!] = header;
+          }
+          blocks.add(SurahHeaderBlockDto(chapter: header));
+
+          break;
+
+        case 'basmallah':
+          blocks.add(BasmalahBlockDto(surahId: line.lineNumber));
+          break;
+
+        case 'ayah':
+          final wordsInLine = line.lastWordId! - line.firstWordId! + 1;
+
+          final lineWords = allWords
+              .skip(currentWordIndex)
+              .take(wordsInLine)
+              .toList();
+          currentWordIndex += wordsInLine;
+
+          if (lineWords.isNotEmpty) {
+            blocks.add(
+              LineWordsBlockDto(
+                lineWords: lineWords,
+                isCentered: line.isCentered,
+              ),
+            );
+          }
+          break;
+        default:
+          break;
       }
-      final words = wordsByAyah[VerseKey(a.surah, a.ayah)] ?? const [];
-      blocks.add(AyahBlockDto(ayah: a, words: words));
-      ayatList.add(words);
     }
-    blocks.add(PageAyatsBlockDto(pageAyahs: List.of(ayatList)));
+
+    // // Add any remaining ayat
+    // if (currentAyatList.isNotEmpty) {
+    //   blocks.add(PageAyatsBlockDto(pageAyahs: List.of(currentAyatList)));
+    // }
 
     return PageContentDto(pageNo: pageNo, blocks: blocks);
   }

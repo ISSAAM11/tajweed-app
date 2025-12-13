@@ -1,5 +1,5 @@
 import 'package:tajweed_ai/src/database/app_database.dart'
-    show WordRow, AyahMetaRow, ChapterRow;
+    show WordRow, AyahMetaRow, ChapterRow, PageLineRow;
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 
 class ChapterHeaderDto {
@@ -23,11 +23,46 @@ class ChapterHeaderDto {
       revelationPlace = row.revelationPlace;
 }
 
+class PageLinesDto {
+  final int pageNumber;
+  final int lineNumber;
+  final String lineType;
+  final bool isCentered;
+  final int? firstWordId;
+  final int? lastWordId;
+  final int? surahNumber;
+
+  PageLinesDto({
+    required this.pageNumber,
+    required this.lineNumber,
+    required this.lineType,
+    required this.isCentered,
+    this.firstWordId,
+    this.lastWordId,
+    this.surahNumber,
+  });
+
+  PageLinesDto.fromPageLineRow(PageLineRow row)
+    : pageNumber = row.pageNumber,
+      lineNumber = row.lineNumber,
+      lineType = row.lineType,
+      isCentered = row.isCentered,
+      firstWordId = row.firstWordId,
+      lastWordId = row.lastWordId,
+      surahNumber = row.surahNumber;
+}
+
 abstract class PageBlockDto {}
 
 class SurahHeaderBlockDto extends PageBlockDto {
   final ChapterHeaderDto chapter;
   SurahHeaderBlockDto({required this.chapter});
+}
+
+class LineWordsBlockDto extends PageBlockDto {
+  final List<WordRow> lineWords;
+  final bool isCentered;
+  LineWordsBlockDto({required this.lineWords, required this.isCentered});
 }
 
 class PageAyatsBlockDto extends PageBlockDto {
