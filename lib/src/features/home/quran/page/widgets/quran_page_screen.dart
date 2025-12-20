@@ -34,12 +34,6 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
                     height: 1,
                   ),
                 ),
-                Text(
-                  "${state.partitionMode.label} ${state.partitionId}",
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleSmall?.copyWith(color: Colors.white),
-                ),
               ],
             );
           },

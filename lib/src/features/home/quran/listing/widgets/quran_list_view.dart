@@ -22,8 +22,15 @@ class QuranListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
       itemCount: header != null ? itemCount + 1 : itemCount,
+      separatorBuilder: (context, index) => Divider(
+        color: Colors.grey[300],
+        height: 1,
+        thickness: 1,
+        indent: 20,
+        endIndent: 20,
+      ),
       itemBuilder: (context, index) {
         if (header != null && index == 0) return header!;
 
@@ -42,6 +49,7 @@ class QuranListView extends StatelessWidget {
       name: chapterItem.nameArabic,
       nameEnglish: chapterItem.name,
       glyph: chapterItem.nameGlyph,
+      versesCount: chapterItem.versesCount,
       revelationPlace: chapterItem.revelationPlace,
       orderNumber: chapterItem.id,
       onTap: () => onTap(
@@ -61,7 +69,7 @@ class QuranListView extends StatelessWidget {
     final previewText = itemWordList.join('\u00A0');
 
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       leading: Text(
         label,
         style: AppFonts.uthmanicHafsFont.copyWith(
@@ -70,9 +78,12 @@ class QuranListView extends StatelessWidget {
           color: AppColors.primary,
         ),
       ),
+
       subtitle: Text(
         previewText,
-        style: AppFonts.uthmanicHafsFont.withColor(AppColors.greyMedium),
+        style: AppFonts.uthmanicHafsFont
+            .withColor(AppColors.greyMedium)
+            .copyWith(fontSize: 17, fontWeight: FontWeight.w600),
         textDirection: TextDirection.rtl,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,

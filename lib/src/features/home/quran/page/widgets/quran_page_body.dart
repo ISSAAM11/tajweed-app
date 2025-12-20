@@ -34,7 +34,6 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
   @override
   void initState() {
     super.initState();
-    // temporary initial page; we'll jump to the correct one after first build
     _pageController = PageController(initialPage: 0);
   }
 
@@ -69,7 +68,6 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
               .clamp(0, (orderedIds.length - 1));
 
           return _PartitionViewData(
-            partitionMode: state.partitionMode,
             partitionId: state.partitionId,
             totalPartitions: state.totalPartitions,
             orderedPartitionIds: orderedIds,
@@ -103,7 +101,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
                 (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
                 ? _orderedPartitionIds[uiIndex]
                 : _orderedPartitionIds.first;
-            bloc.partitionChanged(newPartitionId, data.partitionMode);
+            bloc.partitionChanged(newPartitionId, PartitionMode.page);
           },
           itemBuilder: (context, uiIndex) {
             final partitionId =
@@ -120,7 +118,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
               create: (context) =>
                   QuranPageBloc(bloc.pageDataSource, bloc.snapshotService),
               child: PartitionView(
-                partitionMode: data.partitionMode,
+                partitionMode: PartitionMode.page,
                 partitionIndex: partitionId,
                 initialIndex: 0,
               ),
@@ -134,14 +132,12 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
 
 /// Minimal data holder used with BlocSelector
 class _PartitionViewData extends Equatable {
-  final PartitionMode partitionMode;
   final int partitionId;
   final int totalPartitions;
   final List<int> orderedPartitionIds;
   final int desiredUiIndex;
 
   const _PartitionViewData({
-    required this.partitionMode,
     required this.partitionId,
     required this.totalPartitions,
     required this.orderedPartitionIds,
@@ -150,7 +146,6 @@ class _PartitionViewData extends Equatable {
 
   @override
   List<Object?> get props => [
-    partitionMode,
     partitionId,
     totalPartitions,
     orderedPartitionIds,

@@ -19,6 +19,21 @@ final class SurahListingScreen
   Widget build(BuildContext context, QuranListingState state) {
     return Scaffold(
       backgroundColor: AppColors.scaffold,
+      appBar: AppBar(
+        elevation: 0,
+        leadingWidth: 100,
+        leading: Row(
+          children: [
+            IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
+            IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+          ],
+        ),
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.settings))],
+        title: const Text(
+          'Tajweed App',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       body: SurahListingBody(state),
     );
   }

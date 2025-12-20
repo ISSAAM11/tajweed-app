@@ -26,7 +26,7 @@ class ListHeader extends StatelessWidget {
                   mode.label,
                   style: TextStyle(color: AppColors.primary, fontSize: 20),
                 ),
-                selectedShadowColor: AppColors.accent,
+                selectedShadowColor: const Color.fromARGB(197, 139, 115, 85),
                 selected: selectedViewMode == mode,
                 showCheckmark: false,
                 onSelected: (isSelected) {

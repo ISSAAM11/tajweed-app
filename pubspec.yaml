@@ -54,7 +54,7 @@ flutter:
     - assets/images/background/right_background.jpg
     - assets/images/background/surah-header-background1.png
     - assets/images/background/tajweed-rules.png
-
+    - assets/images/background/first-page-bg.png
   fonts:
     - family: SurahNameV4
       fonts:

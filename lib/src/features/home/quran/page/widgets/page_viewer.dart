@@ -54,8 +54,8 @@ class PageViewer extends StatelessWidget {
           image: ResizeImage(
             AssetImage(
               page.pageNo % 2 == 0
-                  ? 'assets/images/background/left_background.jpg'
-                  : 'assets/images/background/right_background.jpg',
+                  ? "assets/images/background/left_background.jpg"
+                  : "assets/images/background/right_background.jpg",
             ),
             height: 110,
           ),
@@ -101,10 +101,10 @@ class SurahHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 10, right: 10),
-      width: double.infinity + 10,
-      height: 42,
-      padding: const EdgeInsets.only(bottom: 4.0),
+      margin: const EdgeInsets.only(left: 8, right: 8),
+      width: double.infinity,
+      height: 44,
+      padding: const EdgeInsets.only(bottom: 2.5),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
@@ -120,7 +120,8 @@ class SurahHeader extends StatelessWidget {
           int.parse(headerBlock.chapter.nameGlyph, radix: 16),
         ),
         style: AppFonts.surahNamesFont.copyWith(
-          color: Colors.black,
+          color: Color.fromARGB(197, 0, 0, 0),
+          fontWeight: FontWeight.w600,
           fontSize: 20,
         ),
       ),
@@ -146,9 +147,15 @@ class PageMetaBar extends StatelessWidget {
       width: double.infinity,
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8.0),
-      child: Text(
-        "Juz ${pageMetaBlock.juz}, Hizb ${pageMetaBlock.hizb}, Page $pageNo",
-        style: Theme.of(context).textTheme.titleSmall,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Juz ${pageMetaBlock.juz}, Hizb ${pageMetaBlock.hizb}, ",
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+          Text("Page $pageNo", style: Theme.of(context).textTheme.labelSmall),
+        ],
       ),
     );
   }
@@ -160,11 +167,14 @@ class BasmalahWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 3.0),
       child: Text(
         "بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ",
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           fontSize: 19,
+          color: Color.fromARGB(197, 0, 0, 0),
+          height: 2,
+
+          fontWeight: FontWeight.w600,
           fontFamily: "UthmanicHafsV18",
         ),
         textAlign: TextAlign.center,

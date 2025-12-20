@@ -16,11 +16,19 @@ class QuranLineText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const TextStyle baseTextStyle = TextStyle(
-      fontSize: 19,
-      fontFamily: 'UthmanicHafsV18',
-      color: Colors.black87,
-      height: 1.75,
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final responsiveVerticalPadding = screenHeight * 0.007;
+    final responsiveHorizentalPadding = screenWidth * 0.035;
+    final responsivefontSize = screenWidth * 0.05;
+
+    TextStyle baseTextStyle = TextStyle(
+      fontSize: responsivefontSize,
+      fontFamily: 'UthmanicHafsV17',
+      fontWeight: FontWeight.w600,
+      color: Color.fromARGB(178, 0, 0, 0),
+      height: 1.4,
     );
 
     if (lineWords.isEmpty) {
@@ -29,7 +37,10 @@ class QuranLineText extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 2),
+      padding: EdgeInsets.symmetric(
+        horizontal: responsiveHorizentalPadding,
+        vertical: responsiveVerticalPadding,
+      ),
       child: _buildLineWithSpacing(lineWords, baseTextStyle),
     );
   }
