@@ -1,8 +1,13 @@
 import 'package:tajweed_ai/src/base/screens/exports.dart';
+import 'package:tajweed_ai/src/app/binding/app_bindings.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/binding/quran_listing_deps.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/services/last_selected_surah_service.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_state.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router.dart';
 
+import 'last_selected_surah_widget.dart';
 import 'quran_listing_body.dart';
 
 final class SurahListingScreen
@@ -19,22 +24,55 @@ final class SurahListingScreen
   Widget build(BuildContext context, QuranListingState state) {
     return Scaffold(
       backgroundColor: AppColors.scaffold,
-      appBar: AppBar(
-        elevation: 0,
-        leadingWidth: 100,
-        leading: Row(
-          children: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-          ],
-        ),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.settings))],
-        title: const Text(
-          'Tajweed App',
-          style: TextStyle(fontWeight: FontWeight.bold),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
+          child: AppBar(
+            toolbarHeight: 220,
+            elevation: 0,
+            leadingWidth: 100,
+            leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
+            actions: [
+              IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+            ],
+            title: const Text('Tajweed App', style: AppFonts.appBarTitle),
+          ),
         ),
       ),
-      body: SurahListingBody(state),
+      body: Column(
+        children: [
+          _LastSelectedSurahSection(),
+          Expanded(child: SurahListingBody(state)),
+        ],
+      ),
+    );
+  }
+}
+
+class _LastSelectedSurahSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final lastSurahService = get<LastSelectedSurahService>();
+    final lastSurah = lastSurahService.get();
+
+    if (lastSurah == null) return const SizedBox.shrink();
+
+    return LastSelectedSurahWidget(
+      lastSurah: lastSurah,
+      onContinue: () {
+        final args = QuranPageArgs(
+          verseKey: VerseKey(lastSurah.id, 1),
+          mode: PartitionMode.page,
+        );
+        context.push(
+          Uri(path: "/quran-page", queryParameters: args.toQuery()).toString(),
+        );
+      },
     );
   }
 }

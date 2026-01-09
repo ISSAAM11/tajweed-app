@@ -7,11 +7,15 @@ import 'package:tajweed_ai/src/database/app_database.dart';
 class QuranLineText extends StatelessWidget {
   final List<WordRow> lineWords;
   final bool isCentered;
+  final Function(int ayahNumber, Offset position)? onAyahTap;
+  final int? selectedAyah;
 
   const QuranLineText({
     super.key,
     required this.lineWords,
     this.isCentered = false,
+    this.onAyahTap,
+    this.selectedAyah,
   });
 
   @override
@@ -19,16 +23,17 @@ class QuranLineText extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final responsiveVerticalPadding = screenHeight * 0.007;
+    final responsiveVerticalPadding = screenHeight * 0.0035;
     final responsiveHorizentalPadding = screenWidth * 0.035;
-    final responsivefontSize = screenWidth * 0.05;
+    final responsivefontSize = screenWidth * 0.046;
+    final responsiveTextHeight = screenHeight * 0.002;
 
     TextStyle baseTextStyle = TextStyle(
       fontSize: responsivefontSize,
       fontFamily: 'UthmanicHafsV17',
       fontWeight: FontWeight.w600,
-      color: Color.fromARGB(178, 0, 0, 0),
-      height: 1.4,
+      color: Color.fromARGB(183, 0, 0, 0),
+      height: responsiveTextHeight,
     );
 
     if (lineWords.isEmpty) {
@@ -50,13 +55,34 @@ class QuranLineText extends StatelessWidget {
 
     for (int i = 0; i < words.length; i++) {
       final word = words[i];
+      final isSelected = selectedAyah == word.ayah;
+      final highlightColor = isSelected
+          ? Colors.amber.withOpacity(0.3)
+          : Colors.transparent;
+
       final document = html_parser.parse('<span>${word.text_}</span>');
       final spans = _parseNode(document.body!.firstChild!, baseStyle);
 
       wordWidgets.add(
-        RichText(
-          text: TextSpan(children: spans),
-          textDirection: TextDirection.rtl,
+        GestureDetector(
+          onTapDown: (details) {
+            if (onAyahTap != null) {
+              onAyahTap!(word.ayah, details.globalPosition);
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? Colors.amber.withOpacity(0.3)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+            child: RichText(
+              text: TextSpan(children: spans),
+              textDirection: TextDirection.rtl,
+            ),
+          ),
         ),
       );
 
@@ -65,7 +91,6 @@ class QuranLineText extends StatelessWidget {
           wordWidgets.add(const Text(' '));
         }
       } else {
-        // Justified lines use flexible spacing
         if (i < words.length - 1) {
           wordWidgets.add(const Spacer());
         }

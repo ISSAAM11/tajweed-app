@@ -6,34 +6,31 @@ import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.d
 
 sealed class QuranPageState extends Equatable {
   final String surahName;
-  final List<PageLinesDto> pageLines;
   final PartitionMode partitionMode;
   final int partitionId;
-  final List<int> currentPartitionPages;
+  final int currentPage;
   final int totalPartitions;
-  final Map<int, PageContentDto> pages;
+  final PageContentDto? page;
   final int initialPageIndex;
   final Set<int> loadingPages;
 
   const QuranPageState({
     required this.surahName,
-    required this.pageLines,
     required this.partitionMode,
     required this.partitionId,
-    required this.currentPartitionPages,
+    required this.currentPage,
     required this.totalPartitions,
-    required this.pages,
+    required this.page,
     required this.initialPageIndex,
     required this.loadingPages,
   });
   QuranPageState copyWith({
     String? surahName,
-    List<PageLinesDto>? pageLines,
     PartitionMode? partitionMode,
     int? partitionId,
-    List<int>? currentPartitionPages,
+    int? currentPage,
     int? totalPartitions,
-    Map<int, PageContentDto>? pages,
+    PageContentDto? page,
     int? initialPageIndex,
     Set<int>? loadingPages,
   });
@@ -41,11 +38,10 @@ sealed class QuranPageState extends Equatable {
   @override
   List<Object?> get props => [
     surahName,
-    pageLines,
     partitionMode,
     partitionId,
-    currentPartitionPages,
-    pages,
+    currentPage,
+    page,
     loadingPages,
     totalPartitions,
   ];
@@ -56,12 +52,11 @@ class QuranPageInitial extends QuranPageState {
   const QuranPageInitial()
     : super(
         surahName: '',
-        pageLines: const [],
         partitionMode: PartitionMode.surah,
         partitionId: 1,
         totalPartitions: 114,
-        currentPartitionPages: const [],
-        pages: const {},
+        currentPage: 0,
+        page: null,
         initialPageIndex: 0,
         loadingPages: const {},
       );
@@ -69,24 +64,21 @@ class QuranPageInitial extends QuranPageState {
   @override
   QuranPageLoaded copyWith({
     String? surahName,
-    List<PageLinesDto>? pageLines,
     PartitionMode? partitionMode,
     int? partitionId,
-    List<int>? currentPartitionPages,
-    Map<int, PageContentDto>? pages,
+    int? currentPage,
+    PageContentDto? page,
     int? initialPageIndex,
     Set<int>? loadingPages,
     int? totalPartitions,
   }) {
     return QuranPageLoaded(
       surahName: surahName ?? this.surahName,
-      pageLines: pageLines ?? this.pageLines,
       partitionMode: partitionMode ?? this.partitionMode,
       partitionId: partitionId ?? this.partitionId,
-      currentPartitionPages:
-          currentPartitionPages ?? this.currentPartitionPages,
+      currentPage: currentPage ?? this.currentPage,
       totalPartitions: totalPartitions ?? this.totalPartitions,
-      pages: pages ?? this.pages,
+      page: page ?? this.page,
       initialPageIndex: initialPageIndex ?? this.initialPageIndex,
       loadingPages: loadingPages ?? this.loadingPages,
     );
@@ -97,12 +89,11 @@ class QuranPageInitial extends QuranPageState {
 class QuranPageLoaded extends QuranPageState {
   const QuranPageLoaded({
     required super.surahName,
-    required super.pageLines,
     required super.partitionMode,
     required super.partitionId,
-    required super.currentPartitionPages,
+    required super.currentPage,
     required super.totalPartitions,
-    required super.pages,
+    required super.page,
     required super.initialPageIndex,
     required super.loadingPages,
   });
@@ -110,11 +101,10 @@ class QuranPageLoaded extends QuranPageState {
   @override
   QuranPageLoaded copyWith({
     String? surahName,
-    List<PageLinesDto>? pageLines,
     PartitionMode? partitionMode,
     int? partitionId,
-    List<int>? currentPartitionPages,
-    Map<int, PageContentDto>? pages,
+    int? currentPage,
+    PageContentDto? page,
     int? initialPageIndex,
     Set<int>? loadingPages,
     int? totalPartitions,
@@ -123,13 +113,11 @@ class QuranPageLoaded extends QuranPageState {
   }) {
     return QuranPageLoaded(
       surahName: surahName ?? this.surahName,
-      pageLines: pageLines ?? this.pageLines,
       partitionMode: partitionMode ?? this.partitionMode,
       partitionId: partitionId ?? this.partitionId,
-      currentPartitionPages:
-          currentPartitionPages ?? this.currentPartitionPages,
+      currentPage: currentPage ?? this.currentPage,
       totalPartitions: totalPartitions ?? this.totalPartitions,
-      pages: pages ?? this.pages,
+      page: page ?? this.page,
       initialPageIndex: initialPageIndex ?? this.initialPageIndex,
       loadingPages: loadingPages ?? this.loadingPages,
     );

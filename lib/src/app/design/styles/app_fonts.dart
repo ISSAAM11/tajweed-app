@@ -17,4 +17,8 @@ abstract final class AppFonts {
     fontFamily: "UthmanicHafsV18",
     color: AppColors.primaryLight,
   );
+
+  static const TextStyle appBarTitle = TextStyle(
+    color: Color.fromARGB(255, 255, 255, 255),
+  );
 }

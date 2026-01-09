@@ -7,14 +7,16 @@ abstract interface class SignInDataSource {
   static const String endpoint = "sign-in";
 
   /// Calls the Sign In API endpoints.
-  FutureRequestResult<SignInModel> signInWithEmailAndPassword(String email, String password);
+  FutureRequestResult<SignInModel> signInWithEmailAndPassword(
+    String email,
+    String password,
+  );
 
   /// Calls the Sign In API endpoints.
   FutureRequestResult<SignInModel> signInWithGoogle();
 
   /// Calls the Sign In API endpoints.
   FutureRequestResult<SignInModel> signInWithFacebook();
-
 }
 
 final class SignInDataSourceImpl extends DataSource
@@ -28,22 +30,21 @@ final class SignInDataSourceImpl extends DataSource
   // final responseMock = ResponseMock.success;
 
   @override
-  FutureRequestResult<SignInModel> signInWithEmailAndPassword(String email, String password) async {
-    
-    if(!connectivityMonitor.isConnected) return Left(Exception('No internet connection'));
+  FutureRequestResult<SignInModel> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    if (!connectivityMonitor.isConnected)
+      return Left(Exception('No internet connection'));
 
-    return  await performDecodingRequest(
-          decodableModel: SignInModel.empty(),
-          method: RestfulMethods.post,
-          body: {
-            "language": "en",
-            "email": email,
-            "password": password,
-          },
-          path: SignInDataSource.endpoint,
-          mockingData: _mockSignInWithEmailAndPassword(),
-          mockIt: true,
-        );
+    return await performDecodingRequest(
+      decodableModel: SignInModel.empty(),
+      method: RestfulMethods.post,
+      body: {"language": "en", "email": email, "password": password},
+      path: SignInDataSource.endpoint,
+      mockingData: _mockSignInWithEmailAndPassword(),
+      mockIt: true,
+    );
   }
 
   @override
@@ -57,7 +58,6 @@ final class SignInDataSourceImpl extends DataSource
     // TODO: implement signInWithFacebook
     throw UnimplementedError();
   }
-
 }
 
 // enum ResponseMock { noInternet, noData, success, failure }

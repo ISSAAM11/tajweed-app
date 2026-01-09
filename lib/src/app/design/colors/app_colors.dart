@@ -15,7 +15,7 @@ abstract final class AppColors {
     end: Alignment.bottomRight,
     stops: [0.0, 0.5, 1.0],
   );
-  
+
   static const LinearGradient shimmerGradient = LinearGradient(
     colors: [
       Color(0xFFF4E4BC), // Cream
@@ -28,13 +28,13 @@ abstract final class AppColors {
     end: Alignment.bottomRight,
     stops: [0.0, 0.25, 0.5, 0.75, 1.0],
   );
-  
+
   static const LinearGradient secondaryGradient = LinearGradient(
     colors: [secondary, primaryLight, primary],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
+
   static const LinearGradient darkGradient = LinearGradient(
     colors: [primaryDark, primary, primaryLight],
     begin: Alignment.topLeft,
@@ -55,6 +55,7 @@ abstract final class AppColors {
   );
 
   // Neutral Colors
+  static const Color greyDarkest = Color(0xFF403D40); // New color
   static const Color greyDark = Color(0xFF2C2C2C);
   static const Color greyMedium = Color(0xFF555555);
   static const Color greyRegular = Color(0xFF6D7475);

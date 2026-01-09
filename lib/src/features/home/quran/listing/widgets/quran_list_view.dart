@@ -22,15 +22,8 @@ class QuranListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    return ListView.builder(
       itemCount: header != null ? itemCount + 1 : itemCount,
-      separatorBuilder: (context, index) => Divider(
-        color: Colors.grey[300],
-        height: 1,
-        thickness: 1,
-        indent: 20,
-        endIndent: 20,
-      ),
       itemBuilder: (context, index) {
         if (header != null && index == 0) return header!;
 
@@ -69,7 +62,7 @@ class QuranListView extends StatelessWidget {
     final previewText = itemWordList.join('\u00A0');
 
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
       leading: Text(
         label,
         style: AppFonts.uthmanicHafsFont.copyWith(
@@ -82,7 +75,7 @@ class QuranListView extends StatelessWidget {
       subtitle: Text(
         previewText,
         style: AppFonts.uthmanicHafsFont
-            .withColor(AppColors.greyMedium)
+            .withColor(AppColors.greyDark)
             .copyWith(fontSize: 17, fontWeight: FontWeight.w600),
         textDirection: TextDirection.rtl,
         overflow: TextOverflow.ellipsis,
@@ -93,6 +86,8 @@ class QuranListView extends StatelessWidget {
   }
 
   String _getPartitionLabel(PartitionItem item) {
+    print("item.verseKey");
+    print(item.verseKey);
     if (item is JuzItem) return 'Juz. ${item.juzNumber}';
     if (item is PageItem) return 'Page. ${item.pageNumber}';
     if (item is RukuItem) return 'Ruku. ${item.rukuNumber}';

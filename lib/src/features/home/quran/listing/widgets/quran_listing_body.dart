@@ -1,7 +1,9 @@
 //? Base needed imports
 
 import 'package:tajweed_ai/src/base/screens/exports.dart';
+import 'package:tajweed_ai/src/app/binding/app_bindings.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/services/last_selected_surah_service.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_state.dart';
@@ -19,7 +21,19 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
     QuranListingLoadedState() => _QuranScreen(
       itemCount: (state as QuranListingLoadedState).items.length,
       items: (state as QuranListingLoadedState).items,
-      onTap: ({required VerseKey verseKey, required PartitionMode mode}) {
+      chapters: (state as QuranListingLoadedState).chapters,
+      onTap: ({required VerseKey verseKey, required PartitionMode mode}) async {
+        // Save last selected surah if it's a chapter item
+        final loadedState = state as QuranListingLoadedState;
+        if (loadedState.currentListingMode == PartitionMode.surah) {
+          final chapter = loadedState.chapters.firstWhere(
+            (c) => c.id == verseKey.surah,
+            orElse: () => loadedState.chapters.first,
+          );
+          final lastSurahService = get<LastSelectedSurahService>();
+          await lastSurahService.set(chapter);
+        }
+
         final args = QuranPageArgs(verseKey: verseKey, mode: mode);
         context.push(
           Uri(path: "/quran-page", queryParameters: args.toQuery()).toString(),
@@ -41,6 +55,7 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
 class _QuranScreen extends StatelessWidget {
   final int itemCount;
   final List<PartitionItem> items;
+  final List<ChapterItem> chapters;
   final PartitionMode selectedViewMode;
   final Function(PartitionMode) onSelectMode;
   void Function({required VerseKey verseKey, required PartitionMode mode})
@@ -48,6 +63,7 @@ class _QuranScreen extends StatelessWidget {
   _QuranScreen({
     required this.itemCount,
     required this.items,
+    required this.chapters,
     required this.onTap,
     required this.selectedViewMode,
     required this.onSelectMode,

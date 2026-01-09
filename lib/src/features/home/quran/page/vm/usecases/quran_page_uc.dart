@@ -6,43 +6,33 @@ extension QuranPageUc on QuranPageBloc {
     Emitter<QuranPageState> emit,
   ) async {
     final snapshot = snapshotService.snapshot;
-    final totalPartitions = snapshotService.getTotalByMode(
-      snapshot,
-      event.mode,
-    );
+    final totalPartitions = snapshotService.getTotalByMode(snapshot);
+
     // 1. Resolve the page containing the verse
     final pageNo = await pageDataSource.getPageForVerse(event.verseKey);
 
-    // 1. get surah arabic Name
+    // 2. Get surah arabic name
     final chap = await pageDataSource.getChapterHeader(pageNo);
 
-    final pagelines = await pageDataSource.getPageLines(pageNo);
-    // 2. Find the partition that contains this page
-    final partitionId = snapshot.pageToPartition(event.mode, pageNo);
+    // 3. Find the partition that contains this page
+    final partitionId = snapshot.pageToPartition(pageNo);
 
-    // 3. Get all pages for this partition
-    final partitionPages = snapshot.pagesByMode(event.mode, partitionId);
-
-    // 4. Compute the vertical index inside the partition
-    final initialIndex = partitionPages.indexOf(pageNo);
-
-    // 5. Emit loaded state with the index hint for UI
+    // 4. Emit loaded state
     emit(
       QuranPageLoaded(
         surahName: chap.nameArabic,
-        pageLines: pagelines,
-        partitionMode: event.mode,
+        partitionMode: PartitionMode.page,
         partitionId: partitionId,
-        currentPartitionPages: partitionPages,
+        currentPage: pageNo,
         totalPartitions: totalPartitions,
-        pages: state.pages,
+        page: state.page,
         loadingPages: state.loadingPages,
-        initialPageIndex: (initialIndex >= 0) ? initialIndex : 0,
+        initialPageIndex: 0,
       ),
     );
 
-    // 6. Prefetch the current page
-    add(PrefetchPages([pageNo]));
+    // 5. Prefetch the current page
+    add(PrefetchPages(pageNo));
   }
 
   Future<void> _onChangePartitionMode(
@@ -54,36 +44,27 @@ extension QuranPageUc on QuranPageBloc {
 
     final snapshot = snapshotService.snapshot;
     final newMode = event.newMode;
-    final totalPartitions = snapshotService.getTotalByMode(snapshot, newMode);
+    final totalPartitions = snapshotService.getTotalByMode(snapshot);
 
     // 1. Use the page passed by the UI as the current visible page
     final currentPageNo = event.currentPageNo;
 
     // 2. Find the new partition containing this page
-    final newPartitionId = snapshot.pageToPartition(newMode, currentPageNo);
+    final newPartitionId = snapshot.pageToPartition(currentPageNo);
 
-    // 3. Get all pages of that partition
-    final newPartitionPages = snapshot.pagesByMode(newMode, newPartitionId);
-
-    // 4. Find the index of the current page within new partition
-    final newIndex = newPartitionPages.indexOf(currentPageNo);
-    final safeIndex = (newIndex >= 0) ? newIndex : 0;
-
-    // 5. Emit updated state with initial page index for UI
+    // 3. Emit updated state
     emit(
       s.copyWith(
         partitionMode: newMode,
         partitionId: newPartitionId,
-        currentPartitionPages: newPartitionPages,
+        currentPage: currentPageNo,
         totalPartitions: totalPartitions,
-        initialPageIndex: safeIndex,
+        initialPageIndex: 0,
       ),
     );
 
-    // 6. Prefetch the visible page
-    if (newPartitionPages.isNotEmpty) {
-      add(PrefetchPages([newPartitionPages[safeIndex]]));
-    }
+    // 4. Prefetch the visible page
+    add(PrefetchPages(currentPageNo));
   }
 
   void _onPartitionScrollUpdated(
@@ -93,18 +74,17 @@ extension QuranPageUc on QuranPageBloc {
     if (state is! QuranPageLoaded) return;
     final s = state as QuranPageLoaded;
 
-    final pages = s.currentPartitionPages;
-    final total = pages.length;
-    final idx = event.pageIndex;
+    final currentPage = s.currentPage;
 
-    // Always prefetch around current index (±2 for example)
+    // Prefetch current page and neighbors (±2 pages)
     const radius = 2;
-    final start = (idx - radius).clamp(0, total);
-    final end = (idx + radius + 1).clamp(0, total);
+    final pagesToPrefetch = List.generate(
+      radius * 2 + 1,
+      (i) => currentPage - radius + i,
+    ).where((p) => p >= 1 && p <= 604); // Valid Quran page range
 
-    final toPrefetch = pages.sublist(start, end);
-    if (toPrefetch.isNotEmpty) {
-      add(PrefetchPages(toPrefetch));
+    for (final page in pagesToPrefetch) {
+      add(PrefetchPages(page));
     }
   }
 
@@ -114,21 +94,13 @@ extension QuranPageUc on QuranPageBloc {
   ) async {
     final newPartitionId = event.newPartitionId;
     // Get first page to retrieve surah name
-    final newPages = snapshotService.snapshot.pagesByMode(
-      event.partitionMode,
-      event.newPartitionId,
-    );
+    final newPage = snapshotService.snapshot.pageByMode(event.newPartitionId);
     // retrieve surah name
-    final pageLines = await pageDataSource.getPageLines(newPages.first);
 
-    final chap = await pageDataSource.getChapterHeader(newPages.first);
+    final chap = await pageDataSource.getChapterHeader(newPage);
 
     emit(
-      state.copyWith(
-        pageLines: pageLines,
-        surahName: chap.nameArabic,
-        partitionId: newPartitionId,
-      ),
+      state.copyWith(surahName: chap.nameArabic, partitionId: newPartitionId),
     );
   }
 
@@ -136,19 +108,11 @@ extension QuranPageUc on QuranPageBloc {
     FetchPartitionContent event,
     Emitter<QuranPageState> emit,
   ) async {
-    final newPages = snapshotService.snapshot.pagesByMode(
-      PartitionMode.page, // event.partitionMode,
-      event.newPartitionId,
-    );
-    final pageLines = await pageDataSource.getPageLines(newPages.first);
+    final newPage = snapshotService.snapshot.pageByMode(event.newPartitionId);
     emit(
-      state.copyWith(
-        pageLines: pageLines,
-        partitionId: event.newPartitionId,
-        currentPartitionPages: newPages,
-      ),
+      state.copyWith(partitionId: event.newPartitionId, currentPage: newPage),
     );
 
-    add(PrefetchPages(newPages));
+    add(PrefetchPages(newPage));
   }
 }

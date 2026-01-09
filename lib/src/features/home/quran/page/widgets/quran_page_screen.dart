@@ -11,7 +11,7 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
     : super(
         dependencies: QuranPageDependencies().inject,
         onInit: (context, bloc) {
-          bloc.initToVerse(args.verseKey, args.mode);
+          bloc.initToVerse(args.verseKey);
         },
         onUpdate: (context, state) => switch (state) {
           _ => null,

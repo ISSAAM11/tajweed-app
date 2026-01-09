@@ -10,11 +10,10 @@ sealed class QuranPageEvent extends Equatable {
 // init to a verse key or page
 class InitToVerse extends QuranPageEvent {
   final VerseKey verseKey;
-  final PartitionMode mode;
-  const InitToVerse(this.verseKey, this.mode);
+  const InitToVerse(this.verseKey);
 
   @override
-  List<Object?> get props => [verseKey, mode];
+  List<Object?> get props => [verseKey];
 }
 
 // change partition mode but keep current page
@@ -32,35 +31,32 @@ class ChangePartitionMode extends QuranPageEvent {
 // user swiped horizontally
 class PartitionChanged extends QuranPageEvent {
   final int newPartitionId;
-  final PartitionMode partitionMode;
 
-  const PartitionChanged(this.newPartitionId, this.partitionMode);
+  const PartitionChanged(this.newPartitionId);
   @override
   List<Object?> get props => [newPartitionId];
 }
 
 class FetchPartitionContent extends QuranPageEvent {
   final int newPartitionId;
-  final PartitionMode partitionMode;
 
-  const FetchPartitionContent(this.newPartitionId, this.partitionMode);
+  const FetchPartitionContent(this.newPartitionId);
   @override
   List<Object?> get props => [newPartitionId];
 }
 
 // prefetch request
 class PrefetchPages extends QuranPageEvent {
-  final List<int> pageNos;
-  const PrefetchPages(this.pageNos);
+  final int pageNo;
+  const PrefetchPages(this.pageNo);
   @override
-  List<Object?> get props => [pageNos];
+  List<Object?> get props => [pageNo];
 }
 
 class PrefetchNeighborPartitions extends QuranPageEvent {
-  final PartitionMode mode;
   final int partitionId;
 
-  const PrefetchNeighborPartitions(this.mode, this.partitionId);
+  const PrefetchNeighborPartitions(this.partitionId);
   @override
   List<Object?> get props => [partitionId];
 }

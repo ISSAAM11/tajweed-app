@@ -16,23 +16,52 @@ class ListHeader extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Container(
-        color: AppColors.focusColor,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        alignment: Alignment.center,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: PartitionMode.values.map((mode) {
-              return ChoiceChip(
-                label: Text(
-                  mode.label,
-                  style: TextStyle(color: AppColors.primary, fontSize: 20),
+              final isSelected = selectedViewMode == mode;
+              return GestureDetector(
+                onTap: () => onSelectMode(mode),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.black12,
+                        width: 1, // Adjust thickness as needed
+                      ),
+                    ),
+                  ),
+                  width: 65,
+                  child: Column(
+                    spacing: 6,
+                    children: [
+                      Text(
+                        mode.label,
+                        style: TextStyle(
+                          color: isSelected ? Colors.black87 : Colors.black38,
+                          fontWeight: FontWeight.w600,
+                          fontSize: FontSizes.title,
+                        ),
+                      ),
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                        width: isSelected
+                            ? 65
+                            : 0, // Adjust thickness as needed
+                        height: 2,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          color: isSelected ? Colors.black87 : Colors.black12,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                selectedShadowColor: const Color.fromARGB(197, 139, 115, 85),
-                selected: selectedViewMode == mode,
-                showCheckmark: false,
-                onSelected: (isSelected) {
-                  if (isSelected) onSelectMode(mode);
-                },
-              ).symmetricPadding(horizontal: 5, vertical: 5);
+              );
             }).toList(),
           ),
         ),

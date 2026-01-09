@@ -1,3 +1,4 @@
+import 'package:generic_requester/generic_requester.dart';
 import 'package:tajweed_ai/src/database/app_database.dart'
     show WordRow, AyahMetaRow, ChapterRow, PageLineRow;
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
@@ -108,72 +109,34 @@ class PageContentDto {
 }
 
 class PartitionSnapshot {
-  // Totals
   final int totalSurahs;
-  final int totalJuz;
-  final int totalHizb;
-  final int totalRuku;
+
   final int totalPage;
 
   // Partition → page list
   final Map<int, List<int>> pagesBySurah;
-  final Map<int, List<int>> pagesByJuz;
-  final Map<int, List<int>> pagesByHizb;
-  final Map<int, List<int>> pagesByRuku;
 
   // Page → partition (reverse map)
   final Map<int, int> pageToSurah;
-  final Map<int, int> pageToJuz;
-  final Map<int, int> pageToHizb;
-  final Map<int, int> pageToRuku;
 
   PartitionSnapshot({
     required this.totalSurahs,
-    required this.totalJuz,
-    required this.totalHizb,
-    required this.totalRuku,
+
     required this.totalPage,
     required this.pagesBySurah,
-    required this.pagesByJuz,
-    required this.pagesByHizb,
-    required this.pagesByRuku,
+
     required this.pageToSurah,
-    required this.pageToJuz,
-    required this.pageToHizb,
-    required this.pageToRuku,
   });
 
   /// Factory constructor to generate snapshot from pagesBy* maps
   /// Get partitionId for a given page in the given mode
-  int pageToPartition(PartitionMode mode, int pageNo) {
-    switch (mode) {
-      case PartitionMode.surah:
-        return pageToSurah[pageNo] ?? 1;
-      case PartitionMode.juz:
-        return pageToJuz[pageNo] ?? 1;
-      case PartitionMode.hizb:
-        return pageToHizb[pageNo] ?? 1;
-      case PartitionMode.ruku:
-        return pageToRuku[pageNo] ?? 1;
-      case PartitionMode.page:
-        return pageNo; // identity: partition == page
-    }
+  int pageToPartition(int pageNo) {
+    return pageNo; // identity: partition == page
   }
 
   /// Get all pages belonging to a partition in the given mode
-  List<int> pagesByMode(PartitionMode mode, int partitionId) {
-    switch (mode) {
-      case PartitionMode.surah:
-        return pagesBySurah[partitionId] ?? const [];
-      case PartitionMode.juz:
-        return pagesByJuz[partitionId] ?? const [];
-      case PartitionMode.hizb:
-        return pagesByHizb[partitionId] ?? const [];
-      case PartitionMode.ruku:
-        return pagesByRuku[partitionId] ?? const [];
-      case PartitionMode.page:
-        return [partitionId]; // a single page
-    }
+  int pageByMode(int partitionId) {
+    return partitionId; // a single page
   }
 
   List<int> uiKeysByMode(PartitionMode mode) {
@@ -181,13 +144,30 @@ class PartitionSnapshot {
       case PartitionMode.page:
         return List<int>.generate(totalPage, (i) => i + 1);
       case PartitionMode.juz:
-        return pagesByJuz.keys.toList();
+        return [];
       case PartitionMode.hizb:
-        return pagesByHizb.keys.toList();
+        return [];
       case PartitionMode.ruku:
-        return pagesByRuku.keys.toList();
+        return [];
       case PartitionMode.surah:
         return pagesBySurah.keys.toList();
     }
   }
+}
+
+/// Model for API response containing page title
+final class PageTitleModel extends ModelingProtocol {
+  final String title;
+
+  PageTitleModel({required this.title});
+
+  factory PageTitleModel.empty() => PageTitleModel(title: '');
+
+  @override
+  PageTitleModel fromJson(json) {
+    return PageTitleModel(title: json?['title'] as String? ?? '');
+  }
+
+  @override
+  List<Object?> get props => [title];
 }

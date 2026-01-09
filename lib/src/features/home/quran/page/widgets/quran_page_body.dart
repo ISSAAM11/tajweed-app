@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tajweed_ai/src/base/screens/sub_widget.dart';
-import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_state.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/partition_view.dart';
@@ -101,7 +100,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
                 (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
                 ? _orderedPartitionIds[uiIndex]
                 : _orderedPartitionIds.first;
-            bloc.partitionChanged(newPartitionId, PartitionMode.page);
+            bloc.partitionChanged(newPartitionId);
           },
           itemBuilder: (context, uiIndex) {
             final partitionId =
@@ -117,11 +116,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
             return BlocProvider(
               create: (context) =>
                   QuranPageBloc(bloc.pageDataSource, bloc.snapshotService),
-              child: PartitionView(
-                partitionMode: PartitionMode.page,
-                partitionIndex: partitionId,
-                initialIndex: 0,
-              ),
+              child: PartitionView(partitionIndex: partitionId),
             );
           },
         );

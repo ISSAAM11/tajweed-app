@@ -1,6 +1,5 @@
 import 'package:tajweed_ai/src/base/bloc/exports.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/quran_page_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/services/partition_snapshot_service.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_events.dart';
@@ -12,20 +11,18 @@ part 'usecases/quran_page_uc.dart';
 class QuranPageBloc extends BaseBloc<QuranPageEvent, QuranPageState> {
   final QuranPageDatasource pageDataSource;
   final PartitionSnapshotService snapshotService;
-  void initToVerse(VerseKey verse, PartitionMode mode) =>
-      add(InitToVerse(verse, mode));
+  void initToVerse(VerseKey verse) => add(InitToVerse(verse));
 
-  void prefetchPages(List<int> pagesToPrefetch) =>
-      add(PrefetchPages(pagesToPrefetch));
+  void prefetchPages(int pageToPrefetch) => add(PrefetchPages(pageToPrefetch));
 
-  void partitionChanged(int newPartition, partitionMode) =>
-      add(PartitionChanged(newPartition, partitionMode));
+  void partitionChanged(int newPartition) =>
+      add(PartitionChanged(newPartition));
 
-  void fetchPartitionContent(int newPartition, partitionMode) =>
-      add(FetchPartitionContent(newPartition, partitionMode));
+  void fetchPartitionContent(int newPartition) =>
+      add(FetchPartitionContent(newPartition));
 
   void prefetchNeighborPartitions(PartitionMode mode, int newPartitionId) =>
-      add(PrefetchNeighborPartitions(mode, newPartitionId));
+      add(PrefetchNeighborPartitions(newPartitionId));
 
   void partitionScrollUpdated({
     required int partitionId,

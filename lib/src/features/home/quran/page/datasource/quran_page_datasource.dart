@@ -1,4 +1,3 @@
-import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/cache/page_cache.dart';

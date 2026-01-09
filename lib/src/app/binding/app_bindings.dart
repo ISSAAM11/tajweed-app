@@ -9,6 +9,7 @@ import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/listing_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/datasource/quran_listing_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/services/last_selected_surah_service.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/services/partition_snapshot_service.dart';
 
 import '../../core/dependency/get_it_container.dart';
@@ -52,6 +53,9 @@ final class AppBinding extends AppBindings {
     );
     di.registerLazySingleton<ListingCache>(
       () => ListingCache(get<CacheManager<SharedPreferences>>()),
+    );
+    di.registerLazySingleton<LastSelectedSurahService>(
+      () => LastSelectedSurahService(get<CacheManager<SharedPreferences>>()),
     );
 
     // 📦 Datasource (prewarmed)

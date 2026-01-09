@@ -44,6 +44,7 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
 
     return grouped.entries.map((entry) {
       final first = entry.value.first;
+
       return PageItem(
         pageNumber: entry.key,
         verseKey: VerseKey(first['surah'] as int, first['ayah'] as int),
