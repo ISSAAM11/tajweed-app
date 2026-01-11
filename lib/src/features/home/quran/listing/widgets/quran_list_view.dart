@@ -22,18 +22,31 @@ class QuranListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: header != null ? itemCount + 1 : itemCount,
-      itemBuilder: (context, index) {
-        if (header != null && index == 0) return header!;
+    return Column(
+      children: [
+        // Header outside ListView
+        if (header != null) header!,
 
-        final itemIndex = header != null ? index - 1 : index;
-        final item = items[itemIndex];
+        // ListView without header
+        Expanded(
+          child: ListView.separated(
+            separatorBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
+                child: Divider(thickness: 1, color: Colors.grey.shade300),
+              );
+            },
+            itemCount: itemCount,
+            itemBuilder: (context, index) {
+              final item = items[index];
 
-        if (item is ChapterItem) return _buildSurahItem(item, index);
+              if (item is ChapterItem) return _buildSurahItem(item, index);
 
-        return _buildPartitionItem(item, index);
-      },
+              return _buildPartitionItem(item, index);
+            },
+          ),
+        ),
+      ],
     );
   }
 

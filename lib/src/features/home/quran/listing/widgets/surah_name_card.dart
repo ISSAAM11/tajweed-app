@@ -28,42 +28,55 @@ class SurahNameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final metrics = AppMetrics.surahNameCard;
+
     return Card(
-      color: Colors.transparent,
-      shadowColor: Colors.transparent,
+      color: AppColors.transparent,
+      shadowColor: AppColors.transparent,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+          padding: metrics.cardPadding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  Text(
-                    "$orderNumber",
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    alignment: Alignment.center,
+                    height: metrics.numberContainerSize,
+                    width: metrics.numberContainerSize,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(AppImages.surahNumberBackground),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Text(
+                      "$orderNumber",
+                      style: AppFonts.poppins
+                          .withSize(metrics.numberFontSize)
+                          .withColor(AppColors.greyDarkest)
+                          .bold(),
                     ),
                   ),
-
-                  SizedBox(width: 20),
+                  SizedBox(width: metrics.numberTextSpacing),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "$nameEnglish",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                        style: AppFonts.poppins
+                            .withSize(metrics.englishNameFontSize)
+                            .withColor(AppColors.black)
+                            .semiBold(),
                       ),
                       Text(
                         "${revelationPlace.name}, ayah $versesCount",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        style: AppFonts.poppins
+                            .withSize(metrics.metadataFontSize)
+                            .withColor(AppColors.greyMedium)
+                            .medium(),
                       ),
                     ],
                   ),
@@ -72,10 +85,10 @@ class SurahNameCard extends StatelessWidget {
               // Right side: Arabic name (RTL)
               Text(
                 String.fromCharCode(int.parse(glyph, radix: 16)),
-                style: AppFonts.surahNamesFont.bold().copyWith(
-                  fontSize: 20,
-                  color: AppColors.primary,
-                ),
+                style: AppFonts.surahNamesFont
+                    .bold()
+                    .withSize(metrics.arabicNameFontSize)
+                    .withColor(AppColors.primary),
               ),
             ],
           ),

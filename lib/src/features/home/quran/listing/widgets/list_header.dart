@@ -50,7 +50,7 @@ class ListHeader extends StatelessWidget {
                         duration: Duration(milliseconds: 400),
                         curve: Curves.easeInOut,
                         width: isSelected
-                            ? 65
+                            ? 55
                             : 0, // Adjust thickness as needed
                         height: 2,
                         decoration: BoxDecoration(

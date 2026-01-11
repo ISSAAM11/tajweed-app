@@ -55,7 +55,7 @@ abstract final class AppColors {
   );
 
   // Neutral Colors
-  static const Color greyDarkest = Color(0xFF403D40); // New color
+  static const Color greyDarkest = Color(0xFF413E40); // New color
   static const Color greyDark = Color(0xFF2C2C2C);
   static const Color greyMedium = Color(0xFF555555);
   static const Color greyRegular = Color(0xFF6D7475);

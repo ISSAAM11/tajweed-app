@@ -1,4 +1,5 @@
-import 'package:tajweed_ai/src/base/screens/exports.dart';
+import 'package:flutter/material.dart';
+import 'package:tajweed_ai/src/app/index.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 
 class LastSelectedSurahWidget extends StatelessWidget {
@@ -15,122 +16,110 @@ class LastSelectedSurahWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (lastSurah == null) return const SizedBox.shrink();
 
+    final metrics = AppMetrics.lastSelectedSurahWidget;
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      height: metrics.height,
+      padding: metrics.containerPadding,
+      margin: metrics.margin,
       decoration: BoxDecoration(
         color: AppColors.secondary,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryLight, width: 1),
+        image: DecorationImage(
+          image: AssetImage(AppImages.backgroundLastRead),
+          fit: BoxFit.cover,
+        ),
+        borderRadius: BorderRadius.circular(metrics.borderRadius),
       ),
-      child: InkWell(
-        onTap: onContinue,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Left side: Surah number and name
-              Expanded(
-                child: Row(
+      child: Padding(
+        padding: metrics.contentPadding,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Surah number
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          "${lastSurah!.id}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                    Image.asset(
+                      AppImages.lastReadIcon,
+                      width: metrics.lastReadIconSize,
+                      height: metrics.lastReadIconSize,
                     ),
-                    const SizedBox(width: 16),
-                    // Surah name
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Continue Reading",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.greyRegular,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            lastSurah!.name,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.black,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
+                    SizedBox(width: metrics.iconTextSpacing),
+                    Text(
+                      "Last read",
+                      style: AppFonts.lato
+                          .withSize(FontSizes.indication)
+                          .withColor(AppColors.greyDarkest)
+                          .medium(),
                     ),
                   ],
                 ),
-              ),
-              // Right side: Arabic name and continue button
-              Row(
-                children: [
-                  // Arabic name
-                  Text(
-                    String.fromCharCode(
-                      int.parse(lastSurah!.nameGlyph, radix: 16),
-                    ),
-                    style: AppFonts.surahNamesFont.bold().copyWith(
-                      fontSize: 24,
-                      color: AppColors.primary,
-                    ),
+                SizedBox(height: metrics.columnSpacing),
+                Text(
+                  lastSurah!.name,
+                  style: AppFonts.lato
+                      .withSize(FontSizes.headline4)
+                      .withColor(AppColors.greyDarkest)
+                      .semiBold(),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: metrics.columnSpacing),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: "Ayah No: "),
+                      TextSpan(text: "${lastSurah!.id}"),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  // Continue button
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                  style: AppFonts.lato
+                      .withSize(FontSizes.subtitle)
+                      .withColor(AppColors.greyDarkest)
+                      .regular(),
+                ),
+                SizedBox(height: metrics.columnSpacing),
+                ElevatedButton(
+                  onPressed: onContinue,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        metrics.buttonBorderRadius,
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Continue",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                      ],
-                    ),
+                    padding: metrics.buttonPadding,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    minimumSize: Size.zero,
                   ),
-                ],
-              ),
-            ],
-          ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Continue",
+                        style: AppFonts.lato
+                            .withSize(FontSizes.indication)
+                            .withColor(AppColors.greyDarkest)
+                            .regular(),
+                      ),
+                      SizedBox(width: metrics.buttonIconSpacing),
+                      Icon(
+                        Icons.arrow_forward,
+                        color: AppColors.greyDarkest,
+                        size: metrics.continueButtonIconSize,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Image.asset(
+              AppImages.quranImage,
+              width: metrics.quranImageSize,
+              height: metrics.quranImageSize,
+            ),
+          ],
         ),
       ),
     );

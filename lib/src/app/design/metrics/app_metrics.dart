@@ -27,6 +27,8 @@ abstract final class AppMetrics {
   static const progressIndicators = _ProgressIndicators._();
   static final filePicking = _FilePicking._();
   static const spacing = _Spacing._();
+  static const lastSelectedSurahWidget = _LastSelectedSurahWidget._();
+  static const surahNameCard = _SurahNameCard._();
 
   static const mapDefaultCentralPoint = GeoCoordinates(
     35.501212354988134,

@@ -33,6 +33,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
   @override
   void initState() {
     super.initState();
+
     _pageController = PageController(initialPage: 0);
   }
 
@@ -100,6 +101,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
                 (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
                 ? _orderedPartitionIds[uiIndex]
                 : _orderedPartitionIds.first;
+
             bloc.partitionChanged(newPartitionId);
           },
           itemBuilder: (context, uiIndex) {

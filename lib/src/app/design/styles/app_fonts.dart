@@ -21,4 +21,14 @@ abstract final class AppFonts {
   static const TextStyle appBarTitle = TextStyle(
     color: Color.fromARGB(255, 255, 255, 255),
   );
+
+  static const TextStyle lato = TextStyle(
+    fontFamily: "Lato",
+    color: AppColors.scaffold,
+  );
+
+  static const TextStyle poppins = TextStyle(
+    fontFamily: "Poppins",
+    color: AppColors.scaffold,
+  );
 }

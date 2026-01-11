@@ -50,7 +50,7 @@ class _PageViewerState extends State<PageViewer> {
 
   @override
   Widget build(BuildContext context) {
-    Debugger.blue('should render Page ${widget.page.pageNo}');
+    // Debugger.blue('should render Page ${widget.page.pageNo}');
 
     final allWidgets = _buildPageWidgets();
     final pageMetaBar = allWidgets.firstWhere(
