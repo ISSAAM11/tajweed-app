@@ -1,8 +1,7 @@
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/app/binding/app_bindings.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/binding/quran_listing_deps.dart';
-import 'package:tajweed_ai/src/features/home/quran/listing/services/last_selected_surah_service.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/listing_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_state.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router.dart';
@@ -58,19 +57,22 @@ class _LastSelectedSurahSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lastSurahService = get<LastSelectedSurahService>();
-    final lastSurah = lastSurahService.get();
+    final lastSelectedPage = lastSurahService.get();
 
-    if (lastSurah == null) return const SizedBox.shrink();
+    if (lastSelectedPage == null) return const SizedBox.shrink();
 
     return LastSelectedSurahWidget(
-      lastSurah: lastSurah,
+      lastSurah: lastSelectedPage,
       onContinue: () {
         final args = QuranPageArgs(
-          verseKey: VerseKey(lastSurah.id, 1),
+          verseKey: lastSelectedPage.verseKey,
           mode: PartitionMode.page,
         );
         context.push(
-          Uri(path: "/quran-page", queryParameters: args.toQuery()).toString(),
+          Uri(
+            path: "/quran-page",
+            queryParameters: args.toQuery(),
+          ).toString(), // move to surah index
         );
       },
     );

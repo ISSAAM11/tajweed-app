@@ -6,6 +6,7 @@ import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.d
 abstract interface class QuranPageDatasource {
   Future<PageContentDto> getPageContent(int pageNo);
   Future<int> getPageForVerse(VerseKey verseKey);
+  Future<VerseKey> getVersesForPage(int pageNo);
   Future<ChapterHeaderDto> getChapterHeader(int surahIndex);
   Future<List<PageLinesDto>> getPageLines(int surahIndex);
 }
@@ -18,6 +19,11 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
   @override
   Future<int> getPageForVerse(VerseKey verseKey) async {
     return pageDao.getPageForVerse(verseKey);
+  }
+
+  @override
+  Future<VerseKey> getVersesForPage(int pageNo) async {
+    return pageDao.getVersesForPage(pageNo);
   }
 
   @override

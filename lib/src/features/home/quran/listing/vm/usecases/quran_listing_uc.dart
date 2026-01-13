@@ -10,6 +10,7 @@ extension QuranListingUC on QuranListingBloc {
     );
     try {
       final listingData = await _datasource.getListingData();
+
       emit(
         QuranListingLoadedState(
           currentListingMode: state.currentListingMode,

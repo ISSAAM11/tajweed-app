@@ -3,7 +3,7 @@ import 'package:tajweed_ai/src/app/index.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 
 class LastSelectedSurahWidget extends StatelessWidget {
-  final ChapterItem? lastSurah;
+  final LastSelectedPage? lastSurah;
   final VoidCallback? onContinue;
 
   const LastSelectedSurahWidget({
@@ -70,8 +70,8 @@ class LastSelectedSurahWidget extends StatelessWidget {
                 Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: "Ayah No: "),
-                      TextSpan(text: "${lastSurah!.id}"),
+                      TextSpan(text: "Page No: "),
+                      TextSpan(text: "${lastSurah!.pageNumber}"),
                     ],
                   ),
                   style: AppFonts.lato

@@ -7,7 +7,6 @@ extension QuranPageUc on QuranPageBloc {
   ) async {
     final snapshot = snapshotService.snapshot;
     final totalPartitions = snapshotService.getTotalByMode(snapshot);
-
     // 1. Resolve the page containing the verse
     final pageNo = await pageDataSource.getPageForVerse(event.verseKey);
 
@@ -109,6 +108,21 @@ extension QuranPageUc on QuranPageBloc {
     Emitter<QuranPageState> emit,
   ) async {
     final newPage = snapshotService.snapshot.pageByMode(event.newPartitionId);
+    VerseKey verseKey = await pageDataSource.getVersesForPage(newPage);
+
+    final lastSurahService = get<LastSelectedSurahService>();
+    final datasource = get<QuranListingDatasource>();
+    final chapter = await datasource.getChapterById(verseKey.surah);
+
+    LastSelectedPage lastSelectedPage = LastSelectedPage(
+      name: chapter!.nameSimple,
+      nameArabic: chapter.nameArabic,
+      pageNumber: newPage,
+      verseKey: verseKey,
+    );
+
+    await lastSurahService.set(lastSelectedPage);
+
     emit(
       state.copyWith(partitionId: event.newPartitionId, currentPage: newPage),
     );

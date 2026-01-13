@@ -53,7 +53,7 @@ class QuranListView extends StatelessWidget {
   Widget _buildSurahItem(ChapterItem chapterItem, int index) {
     return SurahNameCard(
       name: chapterItem.nameArabic,
-      nameEnglish: chapterItem.name,
+      nameEnglish: chapterItem.nameSimple,
       glyph: chapterItem.nameGlyph,
       versesCount: chapterItem.versesCount,
       revelationPlace: chapterItem.revelationPlace,
@@ -99,8 +99,6 @@ class QuranListView extends StatelessWidget {
   }
 
   String _getPartitionLabel(PartitionItem item) {
-    print("item.verseKey");
-    print(item.verseKey);
     if (item is JuzItem) return 'Juz. ${item.juzNumber}';
     if (item is PageItem) return 'Page. ${item.pageNumber}';
     if (item is RukuItem) return 'Ruku. ${item.rukuNumber}';

@@ -1,4 +1,3 @@
-import 'package:cg_core_defs/helpers/debugging_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_fonts.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';

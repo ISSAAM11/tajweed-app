@@ -57,7 +57,7 @@ class QuranLineText extends StatelessWidget {
       final word = words[i];
       final isSelected = selectedAyah == word.ayah;
       final highlightColor = isSelected
-          ? Colors.amber.withOpacity(0.3)
+          ? Colors.amber.withValues(alpha: 0.3)
           : Colors.transparent;
 
       final document = html_parser.parse('<span>${word.text_}</span>');
@@ -73,7 +73,7 @@ class QuranLineText extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               color: isSelected
-                  ? Colors.amber.withOpacity(0.3)
+                  ? Colors.amber.withValues(alpha: 0.3)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(4),
             ),

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 
 sealed class QuranListingEvent extends Equatable {
   const QuranListingEvent();
@@ -20,4 +21,12 @@ class ChangeListingModeEvent extends QuranListingEvent {
 
   @override
   List<Object?> get props => [mode];
+}
+
+class UpdateLastSurahEvent extends QuranListingEvent {
+  final LastSelectedPage lastSelectedPage;
+  const UpdateLastSurahEvent(this.lastSelectedPage);
+
+  @override
+  List<Object?> get props => [lastSelectedPage];
 }

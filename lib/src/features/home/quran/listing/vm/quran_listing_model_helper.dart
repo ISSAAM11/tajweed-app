@@ -139,6 +139,42 @@ class RukuItem extends PartitionItem {
   );
 }
 
+/// Last Selected Page item
+class LastSelectedPage extends PartitionItem {
+  String name;
+  String nameArabic;
+  int pageNumber;
+  final VerseKey _verseKey;
+
+  LastSelectedPage({
+    required this.name,
+    required this.nameArabic,
+    required this.pageNumber,
+    required VerseKey verseKey,
+  }) : _verseKey = verseKey;
+
+  @override
+  VerseKey get verseKey => _verseKey;
+
+  @override
+  List<String> get ayahWords => throw UnimplementedError();
+
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'nameArabic': nameArabic,
+    'pageNumber': pageNumber,
+    'verseKey': _verseKey.toString(),
+  };
+
+  factory LastSelectedPage.fromMap(Map<String, dynamic> map) =>
+      LastSelectedPage(
+        name: map['name'] as String,
+        nameArabic: map['nameArabic'] as String,
+        pageNumber: map['pageNumber'] as int,
+        verseKey: VerseKey.parse(map['verseKey'] as String),
+      );
+}
+
 /// Chapter item
 class ChapterItem extends PartitionItem {
   int id;

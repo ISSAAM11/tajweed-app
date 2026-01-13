@@ -2,7 +2,6 @@
 
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
-import 'package:tajweed_ai/src/features/home/quran/listing/services/last_selected_surah_service.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_state.dart';
@@ -22,16 +21,6 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
       items: (state as QuranListingLoadedState).items,
       chapters: (state as QuranListingLoadedState).chapters,
       onTap: ({required VerseKey verseKey, required PartitionMode mode}) async {
-        final loadedState = state as QuranListingLoadedState;
-        if (loadedState.currentListingMode == PartitionMode.surah) {
-          final chapter = loadedState.chapters.firstWhere(
-            (c) => c.id == verseKey.surah,
-            orElse: () => loadedState.chapters.first,
-          );
-          final lastSurahService = get<LastSelectedSurahService>();
-          await lastSurahService.set(chapter);
-        }
-
         final args = QuranPageArgs(verseKey: verseKey, mode: mode);
         context.push(
           Uri(path: "/quran-page", queryParameters: args.toQuery()).toString(),

@@ -45,4 +45,13 @@ class ListingCodec {
       hizbs: hizbsResult,
     );
   }
+
+  static String lastSelectedPageToJson(LastSelectedPage page) {
+    return jsonEncode(page.toMap());
+  }
+
+  static LastSelectedPage lastSelectedPageFromJson(String raw) {
+    final map = jsonDecode(raw) as Map<String, dynamic>;
+    return LastSelectedPage.fromMap(map);
+  }
 }

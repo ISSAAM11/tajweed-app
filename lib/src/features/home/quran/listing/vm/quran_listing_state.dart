@@ -28,7 +28,7 @@ final class QuranListingLoadedState extends QuranListingState {
   final List<RukuItem> rukus;
 
   const QuranListingLoadedState({
-    required super.currentListingMode, // ✅ super-parameter name must match the base field
+    required super.currentListingMode,
     required this.chapters,
     required this.pages,
     required this.juzs,
