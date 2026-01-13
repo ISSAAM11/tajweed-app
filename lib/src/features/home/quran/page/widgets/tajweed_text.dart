@@ -5,6 +5,7 @@ import 'package:tajweed_ai/src/app/design/styles/tajweed_styles.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 
 class QuranLineText extends StatelessWidget {
+  final int pageNo;
   final List<WordRow> lineWords;
   final bool isCentered;
   final Function(int ayahNumber, Offset position)? onAyahTap;
@@ -13,6 +14,7 @@ class QuranLineText extends StatelessWidget {
   const QuranLineText({
     super.key,
     required this.lineWords,
+    this.pageNo = 1,
     this.isCentered = false,
     this.onAyahTap,
     this.selectedAyah,
@@ -23,16 +25,15 @@ class QuranLineText extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final responsiveVerticalPadding = screenHeight * 0.0035;
-    final responsiveHorizentalPadding = screenWidth * 0.035;
-    final responsivefontSize = screenWidth * 0.046;
+    final responsiveVerticalPadding = screenHeight * 0.0025;
+    final responsiveHorizentalPadding = screenWidth * 0.03;
+    final responsivefontSize = screenWidth * 0.049;
     final responsiveTextHeight = screenHeight * 0.002;
 
     TextStyle baseTextStyle = TextStyle(
       fontSize: responsivefontSize,
-      fontFamily: 'UthmanicHafsV17',
-      fontWeight: FontWeight.w600,
-      color: Color.fromARGB(183, 0, 0, 0),
+      fontFamily: 'QPC-V2-Font-p$pageNo',
+      color: Colors.black,
       height: responsiveTextHeight,
     );
 
@@ -77,7 +78,6 @@ class QuranLineText extends StatelessWidget {
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(4),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
             child: RichText(
               text: TextSpan(children: spans),
               textDirection: TextDirection.rtl,

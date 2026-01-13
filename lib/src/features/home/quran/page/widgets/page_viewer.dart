@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_fonts.dart';
+import 'package:tajweed_ai/src/app/design/styles/app_styles.dart';
+import 'package:tajweed_ai/src/app/design/styles/font_sizes.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/tajweed_text.dart';
 
@@ -26,15 +29,18 @@ class _PageViewerState extends State<PageViewer> {
 
   List<Widget> _buildPageWidgets() {
     final widgets = <Widget>[];
-
     for (final block in widget.page.blocks) {
       final builtWidget = switch (block) {
         PageMetaBlockDto() => PageMetaBar(
           pageMetaBlock: block,
           pageNo: widget.page.pageNo,
         ),
-        SurahHeaderBlockDto() => SurahHeader(headerBlock: block),
+        SurahHeaderBlockDto() => SurahHeader(
+          headerBlock: block,
+          pageNo: widget.page.pageNo,
+        ),
         LineWordsBlockDto() => QuranLineText(
+          pageNo: widget.page.pageNo,
           lineWords: block.lineWords,
           isCentered: block.isCentered,
         ),
@@ -67,8 +73,8 @@ class _PageViewerState extends State<PageViewer> {
               image: ResizeImage(
                 AssetImage(
                   widget.page.pageNo % 2 == 0
-                      ? "assets/images/background/left_background.jpg"
-                      : "assets/images/background/right_background.jpg",
+                      ? "assets/images/background/left_background-normal.jpg"
+                      : "assets/images/background/left_background-normal.jpg",
                 ),
                 height: 110,
               ),
@@ -79,13 +85,14 @@ class _PageViewerState extends State<PageViewer> {
             children: [
               pageMetaBar,
               Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    physics: ClampingScrollPhysics(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [...contentWidgets, TajweedRulesWidget()],
-                    ),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 30),
+                  child: Column(
+                    mainAxisAlignment: widget.page.pageNo < 3
+                        ? MainAxisAlignment.center
+                        : MainAxisAlignment.spaceBetween,
+
+                    children: contentWidgets,
                   ),
                 ),
               ),
@@ -191,33 +198,20 @@ class _PageViewerState extends State<PageViewer> {
   }
 }
 
-class TajweedRulesWidget extends StatelessWidget {
-  const TajweedRulesWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      margin: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/background/tajweed-rules.png'),
-          fit: BoxFit.contain,
-        ),
-      ),
-      alignment: Alignment.center,
-    );
-  }
-}
-
 class SurahHeader extends StatelessWidget {
   final SurahHeaderBlockDto headerBlock;
-
-  const SurahHeader({super.key, required this.headerBlock});
+  final int pageNo;
+  const SurahHeader({
+    super.key,
+    required this.headerBlock,
+    required this.pageNo,
+  });
 
   @override
   Widget build(BuildContext context) {
+    if (pageNo < 3) {
+      return SizedBox.shrink();
+    }
     final screenWidth = MediaQuery.of(context).size.width;
     final responsivefontSize = screenWidth * 0.047;
 
@@ -263,7 +257,6 @@ class PageMetaBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 25,
       width: double.infinity,
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -272,9 +265,18 @@ class PageMetaBar extends StatelessWidget {
         children: [
           Text(
             "Juz ${pageMetaBlock.juz}, Hizb ${pageMetaBlock.hizb}",
-            style: Theme.of(context).textTheme.labelSmall,
+            style: AppFonts.lato
+                .withSize(FontSizes.subtitle)
+                .withColor(AppColors.accent)
+                .semiBold(),
           ),
-          Text("Page $pageNo", style: Theme.of(context).textTheme.labelSmall),
+          Text(
+            "Page $pageNo",
+            style: AppFonts.lato
+                .withSize(FontSizes.subtitle)
+                .withColor(AppColors.accent)
+                .semiBold(),
+          ),
         ],
       ),
     );
@@ -288,22 +290,42 @@ class BasmalahWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final responsivefontSize = screenWidth * 0.047;
+    final responsivefontSize = screenWidth * 0.05;
     final responsiveTextHeight = screenHeight * 0.0021;
 
     return SizedBox(
       child: Text(
-        "بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ",
+        "ﱁ ﱂ ﱃ ﱄ", //  "بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ",
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           fontSize: responsivefontSize,
-          color: Color.fromARGB(183, 0, 0, 0),
+          // color: Color.fromARGB(183, 0, 0, 0),
           height: responsiveTextHeight,
 
-          fontWeight: FontWeight.w600,
-          fontFamily: "UthmanicHafsV18",
+          // fontWeight: FontWeight.w600,
+          fontFamily: "QPC-V2-Font-p1", // "UthmanicHafsV18",
         ),
         textAlign: TextAlign.center,
       ),
     );
   }
 }
+
+// class TajweedRulesWidget extends StatelessWidget {
+//   const TajweedRulesWidget({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 40,
+//       margin: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+//       width: double.infinity,
+//       decoration: BoxDecoration(
+//         image: DecorationImage(
+//           image: AssetImage('assets/images/background/tajweed-rules.png'),
+//           fit: BoxFit.contain,
+//         ),
+//       ),
+//       alignment: Alignment.center,
+//     );
+//   }
+// }
