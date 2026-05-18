@@ -33,91 +33,93 @@ class LastSelectedSurahWidget extends StatelessWidget {
       child: Padding(
         padding: metrics.contentPadding,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      AppImages.lastReadIcon,
-                      width: metrics.lastReadIconSize,
-                      height: metrics.lastReadIconSize,
-                    ),
-                    SizedBox(width: metrics.iconTextSpacing),
-                    Text(
-                      "Last read",
-                      style: AppFonts.lato
-                          .withSize(FontSizes.indication)
-                          .withColor(AppColors.greyDarkest)
-                          .medium(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: metrics.columnSpacing),
-                Text(
-                  lastSurah!.name,
-                  style: AppFonts.lato
-                      .withSize(FontSizes.headline4)
-                      .withColor(AppColors.greyDarkest)
-                      .semiBold(),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: metrics.columnSpacing),
-                Text.rich(
-                  TextSpan(
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      TextSpan(text: "Page No: "),
-                      TextSpan(text: "${lastSurah!.pageNumber}"),
-                    ],
-                  ),
-                  style: AppFonts.lato
-                      .withSize(FontSizes.subtitle)
-                      .withColor(AppColors.greyDarkest)
-                      .regular(),
-                ),
-                SizedBox(height: metrics.columnSpacing),
-                ElevatedButton(
-                  onPressed: onContinue,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        metrics.buttonBorderRadius,
+                      Image.asset(
+                        AppImages.lastReadIcon,
+                        width: metrics.lastReadIconSize,
+                        height: metrics.lastReadIconSize,
                       ),
-                    ),
-                    padding: metrics.buttonPadding,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    minimumSize: Size.zero,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
+                      SizedBox(width: metrics.iconTextSpacing),
                       Text(
-                        "Continue",
+                        "Last read",
                         style: AppFonts.lato
                             .withSize(FontSizes.indication)
                             .withColor(AppColors.greyDarkest)
-                            .regular(),
-                      ),
-                      SizedBox(width: metrics.buttonIconSpacing),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: AppColors.greyDarkest,
-                        size: metrics.continueButtonIconSize,
+                            .medium(),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: metrics.columnSpacing),
+                  Text(
+                    lastSurah!.name,
+                    style: AppFonts.lato
+                        .withSize(FontSizes.headline4)
+                        .withColor(AppColors.greyDarkest)
+                        .semiBold(),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: metrics.columnSpacing),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: "Page No: "),
+                        TextSpan(text: "${lastSurah!.pageNumber}"),
+                      ],
+                    ),
+                    style: AppFonts.lato
+                        .withSize(FontSizes.subtitle)
+                        .withColor(AppColors.greyDarkest)
+                        .regular(),
+                  ),
+                  SizedBox(height: metrics.columnSpacing),
+                  ElevatedButton(
+                    onPressed: onContinue,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          metrics.buttonBorderRadius,
+                        ),
+                      ),
+                      padding: metrics.buttonPadding,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      minimumSize: Size.zero,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Continue",
+                          style: AppFonts.lato
+                              .withSize(FontSizes.caption)
+                              .withColor(AppColors.greyDarkest)
+                              .regular(),
+                        ),
+                        SizedBox(width: metrics.buttonIconSpacing),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: AppColors.greyDarkest,
+                          size: metrics.continueButtonIconSize,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Image.asset(
-              AppImages.quranImage,
+            SizedBox(width: metrics.iconTextSpacing),
+            SizedBox(
               width: metrics.quranImageSize,
-              height: metrics.quranImageSize,
+              child: Image.asset(AppImages.quranImage, fit: BoxFit.contain),
             ),
           ],
         ),

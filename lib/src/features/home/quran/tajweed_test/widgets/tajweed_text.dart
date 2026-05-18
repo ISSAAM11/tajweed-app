@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 
 class QuranLineText extends StatelessWidget {
@@ -27,7 +26,7 @@ class QuranLineText extends StatelessWidget {
     TextStyle baseTextStyle = TextStyle(
       fontSize: responsivefontSize,
       fontFamily: 'QPC-V2-Font-p$pageNo',
-      color: AppColors.black,
+      color: Colors.black,
       height: isCentered ? 2 : 1,
     );
 
@@ -49,8 +48,8 @@ class QuranLineText extends StatelessWidget {
       final word = words[i];
       final isSelected = selectedAyah == word.ayah;
       final highlightColor = isSelected
-          ? AppColors.ayahHighlight
-          : AppColors.transparent;
+          ? Colors.amber.withValues(alpha: 0.3)
+          : Colors.transparent;
 
       wordWidgets.add(
         GestureDetector(

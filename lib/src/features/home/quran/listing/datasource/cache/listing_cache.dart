@@ -5,7 +5,7 @@ import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_mode
 
 final class ListingCache {
   final CacheManager _cache;
-  static const _kKey = 'listing_data';
+  static const _kKey = 'listing_data_v3';
 
   ListingDataDto? _memory;
 

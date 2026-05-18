@@ -75,6 +75,10 @@ abstract final class AppColors {
   static const Color black = Colors.black;
   static const Color transparent = Colors.transparent;
 
+  // Quran page colors
+  static const Color ayahHighlight = Color(0x4DFFC107);   // amber 30% opacity
+  static const Color surahGlyphColor = Color(0xB7000000); // black 72% opacity
+
   // Interactive Colors
   static const Color splashColor = Color(0x1AD4AF37);
   static const Color focusColor = Color(0x1A8B7355);

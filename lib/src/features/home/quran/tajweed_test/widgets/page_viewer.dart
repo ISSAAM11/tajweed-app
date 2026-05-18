@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
-import 'package:tajweed_ai/src/app/design/metrics/app_metrics.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_fonts.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_styles.dart';
 import 'package:tajweed_ai/src/app/design/styles/font_sizes.dart';
@@ -18,12 +17,13 @@ class PageViewer extends StatefulWidget {
 class _PageViewerState extends State<PageViewer> {
   int? selectedAyah;
   Offset? _popupPosition;
-  final GlobalKey _stackKey = GlobalKey();
+  GlobalKey? _selectedParentKey;
 
   void _removePopup() {
     setState(() {
       selectedAyah = null;
       _popupPosition = null;
+      _selectedParentKey = null;
     });
   }
 
@@ -43,8 +43,9 @@ class _PageViewerState extends State<PageViewer> {
           pageNo: widget.page.pageNo,
           lineWords: block.lineWords,
           isCentered: block.isCentered,
-          selectedAyah: selectedAyah,
-          onAyahTap: _handleAyahTap,
+          onAyahTap: (ayahNumber, position) {
+            _handleAyahTap(ayahNumber, position, _selectedParentKey);
+          },
         ),
         BasmalahBlockDto() => BasmalahWidget(),
         _ => SizedBox.shrink(),
@@ -68,7 +69,6 @@ class _PageViewerState extends State<PageViewer> {
     final screenHeight = MediaQuery.of(context).size.height;
     final responsiveVerticalPadding = screenHeight * 0.015;
     return Stack(
-      key: _stackKey,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -76,10 +76,10 @@ class _PageViewerState extends State<PageViewer> {
               image: ResizeImage(
                 AssetImage(
                   widget.page.pageNo % 2 == 0
-                      ? "assets/images/background/left_background2.jpg"
-                      : "assets/images/background/right_background2.jpg",
+                      ? "assets/images/background/left_background-normal.jpg"
+                      : "assets/images/background/left_background-normal.jpg",
                 ),
-                height: AppMetrics.quranPageViewer.backgroundResizeHeight.toInt(),
+                height: 110,
               ),
               fit: BoxFit.cover,
             ),
@@ -104,93 +104,101 @@ class _PageViewerState extends State<PageViewer> {
             ],
           ),
         ),
-        if (selectedAyah != null && _popupPosition != null)
+        if (selectedAyah != null && _popupPosition != null
+        //&&_selectedParentKey != null
+        )
           _buildPopup(),
       ],
     );
   }
 
   Widget _buildPopup() {
-    final stackBox =
-        _stackKey.currentContext?.findRenderObject() as RenderBox?;
-    if (stackBox == null) return const SizedBox.shrink();
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Get the RenderBox of the parent widget
+        final renderBox =
+            _selectedParentKey!.currentContext?.findRenderObject()
+                as RenderBox?;
+        if (renderBox == null) return SizedBox.shrink();
 
-    final local = stackBox.globalToLocal(_popupPosition!);
-    final stackSize = stackBox.size;
-    final popupWidth = AppMetrics.quranPageViewer.popupWidth;
-    final popupHeight = AppMetrics.quranPageViewer.popupHeight;
-    const margin = 16.0;
-    const offset = 10.0;
+        final parentPosition = renderBox.localToGlobal(Offset.zero);
+        final parentSize = renderBox.size;
 
-    double top = local.dy - popupHeight - offset;
-    double left = local.dx - (popupWidth / 2);
+        const popupWidth = 190.0;
+        const popupHeight = 40.0;
+        const margin = 16.0;
 
-    // Clamp horizontally
-    if (left < margin) left = margin;
-    if (left + popupWidth > stackSize.width - margin) {
-      left = stackSize.width - popupWidth - margin;
-    }
+        double top = parentPosition.dy - popupHeight - 10;
+        double left = _popupPosition!.dx - (popupWidth / 2);
 
-    // If popup goes above the stack, show it below the tap instead
-    if (top < margin) top = local.dy + offset;
+        if (left < margin) left = margin;
+        if (left + popupWidth > constraints.maxWidth - margin) {
+          left = constraints.maxWidth - popupWidth - margin;
+        }
 
-    // Final bottom clamp
-    if (top + popupHeight > stackSize.height - margin) {
-      top = stackSize.height - popupHeight - margin;
-    }
+        if (top < margin) {
+          top = parentPosition.dy + parentSize.height + 10;
+        }
+        if (top + popupHeight > constraints.maxHeight - margin) {
+          top = constraints.maxHeight - popupHeight - margin;
+        }
 
-    return Positioned(
-      left: left,
-      top: top,
-      child: Material(
-        elevation: AppMetrics.quranPageViewer.popupElevation,
-        borderRadius: BorderRadius.circular(
-          AppMetrics.quranPageViewer.popupRadius,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.scaffold,
-            borderRadius: BorderRadius.circular(
-              AppMetrics.quranPageViewer.popupRadius,
+        return Positioned(
+          left: left,
+          top: top,
+          child: GestureDetector(
+            onTap: _removePopup,
+            child: Material(
+              elevation: 8,
+              borderRadius: BorderRadius.circular(25),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.copy),
+                      iconSize: 22,
+                      onPressed: _removePopup,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.bookmark_border),
+                      iconSize: 22,
+                      onPressed: _removePopup,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.translate),
+                      iconSize: 22,
+                      onPressed: _removePopup,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.play_arrow),
+                      iconSize: 22,
+                      onPressed: _removePopup,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.copy),
-                iconSize: AppMetrics.quranPageViewer.popupIconSize,
-                onPressed: null, // TODO: copy ayah text
-              ),
-              IconButton(
-                icon: const Icon(Icons.bookmark_border),
-                iconSize: AppMetrics.quranPageViewer.popupIconSize,
-                onPressed: null, // TODO: bookmark ayah
-              ),
-              IconButton(
-                icon: const Icon(Icons.translate),
-                iconSize: AppMetrics.quranPageViewer.popupIconSize,
-                onPressed: null, // TODO: show translation
-              ),
-              IconButton(
-                icon: const Icon(Icons.play_arrow),
-                iconSize: AppMetrics.quranPageViewer.popupIconSize,
-                onPressed: null, // TODO: play audio
-              ),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  void _handleAyahTap(int ayahNumber, Offset globalPosition) {
+  // Update your onAyahTap callback:
+  void _handleAyahTap(int ayahNumber, Offset position, GlobalKey? parentKey) {
     setState(() {
       if (selectedAyah == ayahNumber) {
         _removePopup();
       } else {
         selectedAyah = ayahNumber;
-        _popupPosition = globalPosition;
+        _popupPosition = position;
+        _selectedParentKey =
+            parentKey; // this valur it is null  ////////////////////////////////////////////////////////////////////////////////////
       }
     });
   }
@@ -214,10 +222,10 @@ class SurahHeader extends StatelessWidget {
     final responsivefontSize = screenWidth * 0.047;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: AppMetrics.quranPageViewer.contentHorizontalMargin),
+      margin: const EdgeInsets.only(left: 8, right: 8),
       width: double.infinity,
-      height: AppMetrics.quranPageViewer.surahHeaderHeight,
-      padding: EdgeInsets.only(bottom: AppMetrics.quranPageViewer.surahHeaderBottomPadding),
+      height: 42,
+      padding: const EdgeInsets.only(bottom: 2),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
@@ -232,10 +240,11 @@ class SurahHeader extends StatelessWidget {
         String.fromCharCode(
           int.parse(headerBlock.chapter.nameGlyph, radix: 16),
         ),
-        style: AppFonts.surahNamesFont
-            .withColor(AppColors.surahGlyphColor)
-            .semiBold()
-            .withSize(responsivefontSize),
+        style: AppFonts.surahNamesFont.copyWith(
+          color: Color.fromARGB(183, 0, 0, 0),
+          fontWeight: FontWeight.w600,
+          fontSize: responsivefontSize,
+        ),
       ),
     );
   }
@@ -289,14 +298,34 @@ class BasmalahWidget extends StatelessWidget {
     final responsivefontSize = screenWidth * 0.05;
 
     return Text(
-      "ﱁ ﱂ ﱃ ﱄ",
-      style: TextStyle(
-        fontFamily: 'QPC-V2-Font-p1',
+      "ﱁ ﱂ ﱃ ﱄ", //  "بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ",
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
         fontSize: responsivefontSize,
-        color: AppColors.surahGlyphColor,
+        fontFamily: "QPC-V2-Font-p1",
+        // color: Color.fromARGB(183, 0, 0, 0),
+        // fontWeight: FontWeight.w600,
+        // fontFamily:"UthmanicHafsV18",
       ),
       textAlign: TextAlign.center,
     );
   }
 }
 
+// class TajweedRulesWidget extends StatelessWidget {
+//   const TajweedRulesWidget({super.key});
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 40,
+//       margin: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+//       width: double.infinity,
+//       decoration: BoxDecoration(
+//         image: DecorationImage(
+//           image: AssetImage('assets/images/background/tajweed-rules.png'),
+//           fit: BoxFit.contain,
+//         ),
+//       ),
+//       alignment: Alignment.center,
+//     );
+//   }
+// }

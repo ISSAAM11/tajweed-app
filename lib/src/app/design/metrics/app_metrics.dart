@@ -29,6 +29,7 @@ abstract final class AppMetrics {
   static const spacing = _Spacing._();
   static const lastSelectedSurahWidget = _LastSelectedSurahWidget._();
   static const surahNameCard = _SurahNameCard._();
+  static const quranPageViewer = _QuranPageViewer._();
 
   static const mapDefaultCentralPoint = GeoCoordinates(
     35.501212354988134,

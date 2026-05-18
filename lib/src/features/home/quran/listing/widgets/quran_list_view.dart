@@ -67,6 +67,7 @@ class QuranListView extends StatelessWidget {
 
   Widget _buildPartitionItem(PartitionItem item, int index) {
     final String label = _getPartitionLabel(item);
+    final int pageNumber = _getPartitionPageNumber(item);
 
     // Process ayah words
     final parsedWords = QuranTextParser.stripRulesList(item.ayahWords);
@@ -78,18 +79,20 @@ class QuranListView extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
       leading: Text(
         label,
-        style: AppFonts.uthmanicHafsFont.copyWith(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
+        style: AppFonts.poppins.copyWith(
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
           color: AppColors.primary,
         ),
       ),
 
       subtitle: Text(
         previewText,
-        style: AppFonts.uthmanicHafsFont
-            .withColor(AppColors.greyDark)
-            .copyWith(fontSize: 17, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          fontFamily: 'QPC-V2-Font-p$pageNumber',
+          fontSize: 14,
+          color: AppColors.greyDark,
+        ),
         textDirection: TextDirection.rtl,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
@@ -105,6 +108,14 @@ class QuranListView extends StatelessWidget {
     if (item is HizbItem)
       return '${item.fraction.label} Hizb. ${item.juzNumber}';
     return 'Partition';
+  }
+
+  int _getPartitionPageNumber(PartitionItem item) {
+    if (item is PageItem) return item.pageNumber;
+    if (item is JuzItem) return item.pageNumber;
+    if (item is HizbItem) return item.pageNumber;
+    if (item is RukuItem) return item.pageNumber;
+    return 1;
   }
 
   void _handlePartitionTap(PartitionItem item) {

@@ -41,7 +41,7 @@ class _FilePicking {
 class _LastSelectedSurahWidget {
   const _LastSelectedSurahWidget._();
 
-  final double height = 160;
+  final double height = 150;
   final double borderRadius = 20;
   final EdgeInsets containerPadding = const EdgeInsets.all(2);
   final EdgeInsets contentPadding = const EdgeInsets.symmetric(
@@ -69,6 +69,22 @@ class _LastSelectedSurahWidget {
     horizontal: 16,
     vertical: 4,
   );
+}
+
+class _QuranPageViewer {
+  const _QuranPageViewer._();
+
+  final double surahHeaderHeight = 42;
+  final double surahHeaderBottomPadding = 2;
+  final double contentHorizontalMargin = 8;
+  final double backgroundResizeHeight = 110;
+
+  // Ayah popup
+  final double popupWidth = 190;
+  final double popupHeight = 40;
+  final double popupRadius = 25;
+  final double popupIconSize = 22;
+  final double popupElevation = 8;
 }
 
 class _SurahNameCard {
