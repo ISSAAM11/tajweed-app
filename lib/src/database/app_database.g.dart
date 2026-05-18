@@ -2390,18 +2390,16 @@ class $AyahMetasTable extends AyahMetas
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $AyahMetasTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  static const VerificationMeta _globalIndexMeta = const VerificationMeta(
+    'globalIndex',
+  );
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
+  late final GeneratedColumn<int> globalIndex = GeneratedColumn<int>(
+    'global_index',
     aliasedName,
     false,
-    hasAutoIncrement: true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
   );
   static const VerificationMeta _surahMeta = const VerificationMeta('surah');
   @override
@@ -2416,17 +2414,6 @@ class $AyahMetasTable extends AyahMetas
   @override
   late final GeneratedColumn<int> ayah = GeneratedColumn<int>(
     'ayah',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _globalIndexMeta = const VerificationMeta(
-    'globalIndex',
-  );
-  @override
-  late final GeneratedColumn<int> globalIndex = GeneratedColumn<int>(
-    'global_index',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -2478,16 +2465,25 @@ class $AyahMetasTable extends AyahMetas
         requiredDuringInsert: true,
       ).withConverter<HizbFraction>($AyahMetasTable.$converterhizbFraction);
   @override
+  late final GeneratedColumnWithTypeConverter<bool, int> hasSajdah =
+      GeneratedColumn<int>(
+        'has_sajdah',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<bool>($AyahMetasTable.$converterhasSajdah);
+  @override
   List<GeneratedColumn> get $columns => [
-    id,
+    globalIndex,
     surah,
     ayah,
-    globalIndex,
     pageNo,
     juzNo,
     hizbNo,
     rukuNo,
     hizbFraction,
+    hasSajdah,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2501,8 +2497,14 @@ class $AyahMetasTable extends AyahMetas
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('global_index')) {
+      context.handle(
+        _globalIndexMeta,
+        globalIndex.isAcceptableOrUnknown(
+          data['global_index']!,
+          _globalIndexMeta,
+        ),
+      );
     }
     if (data.containsKey('surah')) {
       context.handle(
@@ -2519,17 +2521,6 @@ class $AyahMetasTable extends AyahMetas
       );
     } else if (isInserting) {
       context.missing(_ayahMeta);
-    }
-    if (data.containsKey('global_index')) {
-      context.handle(
-        _globalIndexMeta,
-        globalIndex.isAcceptableOrUnknown(
-          data['global_index']!,
-          _globalIndexMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_globalIndexMeta);
     }
     if (data.containsKey('page_no')) {
       context.handle(
@@ -2567,14 +2558,14 @@ class $AyahMetasTable extends AyahMetas
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {globalIndex};
   @override
   AyahMetaRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return AyahMetaRow(
-      id: attachedDatabase.typeMapping.read(
+      globalIndex: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}id'],
+        data['${effectivePrefix}global_index'],
       )!,
       surah: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -2583,10 +2574,6 @@ class $AyahMetasTable extends AyahMetas
       ayah: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}ayah'],
-      )!,
-      globalIndex: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}global_index'],
       )!,
       pageNo: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -2610,6 +2597,12 @@ class $AyahMetasTable extends AyahMetas
           data['${effectivePrefix}hizb_fraction'],
         )!,
       ),
+      hasSajdah: $AyahMetasTable.$converterhasSajdah.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}has_sajdah'],
+        )!,
+      ),
     );
   }
 
@@ -2620,36 +2613,37 @@ class $AyahMetasTable extends AyahMetas
 
   static TypeConverter<HizbFraction, int> $converterhizbFraction =
       const HizbFractionConverter();
+  static TypeConverter<bool, int> $converterhasSajdah =
+      const BoolIntConverter();
 }
 
 class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
-  final int id;
+  final int globalIndex;
   final int surah;
   final int ayah;
-  final int globalIndex;
   final int pageNo;
   final int juzNo;
   final int hizbNo;
   final int rukuNo;
   final HizbFraction hizbFraction;
+  final bool hasSajdah;
   const AyahMetaRow({
-    required this.id,
+    required this.globalIndex,
     required this.surah,
     required this.ayah,
-    required this.globalIndex,
     required this.pageNo,
     required this.juzNo,
     required this.hizbNo,
     required this.rukuNo,
     required this.hizbFraction,
+    required this.hasSajdah,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['global_index'] = Variable<int>(globalIndex);
     map['surah'] = Variable<int>(surah);
     map['ayah'] = Variable<int>(ayah);
-    map['global_index'] = Variable<int>(globalIndex);
     map['page_no'] = Variable<int>(pageNo);
     map['juz_no'] = Variable<int>(juzNo);
     map['hizb_no'] = Variable<int>(hizbNo);
@@ -2659,20 +2653,25 @@ class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
         $AyahMetasTable.$converterhizbFraction.toSql(hizbFraction),
       );
     }
+    {
+      map['has_sajdah'] = Variable<int>(
+        $AyahMetasTable.$converterhasSajdah.toSql(hasSajdah),
+      );
+    }
     return map;
   }
 
   AyahMetasCompanion toCompanion(bool nullToAbsent) {
     return AyahMetasCompanion(
-      id: Value(id),
+      globalIndex: Value(globalIndex),
       surah: Value(surah),
       ayah: Value(ayah),
-      globalIndex: Value(globalIndex),
       pageNo: Value(pageNo),
       juzNo: Value(juzNo),
       hizbNo: Value(hizbNo),
       rukuNo: Value(rukuNo),
       hizbFraction: Value(hizbFraction),
+      hasSajdah: Value(hasSajdah),
     );
   }
 
@@ -2682,62 +2681,61 @@ class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AyahMetaRow(
-      id: serializer.fromJson<int>(json['id']),
+      globalIndex: serializer.fromJson<int>(json['globalIndex']),
       surah: serializer.fromJson<int>(json['surah']),
       ayah: serializer.fromJson<int>(json['ayah']),
-      globalIndex: serializer.fromJson<int>(json['globalIndex']),
       pageNo: serializer.fromJson<int>(json['pageNo']),
       juzNo: serializer.fromJson<int>(json['juzNo']),
       hizbNo: serializer.fromJson<int>(json['hizbNo']),
       rukuNo: serializer.fromJson<int>(json['rukuNo']),
       hizbFraction: serializer.fromJson<HizbFraction>(json['hizbFraction']),
+      hasSajdah: serializer.fromJson<bool>(json['hasSajdah']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'globalIndex': serializer.toJson<int>(globalIndex),
       'surah': serializer.toJson<int>(surah),
       'ayah': serializer.toJson<int>(ayah),
-      'globalIndex': serializer.toJson<int>(globalIndex),
       'pageNo': serializer.toJson<int>(pageNo),
       'juzNo': serializer.toJson<int>(juzNo),
       'hizbNo': serializer.toJson<int>(hizbNo),
       'rukuNo': serializer.toJson<int>(rukuNo),
       'hizbFraction': serializer.toJson<HizbFraction>(hizbFraction),
+      'hasSajdah': serializer.toJson<bool>(hasSajdah),
     };
   }
 
   AyahMetaRow copyWith({
-    int? id,
+    int? globalIndex,
     int? surah,
     int? ayah,
-    int? globalIndex,
     int? pageNo,
     int? juzNo,
     int? hizbNo,
     int? rukuNo,
     HizbFraction? hizbFraction,
+    bool? hasSajdah,
   }) => AyahMetaRow(
-    id: id ?? this.id,
+    globalIndex: globalIndex ?? this.globalIndex,
     surah: surah ?? this.surah,
     ayah: ayah ?? this.ayah,
-    globalIndex: globalIndex ?? this.globalIndex,
     pageNo: pageNo ?? this.pageNo,
     juzNo: juzNo ?? this.juzNo,
     hizbNo: hizbNo ?? this.hizbNo,
     rukuNo: rukuNo ?? this.rukuNo,
     hizbFraction: hizbFraction ?? this.hizbFraction,
+    hasSajdah: hasSajdah ?? this.hasSajdah,
   );
   AyahMetaRow copyWithCompanion(AyahMetasCompanion data) {
     return AyahMetaRow(
-      id: data.id.present ? data.id.value : this.id,
-      surah: data.surah.present ? data.surah.value : this.surah,
-      ayah: data.ayah.present ? data.ayah.value : this.ayah,
       globalIndex: data.globalIndex.present
           ? data.globalIndex.value
           : this.globalIndex,
+      surah: data.surah.present ? data.surah.value : this.surah,
+      ayah: data.ayah.present ? data.ayah.value : this.ayah,
       pageNo: data.pageNo.present ? data.pageNo.value : this.pageNo,
       juzNo: data.juzNo.present ? data.juzNo.value : this.juzNo,
       hizbNo: data.hizbNo.present ? data.hizbNo.value : this.hizbNo,
@@ -2745,153 +2743,151 @@ class AyahMetaRow extends DataClass implements Insertable<AyahMetaRow> {
       hizbFraction: data.hizbFraction.present
           ? data.hizbFraction.value
           : this.hizbFraction,
+      hasSajdah: data.hasSajdah.present ? data.hasSajdah.value : this.hasSajdah,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('AyahMetaRow(')
-          ..write('id: $id, ')
+          ..write('globalIndex: $globalIndex, ')
           ..write('surah: $surah, ')
           ..write('ayah: $ayah, ')
-          ..write('globalIndex: $globalIndex, ')
           ..write('pageNo: $pageNo, ')
           ..write('juzNo: $juzNo, ')
           ..write('hizbNo: $hizbNo, ')
           ..write('rukuNo: $rukuNo, ')
-          ..write('hizbFraction: $hizbFraction')
+          ..write('hizbFraction: $hizbFraction, ')
+          ..write('hasSajdah: $hasSajdah')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(
-    id,
+    globalIndex,
     surah,
     ayah,
-    globalIndex,
     pageNo,
     juzNo,
     hizbNo,
     rukuNo,
     hizbFraction,
+    hasSajdah,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AyahMetaRow &&
-          other.id == this.id &&
+          other.globalIndex == this.globalIndex &&
           other.surah == this.surah &&
           other.ayah == this.ayah &&
-          other.globalIndex == this.globalIndex &&
           other.pageNo == this.pageNo &&
           other.juzNo == this.juzNo &&
           other.hizbNo == this.hizbNo &&
           other.rukuNo == this.rukuNo &&
-          other.hizbFraction == this.hizbFraction);
+          other.hizbFraction == this.hizbFraction &&
+          other.hasSajdah == this.hasSajdah);
 }
 
 class AyahMetasCompanion extends UpdateCompanion<AyahMetaRow> {
-  final Value<int> id;
+  final Value<int> globalIndex;
   final Value<int> surah;
   final Value<int> ayah;
-  final Value<int> globalIndex;
   final Value<int> pageNo;
   final Value<int> juzNo;
   final Value<int> hizbNo;
   final Value<int> rukuNo;
   final Value<HizbFraction> hizbFraction;
+  final Value<bool> hasSajdah;
   const AyahMetasCompanion({
-    this.id = const Value.absent(),
+    this.globalIndex = const Value.absent(),
     this.surah = const Value.absent(),
     this.ayah = const Value.absent(),
-    this.globalIndex = const Value.absent(),
     this.pageNo = const Value.absent(),
     this.juzNo = const Value.absent(),
     this.hizbNo = const Value.absent(),
     this.rukuNo = const Value.absent(),
     this.hizbFraction = const Value.absent(),
+    this.hasSajdah = const Value.absent(),
   });
   AyahMetasCompanion.insert({
-    this.id = const Value.absent(),
+    this.globalIndex = const Value.absent(),
     required int surah,
     required int ayah,
-    required int globalIndex,
     required int pageNo,
     required int juzNo,
     required int hizbNo,
     required int rukuNo,
     required HizbFraction hizbFraction,
+    required bool hasSajdah,
   }) : surah = Value(surah),
        ayah = Value(ayah),
-       globalIndex = Value(globalIndex),
        pageNo = Value(pageNo),
        juzNo = Value(juzNo),
        hizbNo = Value(hizbNo),
        rukuNo = Value(rukuNo),
-       hizbFraction = Value(hizbFraction);
+       hizbFraction = Value(hizbFraction),
+       hasSajdah = Value(hasSajdah);
   static Insertable<AyahMetaRow> custom({
-    Expression<int>? id,
+    Expression<int>? globalIndex,
     Expression<int>? surah,
     Expression<int>? ayah,
-    Expression<int>? globalIndex,
     Expression<int>? pageNo,
     Expression<int>? juzNo,
     Expression<int>? hizbNo,
     Expression<int>? rukuNo,
     Expression<int>? hizbFraction,
+    Expression<int>? hasSajdah,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
+      if (globalIndex != null) 'global_index': globalIndex,
       if (surah != null) 'surah': surah,
       if (ayah != null) 'ayah': ayah,
-      if (globalIndex != null) 'global_index': globalIndex,
       if (pageNo != null) 'page_no': pageNo,
       if (juzNo != null) 'juz_no': juzNo,
       if (hizbNo != null) 'hizb_no': hizbNo,
       if (rukuNo != null) 'ruku_no': rukuNo,
       if (hizbFraction != null) 'hizb_fraction': hizbFraction,
+      if (hasSajdah != null) 'has_sajdah': hasSajdah,
     });
   }
 
   AyahMetasCompanion copyWith({
-    Value<int>? id,
+    Value<int>? globalIndex,
     Value<int>? surah,
     Value<int>? ayah,
-    Value<int>? globalIndex,
     Value<int>? pageNo,
     Value<int>? juzNo,
     Value<int>? hizbNo,
     Value<int>? rukuNo,
     Value<HizbFraction>? hizbFraction,
+    Value<bool>? hasSajdah,
   }) {
     return AyahMetasCompanion(
-      id: id ?? this.id,
+      globalIndex: globalIndex ?? this.globalIndex,
       surah: surah ?? this.surah,
       ayah: ayah ?? this.ayah,
-      globalIndex: globalIndex ?? this.globalIndex,
       pageNo: pageNo ?? this.pageNo,
       juzNo: juzNo ?? this.juzNo,
       hizbNo: hizbNo ?? this.hizbNo,
       rukuNo: rukuNo ?? this.rukuNo,
       hizbFraction: hizbFraction ?? this.hizbFraction,
+      hasSajdah: hasSajdah ?? this.hasSajdah,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
+    if (globalIndex.present) {
+      map['global_index'] = Variable<int>(globalIndex.value);
     }
     if (surah.present) {
       map['surah'] = Variable<int>(surah.value);
     }
     if (ayah.present) {
       map['ayah'] = Variable<int>(ayah.value);
-    }
-    if (globalIndex.present) {
-      map['global_index'] = Variable<int>(globalIndex.value);
     }
     if (pageNo.present) {
       map['page_no'] = Variable<int>(pageNo.value);
@@ -2910,21 +2906,522 @@ class AyahMetasCompanion extends UpdateCompanion<AyahMetaRow> {
         $AyahMetasTable.$converterhizbFraction.toSql(hizbFraction.value),
       );
     }
+    if (hasSajdah.present) {
+      map['has_sajdah'] = Variable<int>(
+        $AyahMetasTable.$converterhasSajdah.toSql(hasSajdah.value),
+      );
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('AyahMetasCompanion(')
-          ..write('id: $id, ')
+          ..write('globalIndex: $globalIndex, ')
           ..write('surah: $surah, ')
           ..write('ayah: $ayah, ')
-          ..write('globalIndex: $globalIndex, ')
           ..write('pageNo: $pageNo, ')
           ..write('juzNo: $juzNo, ')
           ..write('hizbNo: $hizbNo, ')
           ..write('rukuNo: $rukuNo, ')
-          ..write('hizbFraction: $hizbFraction')
+          ..write('hizbFraction: $hizbFraction, ')
+          ..write('hasSajdah: $hasSajdah')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PageLinesTable extends PageLines
+    with TableInfo<$PageLinesTable, PageLineRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PageLinesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _pageNumberMeta = const VerificationMeta(
+    'pageNumber',
+  );
+  @override
+  late final GeneratedColumn<int> pageNumber = GeneratedColumn<int>(
+    'page_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lineNumberMeta = const VerificationMeta(
+    'lineNumber',
+  );
+  @override
+  late final GeneratedColumn<int> lineNumber = GeneratedColumn<int>(
+    'line_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lineTypeMeta = const VerificationMeta(
+    'lineType',
+  );
+  @override
+  late final GeneratedColumn<String> lineType = GeneratedColumn<String>(
+    'line_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isCenteredMeta = const VerificationMeta(
+    'isCentered',
+  );
+  @override
+  late final GeneratedColumn<bool> isCentered = GeneratedColumn<bool>(
+    'is_centered',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_centered" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _firstWordIdMeta = const VerificationMeta(
+    'firstWordId',
+  );
+  @override
+  late final GeneratedColumn<int> firstWordId = GeneratedColumn<int>(
+    'first_word_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastWordIdMeta = const VerificationMeta(
+    'lastWordId',
+  );
+  @override
+  late final GeneratedColumn<int> lastWordId = GeneratedColumn<int>(
+    'last_word_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _surahNumberMeta = const VerificationMeta(
+    'surahNumber',
+  );
+  @override
+  late final GeneratedColumn<int> surahNumber = GeneratedColumn<int>(
+    'surah_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    pageNumber,
+    lineNumber,
+    lineType,
+    isCentered,
+    firstWordId,
+    lastWordId,
+    surahNumber,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'page_lines';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PageLineRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('page_number')) {
+      context.handle(
+        _pageNumberMeta,
+        pageNumber.isAcceptableOrUnknown(data['page_number']!, _pageNumberMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_pageNumberMeta);
+    }
+    if (data.containsKey('line_number')) {
+      context.handle(
+        _lineNumberMeta,
+        lineNumber.isAcceptableOrUnknown(data['line_number']!, _lineNumberMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lineNumberMeta);
+    }
+    if (data.containsKey('line_type')) {
+      context.handle(
+        _lineTypeMeta,
+        lineType.isAcceptableOrUnknown(data['line_type']!, _lineTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lineTypeMeta);
+    }
+    if (data.containsKey('is_centered')) {
+      context.handle(
+        _isCenteredMeta,
+        isCentered.isAcceptableOrUnknown(data['is_centered']!, _isCenteredMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isCenteredMeta);
+    }
+    if (data.containsKey('first_word_id')) {
+      context.handle(
+        _firstWordIdMeta,
+        firstWordId.isAcceptableOrUnknown(
+          data['first_word_id']!,
+          _firstWordIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_word_id')) {
+      context.handle(
+        _lastWordIdMeta,
+        lastWordId.isAcceptableOrUnknown(
+          data['last_word_id']!,
+          _lastWordIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('surah_number')) {
+      context.handle(
+        _surahNumberMeta,
+        surahNumber.isAcceptableOrUnknown(
+          data['surah_number']!,
+          _surahNumberMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {pageNumber, lineNumber};
+  @override
+  PageLineRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PageLineRow(
+      pageNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}page_number'],
+      )!,
+      lineNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}line_number'],
+      )!,
+      lineType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}line_type'],
+      )!,
+      isCentered: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_centered'],
+      )!,
+      firstWordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}first_word_id'],
+      ),
+      lastWordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_word_id'],
+      ),
+      surahNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}surah_number'],
+      ),
+    );
+  }
+
+  @override
+  $PageLinesTable createAlias(String alias) {
+    return $PageLinesTable(attachedDatabase, alias);
+  }
+}
+
+class PageLineRow extends DataClass implements Insertable<PageLineRow> {
+  final int pageNumber;
+  final int lineNumber;
+  final String lineType;
+  final bool isCentered;
+  final int? firstWordId;
+  final int? lastWordId;
+  final int? surahNumber;
+  const PageLineRow({
+    required this.pageNumber,
+    required this.lineNumber,
+    required this.lineType,
+    required this.isCentered,
+    this.firstWordId,
+    this.lastWordId,
+    this.surahNumber,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['page_number'] = Variable<int>(pageNumber);
+    map['line_number'] = Variable<int>(lineNumber);
+    map['line_type'] = Variable<String>(lineType);
+    map['is_centered'] = Variable<bool>(isCentered);
+    if (!nullToAbsent || firstWordId != null) {
+      map['first_word_id'] = Variable<int>(firstWordId);
+    }
+    if (!nullToAbsent || lastWordId != null) {
+      map['last_word_id'] = Variable<int>(lastWordId);
+    }
+    if (!nullToAbsent || surahNumber != null) {
+      map['surah_number'] = Variable<int>(surahNumber);
+    }
+    return map;
+  }
+
+  PageLinesCompanion toCompanion(bool nullToAbsent) {
+    return PageLinesCompanion(
+      pageNumber: Value(pageNumber),
+      lineNumber: Value(lineNumber),
+      lineType: Value(lineType),
+      isCentered: Value(isCentered),
+      firstWordId: firstWordId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firstWordId),
+      lastWordId: lastWordId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastWordId),
+      surahNumber: surahNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(surahNumber),
+    );
+  }
+
+  factory PageLineRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PageLineRow(
+      pageNumber: serializer.fromJson<int>(json['pageNumber']),
+      lineNumber: serializer.fromJson<int>(json['lineNumber']),
+      lineType: serializer.fromJson<String>(json['lineType']),
+      isCentered: serializer.fromJson<bool>(json['isCentered']),
+      firstWordId: serializer.fromJson<int?>(json['firstWordId']),
+      lastWordId: serializer.fromJson<int?>(json['lastWordId']),
+      surahNumber: serializer.fromJson<int?>(json['surahNumber']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'pageNumber': serializer.toJson<int>(pageNumber),
+      'lineNumber': serializer.toJson<int>(lineNumber),
+      'lineType': serializer.toJson<String>(lineType),
+      'isCentered': serializer.toJson<bool>(isCentered),
+      'firstWordId': serializer.toJson<int?>(firstWordId),
+      'lastWordId': serializer.toJson<int?>(lastWordId),
+      'surahNumber': serializer.toJson<int?>(surahNumber),
+    };
+  }
+
+  PageLineRow copyWith({
+    int? pageNumber,
+    int? lineNumber,
+    String? lineType,
+    bool? isCentered,
+    Value<int?> firstWordId = const Value.absent(),
+    Value<int?> lastWordId = const Value.absent(),
+    Value<int?> surahNumber = const Value.absent(),
+  }) => PageLineRow(
+    pageNumber: pageNumber ?? this.pageNumber,
+    lineNumber: lineNumber ?? this.lineNumber,
+    lineType: lineType ?? this.lineType,
+    isCentered: isCentered ?? this.isCentered,
+    firstWordId: firstWordId.present ? firstWordId.value : this.firstWordId,
+    lastWordId: lastWordId.present ? lastWordId.value : this.lastWordId,
+    surahNumber: surahNumber.present ? surahNumber.value : this.surahNumber,
+  );
+  PageLineRow copyWithCompanion(PageLinesCompanion data) {
+    return PageLineRow(
+      pageNumber: data.pageNumber.present
+          ? data.pageNumber.value
+          : this.pageNumber,
+      lineNumber: data.lineNumber.present
+          ? data.lineNumber.value
+          : this.lineNumber,
+      lineType: data.lineType.present ? data.lineType.value : this.lineType,
+      isCentered: data.isCentered.present
+          ? data.isCentered.value
+          : this.isCentered,
+      firstWordId: data.firstWordId.present
+          ? data.firstWordId.value
+          : this.firstWordId,
+      lastWordId: data.lastWordId.present
+          ? data.lastWordId.value
+          : this.lastWordId,
+      surahNumber: data.surahNumber.present
+          ? data.surahNumber.value
+          : this.surahNumber,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PageLineRow(')
+          ..write('pageNumber: $pageNumber, ')
+          ..write('lineNumber: $lineNumber, ')
+          ..write('lineType: $lineType, ')
+          ..write('isCentered: $isCentered, ')
+          ..write('firstWordId: $firstWordId, ')
+          ..write('lastWordId: $lastWordId, ')
+          ..write('surahNumber: $surahNumber')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    pageNumber,
+    lineNumber,
+    lineType,
+    isCentered,
+    firstWordId,
+    lastWordId,
+    surahNumber,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PageLineRow &&
+          other.pageNumber == this.pageNumber &&
+          other.lineNumber == this.lineNumber &&
+          other.lineType == this.lineType &&
+          other.isCentered == this.isCentered &&
+          other.firstWordId == this.firstWordId &&
+          other.lastWordId == this.lastWordId &&
+          other.surahNumber == this.surahNumber);
+}
+
+class PageLinesCompanion extends UpdateCompanion<PageLineRow> {
+  final Value<int> pageNumber;
+  final Value<int> lineNumber;
+  final Value<String> lineType;
+  final Value<bool> isCentered;
+  final Value<int?> firstWordId;
+  final Value<int?> lastWordId;
+  final Value<int?> surahNumber;
+  final Value<int> rowid;
+  const PageLinesCompanion({
+    this.pageNumber = const Value.absent(),
+    this.lineNumber = const Value.absent(),
+    this.lineType = const Value.absent(),
+    this.isCentered = const Value.absent(),
+    this.firstWordId = const Value.absent(),
+    this.lastWordId = const Value.absent(),
+    this.surahNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PageLinesCompanion.insert({
+    required int pageNumber,
+    required int lineNumber,
+    required String lineType,
+    required bool isCentered,
+    this.firstWordId = const Value.absent(),
+    this.lastWordId = const Value.absent(),
+    this.surahNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : pageNumber = Value(pageNumber),
+       lineNumber = Value(lineNumber),
+       lineType = Value(lineType),
+       isCentered = Value(isCentered);
+  static Insertable<PageLineRow> custom({
+    Expression<int>? pageNumber,
+    Expression<int>? lineNumber,
+    Expression<String>? lineType,
+    Expression<bool>? isCentered,
+    Expression<int>? firstWordId,
+    Expression<int>? lastWordId,
+    Expression<int>? surahNumber,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (pageNumber != null) 'page_number': pageNumber,
+      if (lineNumber != null) 'line_number': lineNumber,
+      if (lineType != null) 'line_type': lineType,
+      if (isCentered != null) 'is_centered': isCentered,
+      if (firstWordId != null) 'first_word_id': firstWordId,
+      if (lastWordId != null) 'last_word_id': lastWordId,
+      if (surahNumber != null) 'surah_number': surahNumber,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PageLinesCompanion copyWith({
+    Value<int>? pageNumber,
+    Value<int>? lineNumber,
+    Value<String>? lineType,
+    Value<bool>? isCentered,
+    Value<int?>? firstWordId,
+    Value<int?>? lastWordId,
+    Value<int?>? surahNumber,
+    Value<int>? rowid,
+  }) {
+    return PageLinesCompanion(
+      pageNumber: pageNumber ?? this.pageNumber,
+      lineNumber: lineNumber ?? this.lineNumber,
+      lineType: lineType ?? this.lineType,
+      isCentered: isCentered ?? this.isCentered,
+      firstWordId: firstWordId ?? this.firstWordId,
+      lastWordId: lastWordId ?? this.lastWordId,
+      surahNumber: surahNumber ?? this.surahNumber,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (pageNumber.present) {
+      map['page_number'] = Variable<int>(pageNumber.value);
+    }
+    if (lineNumber.present) {
+      map['line_number'] = Variable<int>(lineNumber.value);
+    }
+    if (lineType.present) {
+      map['line_type'] = Variable<String>(lineType.value);
+    }
+    if (isCentered.present) {
+      map['is_centered'] = Variable<bool>(isCentered.value);
+    }
+    if (firstWordId.present) {
+      map['first_word_id'] = Variable<int>(firstWordId.value);
+    }
+    if (lastWordId.present) {
+      map['last_word_id'] = Variable<int>(lastWordId.value);
+    }
+    if (surahNumber.present) {
+      map['surah_number'] = Variable<int>(surahNumber.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PageLinesCompanion(')
+          ..write('pageNumber: $pageNumber, ')
+          ..write('lineNumber: $lineNumber, ')
+          ..write('lineType: $lineType, ')
+          ..write('isCentered: $isCentered, ')
+          ..write('firstWordId: $firstWordId, ')
+          ..write('lastWordId: $lastWordId, ')
+          ..write('surahNumber: $surahNumber, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2940,8 +3437,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RukusTable rukus = $RukusTable(this);
   late final $SajdahsTable sajdahs = $SajdahsTable(this);
   late final $AyahMetasTable ayahMetas = $AyahMetasTable(this);
-  late final QuranDao quranDao = QuranDao(this as AppDatabase);
-  late final AyahMetaDao ayahMetaDao = AyahMetaDao(this as AppDatabase);
+  late final $PageLinesTable pageLines = $PageLinesTable(this);
+  late final QuranListingDao quranListingDao = QuranListingDao(
+    this as AppDatabase,
+  );
+  late final QuranPageDao quranPageDao = QuranPageDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2954,6 +3454,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     rukus,
     sajdahs,
     ayahMetas,
+    pageLines,
   ];
 }
 
@@ -4233,27 +4734,27 @@ typedef $$SajdahsTableProcessedTableManager =
     >;
 typedef $$AyahMetasTableCreateCompanionBuilder =
     AyahMetasCompanion Function({
-      Value<int> id,
+      Value<int> globalIndex,
       required int surah,
       required int ayah,
-      required int globalIndex,
       required int pageNo,
       required int juzNo,
       required int hizbNo,
       required int rukuNo,
       required HizbFraction hizbFraction,
+      required bool hasSajdah,
     });
 typedef $$AyahMetasTableUpdateCompanionBuilder =
     AyahMetasCompanion Function({
-      Value<int> id,
+      Value<int> globalIndex,
       Value<int> surah,
       Value<int> ayah,
-      Value<int> globalIndex,
       Value<int> pageNo,
       Value<int> juzNo,
       Value<int> hizbNo,
       Value<int> rukuNo,
       Value<HizbFraction> hizbFraction,
+      Value<bool> hasSajdah,
     });
 
 class $$AyahMetasTableFilterComposer
@@ -4265,8 +4766,8 @@ class $$AyahMetasTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
+  ColumnFilters<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4277,11 +4778,6 @@ class $$AyahMetasTableFilterComposer
 
   ColumnFilters<int> get ayah => $composableBuilder(
     column: $table.ayah,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get globalIndex => $composableBuilder(
-    column: $table.globalIndex,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4310,6 +4806,12 @@ class $$AyahMetasTableFilterComposer
     column: $table.hizbFraction,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<bool, bool, int> get hasSajdah =>
+      $composableBuilder(
+        column: $table.hasSajdah,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 }
 
 class $$AyahMetasTableOrderingComposer
@@ -4321,8 +4823,8 @@ class $$AyahMetasTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
+  ColumnOrderings<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -4333,11 +4835,6 @@ class $$AyahMetasTableOrderingComposer
 
   ColumnOrderings<int> get ayah => $composableBuilder(
     column: $table.ayah,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get globalIndex => $composableBuilder(
-    column: $table.globalIndex,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -4365,6 +4862,11 @@ class $$AyahMetasTableOrderingComposer
     column: $table.hizbFraction,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get hasSajdah => $composableBuilder(
+    column: $table.hasSajdah,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AyahMetasTableAnnotationComposer
@@ -4376,19 +4878,16 @@ class $$AyahMetasTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<int> get globalIndex => $composableBuilder(
+    column: $table.globalIndex,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get surah =>
       $composableBuilder(column: $table.surah, builder: (column) => column);
 
   GeneratedColumn<int> get ayah =>
       $composableBuilder(column: $table.ayah, builder: (column) => column);
-
-  GeneratedColumn<int> get globalIndex => $composableBuilder(
-    column: $table.globalIndex,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<int> get pageNo =>
       $composableBuilder(column: $table.pageNo, builder: (column) => column);
@@ -4407,6 +4906,9 @@ class $$AyahMetasTableAnnotationComposer
         column: $table.hizbFraction,
         builder: (column) => column,
       );
+
+  GeneratedColumnWithTypeConverter<bool, int> get hasSajdah =>
+      $composableBuilder(column: $table.hasSajdah, builder: (column) => column);
 }
 
 class $$AyahMetasTableTableManager
@@ -4440,47 +4942,47 @@ class $$AyahMetasTableTableManager
               $$AyahMetasTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int> globalIndex = const Value.absent(),
                 Value<int> surah = const Value.absent(),
                 Value<int> ayah = const Value.absent(),
-                Value<int> globalIndex = const Value.absent(),
                 Value<int> pageNo = const Value.absent(),
                 Value<int> juzNo = const Value.absent(),
                 Value<int> hizbNo = const Value.absent(),
                 Value<int> rukuNo = const Value.absent(),
                 Value<HizbFraction> hizbFraction = const Value.absent(),
+                Value<bool> hasSajdah = const Value.absent(),
               }) => AyahMetasCompanion(
-                id: id,
+                globalIndex: globalIndex,
                 surah: surah,
                 ayah: ayah,
-                globalIndex: globalIndex,
                 pageNo: pageNo,
                 juzNo: juzNo,
                 hizbNo: hizbNo,
                 rukuNo: rukuNo,
                 hizbFraction: hizbFraction,
+                hasSajdah: hasSajdah,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int> globalIndex = const Value.absent(),
                 required int surah,
                 required int ayah,
-                required int globalIndex,
                 required int pageNo,
                 required int juzNo,
                 required int hizbNo,
                 required int rukuNo,
                 required HizbFraction hizbFraction,
+                required bool hasSajdah,
               }) => AyahMetasCompanion.insert(
-                id: id,
+                globalIndex: globalIndex,
                 surah: surah,
                 ayah: ayah,
-                globalIndex: globalIndex,
                 pageNo: pageNo,
                 juzNo: juzNo,
                 hizbNo: hizbNo,
                 rukuNo: rukuNo,
                 hizbFraction: hizbFraction,
+                hasSajdah: hasSajdah,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -4507,6 +5009,256 @@ typedef $$AyahMetasTableProcessedTableManager =
       AyahMetaRow,
       PrefetchHooks Function()
     >;
+typedef $$PageLinesTableCreateCompanionBuilder =
+    PageLinesCompanion Function({
+      required int pageNumber,
+      required int lineNumber,
+      required String lineType,
+      required bool isCentered,
+      Value<int?> firstWordId,
+      Value<int?> lastWordId,
+      Value<int?> surahNumber,
+      Value<int> rowid,
+    });
+typedef $$PageLinesTableUpdateCompanionBuilder =
+    PageLinesCompanion Function({
+      Value<int> pageNumber,
+      Value<int> lineNumber,
+      Value<String> lineType,
+      Value<bool> isCentered,
+      Value<int?> firstWordId,
+      Value<int?> lastWordId,
+      Value<int?> surahNumber,
+      Value<int> rowid,
+    });
+
+class $$PageLinesTableFilterComposer
+    extends Composer<_$AppDatabase, $PageLinesTable> {
+  $$PageLinesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get pageNumber => $composableBuilder(
+    column: $table.pageNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lineNumber => $composableBuilder(
+    column: $table.lineNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lineType => $composableBuilder(
+    column: $table.lineType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isCentered => $composableBuilder(
+    column: $table.isCentered,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get firstWordId => $composableBuilder(
+    column: $table.firstWordId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastWordId => $composableBuilder(
+    column: $table.lastWordId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get surahNumber => $composableBuilder(
+    column: $table.surahNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PageLinesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PageLinesTable> {
+  $$PageLinesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get pageNumber => $composableBuilder(
+    column: $table.pageNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lineNumber => $composableBuilder(
+    column: $table.lineNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lineType => $composableBuilder(
+    column: $table.lineType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isCentered => $composableBuilder(
+    column: $table.isCentered,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get firstWordId => $composableBuilder(
+    column: $table.firstWordId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lastWordId => $composableBuilder(
+    column: $table.lastWordId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get surahNumber => $composableBuilder(
+    column: $table.surahNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PageLinesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PageLinesTable> {
+  $$PageLinesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get pageNumber => $composableBuilder(
+    column: $table.pageNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get lineNumber => $composableBuilder(
+    column: $table.lineNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lineType =>
+      $composableBuilder(column: $table.lineType, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCentered => $composableBuilder(
+    column: $table.isCentered,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get firstWordId => $composableBuilder(
+    column: $table.firstWordId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get lastWordId => $composableBuilder(
+    column: $table.lastWordId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get surahNumber => $composableBuilder(
+    column: $table.surahNumber,
+    builder: (column) => column,
+  );
+}
+
+class $$PageLinesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PageLinesTable,
+          PageLineRow,
+          $$PageLinesTableFilterComposer,
+          $$PageLinesTableOrderingComposer,
+          $$PageLinesTableAnnotationComposer,
+          $$PageLinesTableCreateCompanionBuilder,
+          $$PageLinesTableUpdateCompanionBuilder,
+          (
+            PageLineRow,
+            BaseReferences<_$AppDatabase, $PageLinesTable, PageLineRow>,
+          ),
+          PageLineRow,
+          PrefetchHooks Function()
+        > {
+  $$PageLinesTableTableManager(_$AppDatabase db, $PageLinesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PageLinesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PageLinesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PageLinesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> pageNumber = const Value.absent(),
+                Value<int> lineNumber = const Value.absent(),
+                Value<String> lineType = const Value.absent(),
+                Value<bool> isCentered = const Value.absent(),
+                Value<int?> firstWordId = const Value.absent(),
+                Value<int?> lastWordId = const Value.absent(),
+                Value<int?> surahNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PageLinesCompanion(
+                pageNumber: pageNumber,
+                lineNumber: lineNumber,
+                lineType: lineType,
+                isCentered: isCentered,
+                firstWordId: firstWordId,
+                lastWordId: lastWordId,
+                surahNumber: surahNumber,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int pageNumber,
+                required int lineNumber,
+                required String lineType,
+                required bool isCentered,
+                Value<int?> firstWordId = const Value.absent(),
+                Value<int?> lastWordId = const Value.absent(),
+                Value<int?> surahNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PageLinesCompanion.insert(
+                pageNumber: pageNumber,
+                lineNumber: lineNumber,
+                lineType: lineType,
+                isCentered: isCentered,
+                firstWordId: firstWordId,
+                lastWordId: lastWordId,
+                surahNumber: surahNumber,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PageLinesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PageLinesTable,
+      PageLineRow,
+      $$PageLinesTableFilterComposer,
+      $$PageLinesTableOrderingComposer,
+      $$PageLinesTableAnnotationComposer,
+      $$PageLinesTableCreateCompanionBuilder,
+      $$PageLinesTableUpdateCompanionBuilder,
+      (
+        PageLineRow,
+        BaseReferences<_$AppDatabase, $PageLinesTable, PageLineRow>,
+      ),
+      PageLineRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4524,4 +5276,6 @@ class $AppDatabaseManager {
       $$SajdahsTableTableManager(_db, _db.sajdahs);
   $$AyahMetasTableTableManager get ayahMetas =>
       $$AyahMetasTableTableManager(_db, _db.ayahMetas);
+  $$PageLinesTableTableManager get pageLines =>
+      $$PageLinesTableTableManager(_db, _db.pageLines);
 }

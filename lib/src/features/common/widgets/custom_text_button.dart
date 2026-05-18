@@ -6,17 +6,15 @@ class CustomTextButton extends StatelessWidget {
   final Color? textColor;
 
   const CustomTextButton({
-    super.key, 
-    required this.title, 
+    super.key,
+    required this.title,
     required this.onTap,
     this.textColor,
   });
 
   @override
   Widget build(BuildContext context) => Text(
-          title,
-          style: AppStyles.subtitle.medium().primary(),
-        ).asIconButton(
-        onTap: onTap,
-      );
+    title,
+    style: AppStyles.subtitle.medium().primary(),
+  ).asIconButton(onTap: onTap);
 }

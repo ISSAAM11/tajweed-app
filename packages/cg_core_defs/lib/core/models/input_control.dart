@@ -34,3 +34,7 @@ extension InputControlsListDisposer on List<InputControl> {
   void clearAllTECs() => forEach((element) => element.controller.clear());
   void unfocusAllFocusNodes() => forEach((element) => element.node.unfocus());
 }
+
+extension InputControlGetters on InputControl {
+  String getText() => controller.text;
+}

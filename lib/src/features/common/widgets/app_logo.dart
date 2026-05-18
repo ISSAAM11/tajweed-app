@@ -1,30 +1,42 @@
 import '../../../base/screens/exports.dart';
 
 class AppLogo extends StatelessWidget {
-  const AppLogo({super.key});
+  final double? iconSize;
+  final double? width;
+  final double? height;
+  final double? radius;
+  const AppLogo({
+    super.key,
+    this.iconSize,
+    this.width,
+    this.height,
+    this.radius,
+  });
 
   @override
   Widget build(BuildContext context) => Column(
-      children: [
-        const Icon(
-            Icons.mosque,
-            size: 50,
-            color: Colors.white,
-          ).decorate(
-             width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-              borderRadius: BorderRadius.circular(25),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.2),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-            ],
+    children: [
+      Icon(
+        Icons.mosque,
+        size: iconSize ?? AppMetrics.inputs.height,
+        color: Colors.white,
+      ).decorate(
+        width: width ?? AppMetrics.inputs.height * 2,
+        height: height ?? AppMetrics.inputs.height * 2,
+        decoration: BoxDecoration(
+          gradient: AppColors.primaryGradient,
+          borderRadius: BorderRadius.circular(
+            radius ?? AppMetrics.defaultRadius,
           ),
-          ),
-      ],
-    );
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.2),
+              blurRadius: radius ?? AppMetrics.defaultRadius,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }

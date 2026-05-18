@@ -124,8 +124,15 @@ extension WidgetModifier on Widget {
     child: Container(padding: padding, child: this),
   );
 
-  IconButton asIconButton({required VoidCallback onTap}) =>
-      IconButton(onPressed: onTap, icon: this);
+  IconButton asIconButton({required VoidCallback onTap}) => IconButton(
+    onPressed: onTap,
+    icon: this,
+    style: IconButton.styleFrom(
+      padding: const EdgeInsets.all(5),
+      minimumSize: Size.zero,
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    ),
+  );
 
   Padding overallPadding([double value = 16]) => Padding(
     key: key,
@@ -485,17 +492,21 @@ extension WidgetModifier on Widget {
   }) => Container(
     key: key,
     decoration: BoxDecoration(
-      gradient: gradient ?? LinearGradient(
-        begin: begin ?? Alignment.topLeft,
-        end: end ?? Alignment.bottomRight,
-        colors: colors ?? [
-          AppColors.secondary.withValues(alpha: 0.3),
-          AppColors.primaryLight.withValues(alpha: 0.1),
-          AppColors.primary.withValues(alpha: 0.05),
-          Colors.white,
-        ],
-        stops: stops ?? [0.0, 0.3, 0.7, 1.0],
-      ),
+      gradient:
+          gradient ??
+          LinearGradient(
+            begin: begin ?? Alignment.topLeft,
+            end: end ?? Alignment.bottomRight,
+            colors:
+                colors ??
+                [
+                  AppColors.secondary.withValues(alpha: 0.3),
+                  AppColors.primaryLight.withValues(alpha: 0.1),
+                  AppColors.primary.withValues(alpha: 0.05),
+                  Colors.white,
+                ],
+            stops: stops ?? [0.0, 0.3, 0.7, 1.0],
+          ),
     ),
     child: this,
   );

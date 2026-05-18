@@ -7,7 +7,26 @@ enum RevelationPlace { makkah, madinah }
 
 enum SajdahType { recommended, obligatory }
 
-enum HizbFraction { full, quarter, half, threeQuarter }
+enum HizbFraction {
+  full(''),
+  quarter('1/4'),
+  half('1/2'),
+  threeQuarter('3/4');
+
+  final String label;
+  const HizbFraction(this.label);
+}
+
+enum PartitionMode {
+  surah('Surah'),
+  juz('Juz'),
+  page('Page'),
+  hizb('Hizb'),
+  ruku("Ruku");
+
+  final String label;
+  const PartitionMode(this.label);
+}
 
 /// --- Converters ---
 class BoolIntConverter extends TypeConverter<bool, int> {
@@ -40,13 +59,27 @@ class SajdahTypeConverter extends TypeConverter<SajdahType, String> {
 class VerseKey {
   final int surah;
   final int ayah;
+
   VerseKey(this.surah, this.ayah);
+
   factory VerseKey.parse(String key) {
     final parts = key.split(':');
     return VerseKey(int.parse(parts[0]), int.parse(parts[1]));
   }
+
   @override
   String toString() => '$surah:$ayah';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is VerseKey &&
+          runtimeType == other.runtimeType &&
+          surah == other.surah &&
+          ayah == other.ayah;
+
+  @override
+  int get hashCode => Object.hash(surah, ayah);
 }
 
 class VerseRange {

@@ -9,7 +9,7 @@
     "editor.suggest.insertMode": "replace",
     "editor.inlayHints.enabled": "offUnlessPressed",
     "editor.rulers": [80],
-    "editor.selectionHighlight": false,
+    "editor.selectionHighlight": false
   },
 
   "better-comments.tags": [
@@ -122,10 +122,27 @@
       "italic": false
     }
   ],
-  "[dart]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "Dart-Code.dart-code",
-    "editor.formatOnType": true,
-    "editor.rulers": [80]
-  }
+  "cSpell.words": [
+    "ayat",
+    "basmalah",
+    "bismillah",
+    "Hafs",
+    "Hizb",
+    "Hizbs",
+    "Juzs",
+    "madinah",
+    "metas",
+    "nomow",
+    "prefs",
+    "Ruku",
+    "Rukus",
+    "Sajdah",
+    "Surahs",
+    "tajweed",
+    "tajweedai",
+    "usecase",
+    "usecases",
+    "uthmanic",
+    "Waqf"
+  ]
 }

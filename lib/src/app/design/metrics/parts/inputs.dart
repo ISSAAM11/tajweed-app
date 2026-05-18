@@ -7,22 +7,22 @@ class _Inputs {
   static const _applyElevation = false;
   final double elevation = _applyElevation ? AppMetrics.defaultElevation : 0;
   final double radius = 12;
-  final double height = 56;
-  final double horizontalContentPadding = 24;
-  final double verticalContentPadding = 15;
+  final double height = 40;
+  final double horizontalContentPadding = 20;
+  final double verticalContentPadding = 13;
   final double borderWidth = 1.5;
   final int passwordInputMaxLength = 12;
   final int maxLength = 50;
   final prefixIconConstraints = const BoxConstraints(
-    minWidth: 60,
-    maxWidth: 60,
-    minHeight: 56,
-    maxHeight: 56,
+    minWidth: 40,
+    maxWidth: 40,
+    minHeight: 40,
+    maxHeight: 40,
   );
   final suffixIconConstraints = const BoxConstraints(
-    minWidth: 60,
-    maxWidth: 60,
-    minHeight: 56,
-    maxHeight: 56,
+    minWidth: 40,
+    maxWidth: 40,
+    minHeight: 40,
+    maxHeight: 40,
   );
 }
