@@ -7,17 +7,18 @@
 
 ## Dashboard
 
-- **Total features** : 5
-- **Total User Stories** : 20
-- **Effort total** : 15 jours
+- **Total features** : 6
+- **Total User Stories** : 24
+- **Effort total** : 18 jours
 - **Set actif** : Set 1
-- **Progression globale** : 0% (0/5 features terminees)
+- **Progression globale** : 0% (0/6 features terminees)
 
 ### Status par Set
 
 | Set | Objectif | Features | Status |
 |-----|----------|----------|--------|
 | Set 1 | Finalisation MVP - Auth & Home | 5/5 | En cours (cap atteint) |
+| Set 2 | Polish & Personnalisation | 1/5 | A faire |
 
 ---
 
@@ -122,6 +123,36 @@
 
 ---
 
+## Set 2 - Polish & Personnalisation
+
+**Objectif** : Ajouter les ecrans de personnalisation et de polish UX qui ameliorent l'experience utilisateur sans bloquer le MVP (themes, preferences, etc.).
+
+**Status** : A faire
+**Features** : 1/5
+**Effort** : 3 jours
+
+### [Feature 3.1] Settings Theme Toggle
+
+- **Status** : En cours - Frontend
+- **Branche** : `feat/IB-f3.1-us1-4`
+- **Started** : 2026-05-19
+- **Module** : Settings (nouveau module)
+- **Effort** : 3 jours (4 User Stories)
+- **Complexite** : Moyenne
+- **Localisation** : `lib/src/features/settings/` (existe deja - contient le toggle de langue)
+- **Note** : Le dossier `lib/src/features/settings/` existe deja avec le toggle de langue, mais aucune feature Settings n'etait jusqu'ici tracee. Cette feature introduit officiellement le module Settings dans le spec. L'infrastructure `AppThemes.light` + `AppThemes.dark` est deja presente dans `lib/src/app/design/themes/` (dark mode partiel a finaliser via US-3.1.4).
+- **Backend** :
+  - [ ] Aucun (preference locale, persistance via SharedPreferences)
+- **Frontend** :
+  - [ ] US-3.1.1 : Section "Apparence" dans Settings avec affichage du theme actuel (S)
+  - [ ] US-3.1.2 : Toggle/Switch pour basculer light/dark, application immediate via ThemeBloc/Cubit (M)
+  - [x] US-3.1.3 : `ThemePreferenceService` (pattern `LocalePreferenceService`) - persistance SharedPreferences (S) — `lib/src/core/services/theme_preference_service.dart` + `lib/src/app/theme/app_theme_mode.dart` + 4 tests
+  - [ ] US-3.1.4 : Finalisation `AppThemes.dark` - palette inversee, contrastes coherents avec gold brand (M)
+  - [ ] Cles ARB `settingsTheme`, `settingsThemeLight`, `settingsThemeDark` dans `app_en.arb` + `app_ar.arb`
+  - [x] Tests frontend (infrastructure) — `flutter_test` ajoute au pubspec, premier test du projet : 4 tests ThemePreferenceService passent. Tests des autres US a ajouter au fur et a mesure.
+
+---
+
 ## Backlog - Features Ajoutees
 
 | Date | Feature | Module | Set | Effort | Source |
@@ -131,6 +162,7 @@
 | 2026-05-18 | 1.3 Home Screen (Chooser) | Home | Set 1 | 1.5j | Refactor du 1.3 initial - demande utilisateur |
 | 2026-05-18 | 1.4 Tajweed Courses Screen | Home | Set 1 | 3j | Bootstrap initial - demande utilisateur |
 | 2026-05-18 | 1.5 Quran Listing | Home | Set 1 | 2j | Extrait de l'ancien 1.3 - n'est plus la home |
+| 2026-05-19 | 3.1 Settings Theme Toggle | Settings | Set 2 | 3j | Demande utilisateur (exercice VibeCoding guide) |
 
 ---
 
@@ -150,3 +182,23 @@
 - **Set** : Set 1 - passe a 5/5 features (cap atteint)
 - **Raison** : Demande utilisateur d'avoir un vrai ecran d'accueil qui sert de chooser entre Quran Listing et Tajweed Courses
 - **Impact technique** : `main.dart` (`initialRoute`) et `AppRouter` devront pointer vers `/home` au lieu de `/quran-listing`
+
+### 2026-05-19 - US-3.1.3 terminee + bootstrap infra de tests
+- **Action** : Implementation de US-3.1.3 (ThemePreferenceService) et ajout de `flutter_test` aux dev_dependencies (premier test du projet).
+- **Fichiers crees** :
+  - `lib/src/app/theme/app_theme_mode.dart` (enum AppThemeMode { light, dark }, miroir d'AppLanguage)
+  - `lib/src/core/services/theme_preference_service.dart` (miroir de LocalePreferenceService, cle `app_theme_mode`)
+  - `test/core/services/theme_preference_service_test.dart` (4 tests, tous passent)
+- **Fichiers modifies** : `pubspec.yaml` (ajout `flutter_test: sdk: flutter`)
+- **Raison** : Le projet n'avait aucune infrastructure de test (`test/e2e_shift_handover_test.dart` etait entierement commente). Le skill `/workflow-start-implementation` prescrit TDD, et le tracker liste "Tests frontend" comme deliverable de la Feature 3.1. Decision utilisateur : bootstrapper l'infra de tests avec cette US plutot que de creer une feature separee.
+- **Impact projet** : Tous les futurs Sets pourront ajouter des tests unitaires sans setup supplementaire. Le pattern `SharedPreferences.setMockInitialValues + CacheManagerImpl` est la reference pour tester les services bases sur le cache.
+- **Verification** : `flutter test test/core/services/theme_preference_service_test.dart` → 4/4 OK. `flutter analyze` sur les nouveaux fichiers → 0 issues.
+
+### 2026-05-19 - Creation Set 2 + ajout Feature 3.1
+- **Action** : Creation d'un nouveau Set 2 "Polish & Personnalisation" et ajout de la Feature 3.1 Settings Theme Toggle
+- **Module ajoute** : Settings (nouveau module dans `LISTE-DES-FONCTIONS.md`, le 3eme)
+- **Feature 3.1** : Settings Theme Toggle (light/dark) - 4 US, 3 jours
+- **Set** : Set 2 - nouveau Set (1/5 features), Set 1 reste plein (5/5)
+- **Raison** : Demande utilisateur lors de l'exercice du guide VibeCoding (`docs/VIBECODING-GUIDE.md` section 8). Set 1 etait au cap, donc Set 2 cree.
+- **Dette technique relevee** : Le dossier `lib/src/features/settings/` existe deja avec un toggle de langue fonctionnel, mais aucune feature Settings n'etait jusqu'ici dans le spec. La Feature 3.1 introduit le module Settings dans le tracker mais ne re-documente pas le toggle de langue existant (a faire dans un futur Set si necessaire de tracer historiquement).
+- **Pre-requis technique** : `AppThemes.dark` existe en partiel dans `lib/src/app/design/themes/` - US-3.1.4 est dediee a sa finalisation.
