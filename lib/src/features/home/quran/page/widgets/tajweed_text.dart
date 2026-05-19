@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart' as html_parser;
-import 'package:html/dom.dart' as dom;
-import 'package:tajweed_ai/src/app/design/styles/tajweed_styles.dart';
+import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 
 class QuranLineText extends StatelessWidget {
+  final int pageNo;
   final List<WordRow> lineWords;
   final bool isCentered;
+  final Function(int ayahNumber, Offset position)? onAyahTap;
+  final int? selectedAyah;
 
   const QuranLineText({
     super.key,
     required this.lineWords,
+    this.pageNo = 1,
     this.isCentered = false,
+    this.onAyahTap,
+    this.selectedAyah,
   });
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
-    final responsiveVerticalPadding = screenHeight * 0.007;
-    final responsiveHorizentalPadding = screenWidth * 0.035;
-    final responsivefontSize = screenWidth * 0.05;
+    final responsiveHorizentalPadding = screenWidth * 0.03;
+    final responsivefontSize = screenWidth * 0.050;
 
     TextStyle baseTextStyle = TextStyle(
       fontSize: responsivefontSize,
-      fontFamily: 'UthmanicHafsV17',
-      fontWeight: FontWeight.w600,
-      color: Color.fromARGB(178, 0, 0, 0),
-      height: 1.4,
+      fontFamily: 'QPC-V2-Font-p$pageNo',
+      color: AppColors.black,
+      height: isCentered ? 2 : 1,
     );
 
     if (lineWords.isEmpty) {
@@ -37,10 +37,7 @@ class QuranLineText extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: responsiveHorizentalPadding,
-        vertical: responsiveVerticalPadding,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: responsiveHorizentalPadding),
       child: _buildLineWithSpacing(lineWords, baseTextStyle),
     );
   }
@@ -50,13 +47,25 @@ class QuranLineText extends StatelessWidget {
 
     for (int i = 0; i < words.length; i++) {
       final word = words[i];
-      final document = html_parser.parse('<span>${word.text_}</span>');
-      final spans = _parseNode(document.body!.firstChild!, baseStyle);
+      final isSelected = selectedAyah == word.ayah;
+      final highlightColor = isSelected
+          ? AppColors.ayahHighlight
+          : AppColors.transparent;
 
       wordWidgets.add(
-        RichText(
-          text: TextSpan(children: spans),
-          textDirection: TextDirection.rtl,
+        GestureDetector(
+          onTapDown: (details) {
+            if (onAyahTap != null) {
+              onAyahTap!(word.ayah, details.globalPosition);
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: highlightColor,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(word.text_, style: baseStyle),
+          ),
         ),
       );
 
@@ -64,44 +73,16 @@ class QuranLineText extends StatelessWidget {
         if (i < words.length - 1) {
           wordWidgets.add(const Text(' '));
         }
-      } else {
-        // Justified lines use flexible spacing
-        if (i < words.length - 1) {
-          wordWidgets.add(const Spacer());
-        }
       }
     }
 
     return Row(
+      spacing: isCentered ? 4.0 : 0.0,
       mainAxisAlignment: isCentered
           ? MainAxisAlignment.center
           : MainAxisAlignment.spaceBetween,
       textDirection: TextDirection.rtl,
       children: wordWidgets,
     );
-  }
-
-  List<TextSpan> _parseNode(dom.Node node, TextStyle baseStyle) {
-    if (node.nodeType == dom.Node.TEXT_NODE) {
-      return [TextSpan(text: node.text, style: baseStyle)];
-    }
-    if (node.nodeType == dom.Node.ELEMENT_NODE) {
-      final element = node as dom.Element;
-      final spans = <TextSpan>[];
-      if (element.localName == 'rule') {
-        final ruleClass = element.attributes['class'] ?? '';
-        final tajweedColor = tajweedStyleMap[ruleClass]?.color;
-        final styledText = baseStyle.copyWith(color: tajweedColor);
-        for (var child in element.nodes) {
-          spans.addAll(_parseNode(child, styledText));
-        }
-      } else {
-        for (var child in element.nodes) {
-          spans.addAll(_parseNode(child, baseStyle));
-        }
-      }
-      return spans;
-    }
-    return [];
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/app/index.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 
 class SurahNameCard extends StatelessWidget {
-  final String name;
+  final String nameArabic;
   final String? nameEnglish;
   final String glyph;
   final RevelationPlace revelationPlace;
@@ -15,7 +16,7 @@ class SurahNameCard extends StatelessWidget {
 
   SurahNameCard({
     super.key,
-    required this.name,
+    required this.nameArabic,
     this.nameEnglish,
     required this.glyph,
     required this.revelationPlace,
@@ -28,40 +29,62 @@ class SurahNameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final metrics = AppMetrics.surahNameCard;
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final displayName = isArabic ? nameArabic : (nameEnglish ?? nameArabic);
+    final placeLabel = switch (revelationPlace) {
+      RevelationPlace.makkah => l10n.revelationMakkah,
+      RevelationPlace.madinah => l10n.revelationMadinah,
+    };
+
     return Card(
+      color: AppColors.transparent,
+      shadowColor: AppColors.transparent,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          padding: metrics.cardPadding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  Text(
-                    "$orderNumber",
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    alignment: Alignment.center,
+                    height: metrics.numberContainerSize,
+                    width: metrics.numberContainerSize,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(AppImages.surahNumberBackground),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Text(
+                      "$orderNumber",
+                      style: AppFonts.poppins
+                          .withSize(metrics.numberFontSize)
+                          .withColor(AppColors.greyDarkest)
+                          .bold(),
                     ),
                   ),
-
-                  SizedBox(width: 20),
+                  SizedBox(width: metrics.numberTextSpacing),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "$nameEnglish",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                        displayName,
+                        style: AppFonts.poppins
+                            .withSize(metrics.englishNameFontSize)
+                            .withColor(AppColors.black)
+                            .semiBold(),
                       ),
                       Text(
-                        "${revelationPlace.name}, ayah $versesCount",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        '$placeLabel, ${l10n.versesCount(versesCount)}',
+                        style: AppFonts.poppins
+                            .withSize(metrics.metadataFontSize)
+                            .withColor(AppColors.greyMedium)
+                            .medium(),
                       ),
                     ],
                   ),
@@ -70,10 +93,10 @@ class SurahNameCard extends StatelessWidget {
               // Right side: Arabic name (RTL)
               Text(
                 String.fromCharCode(int.parse(glyph, radix: 16)),
-                style: AppFonts.surahNamesFont.bold().copyWith(
-                  fontSize: 20,
-                  color: AppColors.primary,
-                ),
+                style: AppFonts.surahNamesFont
+                    .bold()
+                    .withSize(metrics.arabicNameFontSize)
+                    .withColor(AppColors.primary),
               ),
             ],
           ),

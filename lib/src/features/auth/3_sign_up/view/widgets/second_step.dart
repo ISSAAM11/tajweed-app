@@ -19,92 +19,97 @@ class _Step2 extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Form(
-    key: formKey,
-    child: Column(
-      children: [
-        VerticalSpacing(AppMetrics.spacing.md),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            FormInput(
-              label: 'First Name',
-              controller: firstName.controller,
-              prefixIcon: Icon(Icons.person_2_outlined),
-              focusNode: firstName.node,
-              nextFocusNode: lastName.node,
-              validator: InputValidators.validateName,
-            ).expanded(),
-            const HorizontalSpacing(10),
-            FormInput(
-              label: 'Last Name',
-              controller: lastName.controller,
-              prefixIcon: Icon(Icons.person_2_outlined),
-              focusNode: lastName.node,
-              validator: InputValidators.validateName,
-            ).expanded(),
-          ],
-        ),
-        VerticalSpacing(AppMetrics.spacing.md),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Observer(
-              observes: country,
-              builder: (BuildContext context, value) => CountryFieldPicker(
-                onCountrySelected: (p1) {
-                  country.value = p1;
-                  Debugger.red(country.value);
-                },
-                country: value,
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          VerticalSpacing(AppMetrics.spacing.md),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FormInput(
+                label: l10n.authFirstName,
+                controller: firstName.controller,
+                prefixIcon: Icon(Icons.person_2_outlined),
+                focusNode: firstName.node,
+                nextFocusNode: lastName.node,
+                validator: InputValidators.validateName,
               ).expanded(),
-            ),
-            const HorizontalSpacing(10),
-            Observer(
-              observes: birthDate,
-              builder: (BuildContext context, value) => BirthFieldPicker(
-                onDateSelected: (d) {
-                  birthDate.value = d;
-                },
-                date: value,
+              const HorizontalSpacing(10),
+              FormInput(
+                label: l10n.authLastName,
+                controller: lastName.controller,
+                prefixIcon: Icon(Icons.person_2_outlined),
+                focusNode: lastName.node,
+                validator: InputValidators.validateName,
               ).expanded(),
-            ),
-          ],
-        ),
-        VerticalSpacing(AppMetrics.spacing.md),
-
-        /// 🔹 Gender selector bound to the observable
-        Observer(
-          observes: selectedGenderObs,
-          builder: (context, _) => OptionSelector<Gender>(
-            title: "Select your gender:",
-            options: Gender.values,
-            selectedValue: selectedGenderObs.value == "M"
-                ? Gender.male
-                : selectedGenderObs.value == "F"
-                ? Gender.female
-                : null,
-            labelBuilder: (g) => g.label,
-            onChanged: (value) {
-              selectedGenderObs.value = value.code;
-            },
+            ],
           ),
-        ),
-      ],
-    ),
-  );
+          VerticalSpacing(AppMetrics.spacing.md),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Observer(
+                observes: country,
+                builder: (BuildContext context, value) => CountryFieldPicker(
+                  onCountrySelected: (p1) {
+                    country.value = p1;
+                    Debugger.red(country.value);
+                  },
+                  country: value,
+                ).expanded(),
+              ),
+              const HorizontalSpacing(10),
+              Observer(
+                observes: birthDate,
+                builder: (BuildContext context, value) => BirthFieldPicker(
+                  onDateSelected: (d) {
+                    birthDate.value = d;
+                  },
+                  date: value,
+                ).expanded(),
+              ),
+            ],
+          ),
+          VerticalSpacing(AppMetrics.spacing.md),
+
+          /// Gender selector bound to the observable
+          Observer(
+            observes: selectedGenderObs,
+            builder: (context, _) => OptionSelector<Gender>(
+              title: l10n.authSelectGender,
+              options: Gender.values,
+              selectedValue: selectedGenderObs.value == "M"
+                  ? Gender.male
+                  : selectedGenderObs.value == "F"
+                  ? Gender.female
+                  : null,
+              labelBuilder: (g) => switch (g) {
+                Gender.male => l10n.authGenderMale,
+                Gender.female => l10n.authGenderFemale,
+              },
+              onChanged: (value) {
+                selectedGenderObs.value = value.code;
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 enum Gender {
-  male("M", "Male"),
-  female("F", "Female");
+  male("M"),
+  female("F");
 
   final String code; // Backend value
-  final String label; // UI label
 
-  const Gender(this.code, this.label);
+  const Gender(this.code);
 }
 
 class OptionSelector<T> extends StatelessWidget {
@@ -113,7 +118,7 @@ class OptionSelector<T> extends StatelessWidget {
   final T? selectedValue;
   final ValueChanged<T> onChanged;
   final Axis direction;
-  final String Function(T)? labelBuilder; // 👈 new
+  final String Function(T)? labelBuilder;
 
   const OptionSelector({
     super.key,

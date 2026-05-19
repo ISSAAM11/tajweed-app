@@ -1,3 +1,5 @@
+import 'package:tajweed_ai/l10n/app_localizations.dart';
+
 import '../../../../../base/screens/exports.dart';
 import '../../../../../utils/input_validator.dart';
 import '../../../../common/widgets/form_input.dart';
@@ -25,14 +27,15 @@ class SignInForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Form(
       key: formKey,
       child: Column(
         children: [
           //$ Inputs
           FormInput(
-            label: 'Email',
-            hint: 'Enter your email',
+            label: l10n.authEmail,
+            hint: l10n.authEmailHint,
             type: FormInputType.email,
             controller: emailController,
             focusNode: emailFocusNode,
@@ -42,8 +45,8 @@ class SignInForm extends StatelessWidget {
           VerticalSpacing(AppMetrics.spacing.md),
           FormInput(
             type: FormInputType.password,
-            label: 'Password',
-            hint: 'Enter your password',
+            label: l10n.authPassword,
+            hint: l10n.authPasswordHint,
             focusNode: passwordFocusNode,
             controller: passwordController,
             validator: InputValidators.validateLoginPassword,

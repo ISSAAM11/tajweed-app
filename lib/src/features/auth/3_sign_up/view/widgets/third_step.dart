@@ -16,6 +16,7 @@ class _Step3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final defaultPinTheme = PinTheme(
       width: 50,
       height: 56,
@@ -33,13 +34,12 @@ class _Step3 extends StatelessWidget {
       children: [
         VerticalSpacing(AppMetrics.scaffold.horizontalBodyPadding),
         Text(
-          "Check your inbox 📩",
+          l10n.authCheckInbox,
           style: AppStyles.headline3.bold().copyWith(color: AppColors.tertiary),
         ),
         const SizedBox(height: 8),
         Text(
-          "We’ve sent you a 4-digit verification code to your email. "
-          "Please enter it below to continue.",
+          l10n.authVerificationMessage,
           style: AppStyles.title.semiBold().copyWith(color: AppColors.black),
           textAlign: TextAlign.center,
         ),
@@ -86,7 +86,7 @@ class _Step3 extends StatelessWidget {
           children: [
             const Spacer(),
             CustomTextButton(
-              title: 'resend code',
+              title: l10n.authResendCode,
               onTap: resend,
               textColor: AppColors.primary,
             ),

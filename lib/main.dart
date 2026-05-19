@@ -1,7 +1,6 @@
 import 'dart:async' show runZonedGuarded;
 
 import 'package:flutter/material.dart';
-import 'package:tajweed_ai/src/features/home/quran/listing/router/surah_listing_route.dart';
 
 import 'src/app/app_widget.dart';
 import 'src/app/binding/app_bindings.dart';
@@ -25,7 +24,7 @@ void _application() async {
 
   RequesterConfig.configure();
 
-  await AppConfig.setInitialRoute(quranListingRoute.path);
+  await AppConfig.setInitialRoute();
 
   runApp(
     const AppWidget(

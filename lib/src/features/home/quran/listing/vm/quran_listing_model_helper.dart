@@ -42,11 +42,13 @@ class PageItem extends PartitionItem {
 /// Juz item
 class JuzItem extends PartitionItem {
   final int juzNumber;
+  final int pageNumber;
   final VerseKey _verseKey;
   final List<String> _ayahWords;
 
   JuzItem({
     required this.juzNumber,
+    required this.pageNumber,
     required VerseKey verseKey,
     required List<String> ayahWords,
   }) : _verseKey = verseKey,
@@ -60,12 +62,14 @@ class JuzItem extends PartitionItem {
 
   Map<String, dynamic> toMap() => {
     'juzNumber': juzNumber,
+    'pageNumber': pageNumber,
     'verseKey': _verseKey.toString(),
     'ayahWords': _ayahWords,
   };
 
   factory JuzItem.fromMap(Map<String, dynamic> map) => JuzItem(
     juzNumber: map['juzNumber'] as int,
+    pageNumber: map['pageNumber'] as int,
     verseKey: VerseKey.parse(map['verseKey'] as String),
     ayahWords: List<String>.from(map['ayahWords'] as List),
   );
@@ -74,12 +78,14 @@ class JuzItem extends PartitionItem {
 /// Hizb item
 class HizbItem extends PartitionItem {
   final int juzNumber;
+  final int pageNumber;
   final HizbFraction fraction;
   final VerseKey _verseKey;
   final List<String> _ayahWords;
 
   HizbItem({
     required this.juzNumber,
+    required this.pageNumber,
     required this.fraction,
     required VerseKey verseKey,
     required List<String> ayahWords,
@@ -94,6 +100,7 @@ class HizbItem extends PartitionItem {
 
   Map<String, dynamic> toMap() => {
     'juzNumber': juzNumber,
+    'pageNumber': pageNumber,
     'fraction': fraction.index,
     'verseKey': _verseKey.toString(),
     'ayahWords': _ayahWords,
@@ -101,6 +108,7 @@ class HizbItem extends PartitionItem {
 
   factory HizbItem.fromMap(Map<String, dynamic> map) => HizbItem(
     juzNumber: map['juzNumber'] as int,
+    pageNumber: map['pageNumber'] as int,
     fraction: HizbFraction.values[map['fraction'] as int],
     verseKey: VerseKey.parse(map['verseKey'] as String),
     ayahWords: List<String>.from(map['ayahWords'] as List),
@@ -110,11 +118,13 @@ class HizbItem extends PartitionItem {
 /// Ruku item
 class RukuItem extends PartitionItem {
   final int rukuNumber;
+  final int pageNumber;
   final VerseKey _verseKey;
   final List<String> _ayahWords;
 
   RukuItem({
     required this.rukuNumber,
+    required this.pageNumber,
     required VerseKey verseKey,
     required List<String> ayahWords,
   }) : _verseKey = verseKey,
@@ -128,15 +138,53 @@ class RukuItem extends PartitionItem {
 
   Map<String, dynamic> toMap() => {
     'rukuNumber': rukuNumber,
+    'pageNumber': pageNumber,
     'verseKey': _verseKey.toString(),
     'ayahWords': _ayahWords,
   };
 
   factory RukuItem.fromMap(Map<String, dynamic> map) => RukuItem(
     rukuNumber: map['rukuNumber'] as int,
+    pageNumber: map['pageNumber'] as int,
     verseKey: VerseKey.parse(map['verseKey'] as String),
     ayahWords: List<String>.from(map['ayahWords'] as List),
   );
+}
+
+/// Last Selected Page item
+class LastSelectedPage extends PartitionItem {
+  String name;
+  String nameArabic;
+  int pageNumber;
+  final VerseKey _verseKey;
+
+  LastSelectedPage({
+    required this.name,
+    required this.nameArabic,
+    required this.pageNumber,
+    required VerseKey verseKey,
+  }) : _verseKey = verseKey;
+
+  @override
+  VerseKey get verseKey => _verseKey;
+
+  @override
+  List<String> get ayahWords => throw UnimplementedError();
+
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'nameArabic': nameArabic,
+    'pageNumber': pageNumber,
+    'verseKey': _verseKey.toString(),
+  };
+
+  factory LastSelectedPage.fromMap(Map<String, dynamic> map) =>
+      LastSelectedPage(
+        name: map['name'] as String,
+        nameArabic: map['nameArabic'] as String,
+        pageNumber: map['pageNumber'] as int,
+        verseKey: VerseKey.parse(map['verseKey'] as String),
+      );
 }
 
 /// Chapter item

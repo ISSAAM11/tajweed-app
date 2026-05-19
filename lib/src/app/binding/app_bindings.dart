@@ -4,6 +4,8 @@ import 'package:flutter/material.dart' show WidgetsFlutterBinding;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:generic_requester/generic_requester.dart' show Dio;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tajweed_ai/src/app/locale/locale_bloc.dart';
+import 'package:tajweed_ai/src/core/services/locale_preference_service.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
@@ -52,6 +54,17 @@ final class AppBinding extends AppBindings {
     );
     di.registerLazySingleton<ListingCache>(
       () => ListingCache(get<CacheManager<SharedPreferences>>()),
+    );
+    di.registerLazySingleton<LastSelectedSurahService>(
+      () => LastSelectedSurahService(get<CacheManager<SharedPreferences>>()),
+    );
+
+    // 📦 Locale
+    di.registerLazySingleton<LocalePreferenceService>(
+      () => LocalePreferenceService(get<CacheManager<SharedPreferences>>()),
+    );
+    di.registerSingleton<LocaleBloc>(
+      LocaleBloc(get<LocalePreferenceService>()),
     );
 
     // 📦 Datasource (prewarmed)

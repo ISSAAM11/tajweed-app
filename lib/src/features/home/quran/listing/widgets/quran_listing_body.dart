@@ -1,5 +1,6 @@
 //? Base needed imports
 
+import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_bloc.dart';
@@ -19,7 +20,8 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
     QuranListingLoadedState() => _QuranScreen(
       itemCount: (state as QuranListingLoadedState).items.length,
       items: (state as QuranListingLoadedState).items,
-      onTap: ({required VerseKey verseKey, required PartitionMode mode}) {
+      chapters: (state as QuranListingLoadedState).chapters,
+      onTap: ({required VerseKey verseKey, required PartitionMode mode}) async {
         final args = QuranPageArgs(verseKey: verseKey, mode: mode);
         context.push(
           Uri(path: "/quran-page", queryParameters: args.toQuery()).toString(),
@@ -29,7 +31,10 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
       onSelectMode: (mode) => bloc.changeListingMode(mode),
     ),
     QuranListingErrorState() => Center(
-      child: Text("Error: ${(state as QuranListingErrorState).message}"),
+      child: Text(
+        '${AppLocalizations.of(context)!.errorPrefix}: '
+        '${(state as QuranListingErrorState).message}',
+      ),
     ),
     _ => CircularProgressIndicator(
       strokeWidth: 2,
@@ -41,6 +46,7 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
 class _QuranScreen extends StatelessWidget {
   final int itemCount;
   final List<PartitionItem> items;
+  final List<ChapterItem> chapters;
   final PartitionMode selectedViewMode;
   final Function(PartitionMode) onSelectMode;
   void Function({required VerseKey verseKey, required PartitionMode mode})
@@ -48,6 +54,7 @@ class _QuranScreen extends StatelessWidget {
   _QuranScreen({
     required this.itemCount,
     required this.items,
+    required this.chapters,
     required this.onTap,
     required this.selectedViewMode,
     required this.onSelectMode,

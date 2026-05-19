@@ -27,7 +27,7 @@ final class AppThemes {
 
     //! App Bar
     appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.greyDarkest,
       elevation: AppMetrics.topBar.elevation,
       toolbarHeight: AppMetrics.topBar.height,
       shadowColor: AppColors.shadow,
@@ -111,11 +111,17 @@ final class AppThemes {
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.inputBorder, width: AppMetrics.inputs.borderWidth),
+        borderSide: BorderSide(
+          color: AppColors.inputBorder,
+          width: AppMetrics.inputs.borderWidth,
+        ),
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.primary, width: AppMetrics.inputs.borderWidth),
+        borderSide: BorderSide(
+          color: AppColors.primary,
+          width: AppMetrics.inputs.borderWidth,
+        ),
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       errorBorder: OutlineInputBorder(
@@ -126,7 +132,10 @@ final class AppThemes {
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.error, width: AppMetrics.inputs.borderWidth),
+        borderSide: BorderSide(
+          color: AppColors.error,
+          width: AppMetrics.inputs.borderWidth,
+        ),
         borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
       ),
       filled: true,

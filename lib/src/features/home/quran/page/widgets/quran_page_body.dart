@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tajweed_ai/src/base/screens/sub_widget.dart';
-import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_state.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/partition_view.dart';
@@ -34,6 +33,7 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
   @override
   void initState() {
     super.initState();
+
     _pageController = PageController(initialPage: 0);
   }
 
@@ -86,44 +86,46 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
           _maybeJumpToUiIndex(data.desiredUiIndex);
         });
 
-        return PageView.builder(
-          reverse: true,
-          controller: _pageController,
-          itemCount: _orderedPartitionIds.length,
-          onPageChanged: (uiIndex) {
-            if (_ignoreNextPageChange) {
-              _ignoreNextPageChange = false;
+        // Quran pagination is always right-to-left, regardless of the app
+        // locale. Locking the ambient TextDirection here keeps the swipe
+        // direction stable when the user toggles English / Arabic.
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: _orderedPartitionIds.length,
+            onPageChanged: (uiIndex) {
+              if (_ignoreNextPageChange) {
+                _ignoreNextPageChange = false;
+                _lastUiIndex = uiIndex;
+                return;
+              }
               _lastUiIndex = uiIndex;
-              return;
-            }
-            _lastUiIndex = uiIndex;
-            final newPartitionId =
-                (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
-                ? _orderedPartitionIds[uiIndex]
-                : _orderedPartitionIds.first;
-            bloc.partitionChanged(newPartitionId, PartitionMode.page);
-          },
-          itemBuilder: (context, uiIndex) {
-            final partitionId =
-                (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
-                ? _orderedPartitionIds[uiIndex]
-                : _orderedPartitionIds.first;
+              final newPartitionId =
+                  (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
+                  ? _orderedPartitionIds[uiIndex]
+                  : _orderedPartitionIds.first;
 
-            if ((partitionId < data.partitionId - 1) ||
-                (partitionId > data.partitionId + 1)) {
-              return const SizedBox.shrink();
-            }
+              bloc.partitionChanged(newPartitionId);
+            },
+            itemBuilder: (context, uiIndex) {
+              final partitionId =
+                  (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
+                  ? _orderedPartitionIds[uiIndex]
+                  : _orderedPartitionIds.first;
 
-            return BlocProvider(
-              create: (context) =>
-                  QuranPageBloc(bloc.pageDataSource, bloc.snapshotService),
-              child: PartitionView(
-                partitionMode: PartitionMode.page,
-                partitionIndex: partitionId,
-                initialIndex: 0,
-              ),
-            );
-          },
+              if ((partitionId < data.partitionId - 1) ||
+                  (partitionId > data.partitionId + 1)) {
+                return const SizedBox.shrink();
+              }
+
+              return BlocProvider(
+                create: (context) =>
+                    QuranPageBloc(bloc.pageDataSource, bloc.snapshotService),
+                child: PartitionView(partitionIndex: partitionId),
+              );
+            },
+          ),
         );
       },
     );

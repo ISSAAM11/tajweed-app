@@ -145,6 +145,21 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
     return ayahMeta.pageNo;
   }
 
+  Future<VerseKey> getVersesForPage(int pageNo) async {
+    final ayahs =
+        await (select(ayahMetas)
+              ..where((a) => a.pageNo.equals(pageNo))
+              ..orderBy([
+                (a) => OrderingTerm(expression: a.surah),
+                (a) => OrderingTerm(expression: a.ayah),
+              ])
+              ..limit(1))
+            .get();
+
+    final firstAyah = ayahs.first;
+    return VerseKey(firstAyah.surah, firstAyah.ayah);
+  }
+
   /// Page ayat ordered by mushaf flow
   Future<List<AyahMetaRow>> getPageAyatMetas(int pageNo) {
     return (select(ayahMetas)

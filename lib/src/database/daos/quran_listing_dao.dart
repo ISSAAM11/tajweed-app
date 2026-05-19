@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:tajweed_ai/src/database/tables/quran/ayah_metas.dart';
 import 'package:tajweed_ai/src/database/tables/quran/chapters.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/database/tables/quran/page_lines.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 
 import '../app_database.dart';
@@ -9,7 +10,7 @@ import '../tables/quran/words.dart';
 
 part 'generated/quran_listing_dao.g.dart';
 
-@DriftAccessor(tables: [AyahMetas, Words, Chapters])
+@DriftAccessor(tables: [AyahMetas, Words, Chapters, PageLines])
 class QuranListingDao extends DatabaseAccessor<AppDatabase>
     with _$QuranListingDaoMixin {
   QuranListingDao(super.db);
@@ -25,14 +26,23 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
         SELECT a.page_no, a.surah, a.ayah, w.text
         FROM ayah_metas a
         JOIN words w ON w.surah = a.surah AND w.ayah = a.ayah
+        JOIN (
+          SELECT page_number,
+                 MIN(first_word_id) AS min_word,
+                 MAX(last_word_id)  AS max_word
+          FROM page_lines
+          WHERE first_word_id IS NOT NULL AND last_word_id IS NOT NULL
+          GROUP BY page_number
+        ) pl ON pl.page_number = a.page_no
         INNER JOIN (
           SELECT page_no, MIN(global_index) AS firstIndex
           FROM ayah_metas
           GROUP BY page_no
         ) b ON a.global_index = b.firstIndex
+        WHERE w.id BETWEEN pl.min_word AND pl.max_word
         ORDER BY a.page_no, w.word;
       ''',
-      readsFrom: {ayahMetas, words},
+      readsFrom: {ayahMetas, words, pageLines},
     ).get();
 
     final grouped = <int, List<Map<String, dynamic>>>{};
@@ -44,6 +54,7 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
 
     return grouped.entries.map((entry) {
       final first = entry.value.first;
+
       return PageItem(
         pageNumber: entry.key,
         verseKey: VerseKey(first['surah'] as int, first['ayah'] as int),
@@ -56,17 +67,26 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
   Future<List<JuzItem>> getJuzsWithFirstAyah() async {
     final rows = await customSelect(
       '''
-        SELECT a.juz_no, a.surah, a.ayah, w.text
+        SELECT a.juz_no, a.page_no, a.surah, a.ayah, w.text
         FROM ayah_metas a
         JOIN words w ON w.surah = a.surah AND w.ayah = a.ayah
+        JOIN (
+          SELECT page_number,
+                 MIN(first_word_id) AS min_word,
+                 MAX(last_word_id)  AS max_word
+          FROM page_lines
+          WHERE first_word_id IS NOT NULL AND last_word_id IS NOT NULL
+          GROUP BY page_number
+        ) pl ON pl.page_number = a.page_no
         INNER JOIN (
           SELECT juz_no, MIN(global_index) AS firstIndex
           FROM ayah_metas
           GROUP BY juz_no
         ) b ON a.global_index = b.firstIndex
+        WHERE w.id BETWEEN pl.min_word AND pl.max_word
         ORDER BY a.juz_no, w.word;
       ''',
-      readsFrom: {ayahMetas, words},
+      readsFrom: {ayahMetas, words, pageLines},
     ).get();
 
     final grouped = <int, List<Map<String, dynamic>>>{};
@@ -80,6 +100,7 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
       final first = entry.value.first;
       return JuzItem(
         juzNumber: entry.key,
+        pageNumber: first['page_no'] as int,
         verseKey: VerseKey(first['surah'] as int, first['ayah'] as int),
         ayahWords: entry.value.map((r) => r['text'] as String).toList(),
       );
@@ -90,17 +111,26 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
   Future<List<RukuItem>> getRukusWithFirstAyah() async {
     final rows = await customSelect(
       '''
-        SELECT a.ruku_no, a.surah, a.ayah, w.text
+        SELECT a.ruku_no, a.page_no, a.surah, a.ayah, w.text
         FROM ayah_metas a
         JOIN words w ON w.surah = a.surah AND w.ayah = a.ayah
+        JOIN (
+          SELECT page_number,
+                 MIN(first_word_id) AS min_word,
+                 MAX(last_word_id)  AS max_word
+          FROM page_lines
+          WHERE first_word_id IS NOT NULL AND last_word_id IS NOT NULL
+          GROUP BY page_number
+        ) pl ON pl.page_number = a.page_no
         INNER JOIN (
           SELECT ruku_no, MIN(global_index) AS firstIndex
           FROM ayah_metas
           GROUP BY ruku_no
         ) b ON a.global_index = b.firstIndex
+        WHERE w.id BETWEEN pl.min_word AND pl.max_word
         ORDER BY a.ruku_no, w.word;
       ''',
-      readsFrom: {ayahMetas, words},
+      readsFrom: {ayahMetas, words, pageLines},
     ).get();
 
     final grouped = <int, List<Map<String, dynamic>>>{};
@@ -114,6 +144,7 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
       final first = entry.value.first;
       return RukuItem(
         rukuNumber: entry.key,
+        pageNumber: first['page_no'] as int,
         verseKey: VerseKey(first['surah'] as int, first['ayah'] as int),
         ayahWords: entry.value.map((r) => r['text'] as String).toList(),
       );
@@ -124,17 +155,26 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
   Future<List<HizbItem>> getHizbsWithFirstAyah() async {
     final rows = await customSelect(
       '''
-        SELECT a.juz_no, a.hizb_fraction, a.surah, a.ayah, w.text
+        SELECT a.juz_no, a.hizb_fraction, a.page_no, a.surah, a.ayah, w.text
         FROM ayah_metas a
         JOIN words w ON w.surah = a.surah AND w.ayah = a.ayah
+        JOIN (
+          SELECT page_number,
+                 MIN(first_word_id) AS min_word,
+                 MAX(last_word_id)  AS max_word
+          FROM page_lines
+          WHERE first_word_id IS NOT NULL AND last_word_id IS NOT NULL
+          GROUP BY page_number
+        ) pl ON pl.page_number = a.page_no
         INNER JOIN (
           SELECT juz_no, hizb_fraction, MIN(global_index) AS firstIndex
           FROM ayah_metas
           GROUP BY juz_no, hizb_fraction
         ) b ON a.global_index = b.firstIndex
+        WHERE w.id BETWEEN pl.min_word AND pl.max_word
         ORDER BY a.juz_no, a.hizb_fraction, w.word;
       ''',
-      readsFrom: {ayahMetas, words},
+      readsFrom: {ayahMetas, words, pageLines},
     ).get();
 
     final grouped = <String, List<Map<String, dynamic>>>{};
@@ -149,6 +189,7 @@ class QuranListingDao extends DatabaseAccessor<AppDatabase>
       final first = entry.value.first;
       return HizbItem(
         juzNumber: first['juz_no'] as int,
+        pageNumber: first['page_no'] as int,
         fraction: const HizbFractionConverter().fromSql(
           first['hizb_fraction'] as int,
         ),
