@@ -75,6 +75,14 @@ abstract final class AppColors {
   static const Color black = Colors.black;
   static const Color transparent = Colors.transparent;
 
+  // Dark Theme Surfaces — keep gold brand, invert greys
+  static const Color darkScaffold = Color(0xFF1A1A1A);
+  static const Color darkSurface = Color(0xFF242424);
+  static const Color darkSurfaceVariant = Color(0xFF2C2C2C);
+  static const Color darkBorder = Color(0xFF3A3A3A);
+  static const Color darkTextPrimary = Color(0xFFF5F5F5);
+  static const Color darkTextSecondary = Color(0xFFB8B8B8);
+
   // Quran page colors
   static const Color ayahHighlight = Color(0x4DFFC107);   // amber 30% opacity
   static const Color surahGlyphColor = Color(0xB7000000); // black 72% opacity

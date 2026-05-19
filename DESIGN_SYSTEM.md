@@ -27,6 +27,19 @@ The palette is built around **elegant gold** as the brand color on a white scaff
 | `warning` | `#F39C12` | Warnings |
 | `info` | `#3498DB` | Info states |
 
+### Dark theme surfaces
+
+Used by `AppThemes.dark`. The gold brand (`primary`, `primaryLight`) is preserved as-is; only greys invert.
+
+| Name | Hex | Use |
+|---|---|---|
+| `darkScaffold` | `#1A1A1A` | Dark mode scaffold background |
+| `darkSurface` | `#242424` | Cards, dialogs, snackbars, list backgrounds |
+| `darkSurfaceVariant` | `#2C2C2C` | Input fills, tooltips, slightly elevated surfaces |
+| `darkBorder` | `#3A3A3A` | Dividers, input borders (unfocused) |
+| `darkTextPrimary` | `#F5F5F5` | Primary body text in dark mode |
+| `darkTextSecondary` | `#B8B8B8` | Hints, subtitles, secondary labels in dark mode |
+
 ### Gradients
 ```dart
 AppColors.primaryGradient   // Gold left-to-right: light → rich → dark

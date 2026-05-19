@@ -240,21 +240,124 @@ final class AppThemes {
   );
 
   static final ThemeData dark = light.copyWith(
+    brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
-      surface: Color(0xFF1A1A1A),
+      surface: AppColors.darkSurface,
       primary: AppColors.primary,
       secondary: AppColors.secondary,
+      tertiary: AppColors.tertiary,
       shadow: AppColors.shadow,
+      error: AppColors.error,
       onPrimary: Colors.white,
       onSecondary: AppColors.greyDark,
-      onSurface: Colors.white,
+      onSurface: AppColors.darkTextPrimary,
+      onError: Colors.white,
     ),
-    scaffoldBackgroundColor: const Color(0xFF1A1A1A),
-    textTheme: const TextTheme(),
+    scaffoldBackgroundColor: AppColors.darkScaffold,
+    canvasColor: AppColors.darkSurface,
+
+    //! App Bar — keep dark grey background (same as light) so brand stays consistent
     appBarTheme: light.appBarTheme.copyWith(
-      backgroundColor: AppColors.primary,
-      titleTextStyle: light.appBarTheme.titleTextStyle,
-      iconTheme: light.appBarTheme.iconTheme,
+      backgroundColor: AppColors.greyDarkest,
+    ),
+
+    //! Card — darker surface, no shadow tint
+    cardTheme: light.cardTheme.copyWith(
+      color: AppColors.darkSurface,
+    ),
+
+    //! Divider
+    dividerTheme: const DividerThemeData(
+      color: AppColors.darkBorder,
+      thickness: 1,
+      space: 1,
+    ),
+
+    //! Inputs — dark surface variant fill, gold focus border (brand)
+    inputDecorationTheme: light.inputDecorationTheme.copyWith(
+      fillColor: AppColors.darkSurfaceVariant,
+      prefixIconColor: AppColors.darkTextSecondary,
+      suffixIconColor: AppColors.darkTextSecondary,
+      hintStyle: AppFonts.lato
+          .withSize(FontSizes.subtitle)
+          .withColor(AppColors.darkTextSecondary),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: AppColors.darkBorder,
+          width: AppMetrics.inputs.borderWidth,
+        ),
+        borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
+      ),
+    ),
+
+    //! Dialog
+    dialogTheme: DialogThemeData(
+      backgroundColor: AppColors.darkSurface,
+      surfaceTintColor: Colors.transparent,
+      contentTextStyle: AppFonts.helvetica
+          .withSize(FontSizes.subtitle)
+          .withColor(AppColors.darkTextPrimary),
+    ),
+
+    //! List Tile
+    listTileTheme: light.listTileTheme.copyWith(
+      iconColor: AppColors.primaryLight,
+      textColor: AppColors.darkTextPrimary,
+      titleTextStyle: AppFonts.helvetica
+          .bold()
+          .withSize(FontSizes.headline3)
+          .withColor(AppColors.darkTextPrimary),
+      subtitleTextStyle: AppFonts.helvetica
+          .withSize(FontSizes.subtitle)
+          .withHeight(1.3)
+          .withColor(AppColors.darkTextSecondary),
+    ),
+
+    //! Tooltip
+    tooltipTheme: TooltipThemeData(
+      decoration: BoxDecoration(
+        color: AppColors.darkSurfaceVariant,
+        borderRadius: BorderRadius.circular(AppMetrics.defaultRadius),
+      ),
+      enableFeedback: true,
+      textStyle: AppFonts.helvetica
+          .withSize(FontSizes.subtitle)
+          .semiBold()
+          .withColor(AppColors.darkTextPrimary),
+    ),
+
+    //! SnackBar
+    snackBarTheme: light.snackBarTheme.copyWith(
+      backgroundColor: AppColors.darkSurfaceVariant,
+      contentTextStyle: AppFonts.helvetica
+          .withSize(FontSizes.subtitle)
+          .withColor(AppColors.darkTextPrimary),
+    ),
+
+    //! Chip
+    chipTheme: light.chipTheme.copyWith(
+      backgroundColor: AppColors.darkSurface,
+      labelStyle: AppFonts.helvetica
+          .withSize(FontSizes.subtitle)
+          .semiBold()
+          .withColor(AppColors.darkTextPrimary),
+    ),
+
+    //! Text Button — gold text on transparent for dark
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        elevation: AppMetrics.buttons.elevated.elevation,
+        shadowColor: AppColors.shadow,
+        minimumSize: Size.fromHeight(AppMetrics.buttons.text.height),
+        backgroundColor: AppColors.darkSurface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(AppMetrics.buttons.radius),
+          ),
+        ),
+        textStyle: AppFonts.helvetica.bold().withSize(FontSizes.title),
+        foregroundColor: AppColors.primaryLight,
+      ),
     ),
   );
 }

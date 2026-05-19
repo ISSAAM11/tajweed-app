@@ -147,7 +147,7 @@
   - [ ] US-3.1.1 : Section "Apparence" dans Settings avec affichage du theme actuel (S)
   - [x] US-3.1.2 : Toggle/Switch pour basculer light/dark, application immediate via ThemeBloc/Cubit (M) — `lib/src/app/theme/theme_bloc.dart` (Cubit<AppThemeMode> + toggle()) registered as singleton, `MaterialApp.router` rebuilds via `BlocBuilder<ThemeBloc>` + `themeMode` switch, 5 tests
   - [x] US-3.1.3 : `ThemePreferenceService` (pattern `LocalePreferenceService`) - persistance SharedPreferences (S) — `lib/src/core/services/theme_preference_service.dart` + `lib/src/app/theme/app_theme_mode.dart` + 4 tests
-  - [ ] US-3.1.4 : Finalisation `AppThemes.dark` - palette inversee, contrastes coherents avec gold brand (M)
+  - [x] US-3.1.4 : Finalisation `AppThemes.dark` - palette inversee, contrastes coherents avec gold brand (M) — 6 nouveaux tokens dans `AppColors` (`darkScaffold`, `darkSurface`, `darkSurfaceVariant`, `darkBorder`, `darkTextPrimary`, `darkTextSecondary`), `AppThemes.dark` etendu (colorScheme dark, scaffold, AppBar, card, divider, inputs, dialog, listTile, tooltip, snackbar, chip, textButton), 4 tests, `DESIGN_SYSTEM.md` documente
   - [ ] Cles ARB `settingsTheme`, `settingsThemeLight`, `settingsThemeDark` dans `app_en.arb` + `app_ar.arb`
   - [x] Tests frontend (infrastructure) — `flutter_test` ajoute au pubspec, premier test du projet. `flutter test` complet : 9/9 OK. Tests des autres US a ajouter au fur et a mesure.
 
@@ -182,6 +182,20 @@
 - **Set** : Set 1 - passe a 5/5 features (cap atteint)
 - **Raison** : Demande utilisateur d'avoir un vrai ecran d'accueil qui sert de chooser entre Quran Listing et Tajweed Courses
 - **Impact technique** : `main.dart` (`initialRoute`) et `AppRouter` devront pointer vers `/home` au lieu de `/quran-listing`
+
+### 2026-05-19 - US-3.1.4 terminee
+- **Action** : Finalisation du theme dark de l'app, avec une palette coherente qui preserve le gold brand et inverse les surfaces/greys.
+- **Fichiers modifies** :
+  - `lib/src/app/design/colors/app_colors.dart` : 6 nouveaux tokens (darkScaffold #1A1A1A, darkSurface #242424, darkSurfaceVariant #2C2C2C, darkBorder #3A3A3A, darkTextPrimary #F5F5F5, darkTextSecondary #B8B8B8). Aucune couleur hardcodee.
+  - `lib/src/app/design/themes/app_themes.dart` : `AppThemes.dark` etendu avec colorScheme.dark complet, scaffold, canvas, AppBar (greyDarkest conserve pour la coherence brand), card, divider, inputs (fill darkSurfaceVariant, border darkBorder, focus or-jaune), dialog, listTile, tooltip, snackbar, chip, textButton. `brightness: Brightness.dark` explicite.
+  - `DESIGN_SYSTEM.md` : nouvelle section "Dark theme surfaces" documentant les 6 tokens.
+- **Fichiers crees** :
+  - `test/app/design/app_themes_test.dart` : 4 tests (light pumpe, dark pumpe, dark brightness + primary gold preserve, light/dark partagent meme primary).
+- **Decisions design** :
+  - L'AppBar dark conserve `greyDarkest` (#413E40, identique au light) pour garder une signature brand reconnaissable entre les deux modes.
+  - Les icones en dark passent en `primaryLight` (gold clair) pour le contraste sur surface sombre.
+  - Le focus border des inputs reste gold dans les deux modes — c'est l'element brand le plus visible.
+- **Verification** : `flutter test` complet → 13/13 OK. `flutter analyze lib/src/app/design/` → 0 issues.
 
 ### 2026-05-19 - US-3.1.2 terminee
 - **Action** : Implementation de US-3.1.2 (ThemeBloc + wiring MaterialApp) et suppression d'un fichier de test casse pre-existant.
