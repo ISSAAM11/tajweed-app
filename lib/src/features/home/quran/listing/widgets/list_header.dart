@@ -1,3 +1,4 @@
+import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 
@@ -13,6 +14,7 @@ class ListHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       width: double.infinity,
       child: Container(
@@ -30,7 +32,7 @@ class ListHeader extends StatelessWidget {
                     border: Border(
                       bottom: BorderSide(
                         color: Colors.black12,
-                        width: 1, // Adjust thickness as needed
+                        width: 1,
                       ),
                     ),
                   ),
@@ -39,7 +41,7 @@ class ListHeader extends StatelessWidget {
                     spacing: 6,
                     children: [
                       Text(
-                        mode.label,
+                        _localizedPartitionLabel(l10n, mode),
                         style: TextStyle(
                           color: isSelected ? Colors.black87 : Colors.black38,
                           fontWeight: FontWeight.w600,
@@ -49,9 +51,7 @@ class ListHeader extends StatelessWidget {
                       AnimatedContainer(
                         duration: Duration(milliseconds: 400),
                         curve: Curves.easeInOut,
-                        width: isSelected
-                            ? 55
-                            : 0, // Adjust thickness as needed
+                        width: isSelected ? 55 : 0,
                         height: 2,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -68,4 +68,13 @@ class ListHeader extends StatelessWidget {
       ),
     );
   }
+
+  String _localizedPartitionLabel(AppLocalizations l10n, PartitionMode mode) =>
+      switch (mode) {
+        PartitionMode.surah => l10n.partitionSurah,
+        PartitionMode.juz => l10n.partitionJuz,
+        PartitionMode.page => l10n.partitionPage,
+        PartitionMode.hizb => l10n.partitionHizb,
+        PartitionMode.ruku => l10n.partitionRuku,
+      };
 }

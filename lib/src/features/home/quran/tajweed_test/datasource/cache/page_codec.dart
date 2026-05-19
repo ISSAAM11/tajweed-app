@@ -124,6 +124,7 @@ class PageCodec {
               chapter: ChapterHeaderDto(
                 id: c['id'],
                 nameArabic: c['nameArabic'],
+                nameSimple: c['nameSimple'] ?? '',
                 nameGlyph: c['nameGlyph'],
                 bismillahPre: c['bismillahPre'],
                 revelationPlace: c['revelationPlace'] == 'makkah'

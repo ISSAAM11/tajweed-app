@@ -21,8 +21,10 @@ class PageCodec {
           'chapter': {
             'id': b.chapter.id,
             'nameArabic': b.chapter.nameArabic,
+            'nameSimple': b.chapter.nameSimple,
             'nameGlyph': b.chapter.nameGlyph,
             'bismillahPre': b.chapter.bismillahPre,
+            'revelationPlace': b.chapter.revelationPlace.name,
           },
         };
       } else if (b is BasmalahBlockDto) {
@@ -124,6 +126,7 @@ class PageCodec {
               chapter: ChapterHeaderDto(
                 id: c['id'],
                 nameArabic: c['nameArabic'],
+                nameSimple: c['nameSimple'] ?? '',
                 nameGlyph: c['nameGlyph'],
                 bismillahPre: c['bismillahPre'],
                 revelationPlace: c['revelationPlace'] == 'makkah'

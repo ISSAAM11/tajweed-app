@@ -36,7 +36,9 @@ final class TajweedScreen extends Feature<QuranPageBloc, QuranPageState> {
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
                 ),
-                child: AppBar(
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: AppBar(
                   title: BlocBuilder<QuranPageBloc, QuranPageState>(
                     builder: (context, state) {
                       return Column(
@@ -60,6 +62,7 @@ final class TajweedScreen extends Feature<QuranPageBloc, QuranPageState> {
                       Navigator.pop(context);
                     },
                   ),
+                ),
                 ),
               ),
             ),

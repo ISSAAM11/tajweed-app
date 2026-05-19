@@ -86,41 +86,46 @@ class _QuranReaderInternalState extends State<_QuranReaderInternal> {
           _maybeJumpToUiIndex(data.desiredUiIndex);
         });
 
-        return PageView.builder(
-          reverse: true,
-          controller: _pageController,
-          itemCount: _orderedPartitionIds.length,
-          onPageChanged: (uiIndex) {
-            if (_ignoreNextPageChange) {
-              _ignoreNextPageChange = false;
+        // Quran pagination is always right-to-left, regardless of the app
+        // locale. Locking the ambient TextDirection here keeps the swipe
+        // direction stable when the user toggles English / Arabic.
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: _orderedPartitionIds.length,
+            onPageChanged: (uiIndex) {
+              if (_ignoreNextPageChange) {
+                _ignoreNextPageChange = false;
+                _lastUiIndex = uiIndex;
+                return;
+              }
               _lastUiIndex = uiIndex;
-              return;
-            }
-            _lastUiIndex = uiIndex;
-            final newPartitionId =
-                (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
-                ? _orderedPartitionIds[uiIndex]
-                : _orderedPartitionIds.first;
+              final newPartitionId =
+                  (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
+                  ? _orderedPartitionIds[uiIndex]
+                  : _orderedPartitionIds.first;
 
-            bloc.partitionChanged(newPartitionId);
-          },
-          itemBuilder: (context, uiIndex) {
-            final partitionId =
-                (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
-                ? _orderedPartitionIds[uiIndex]
-                : _orderedPartitionIds.first;
+              bloc.partitionChanged(newPartitionId);
+            },
+            itemBuilder: (context, uiIndex) {
+              final partitionId =
+                  (uiIndex >= 0 && uiIndex < _orderedPartitionIds.length)
+                  ? _orderedPartitionIds[uiIndex]
+                  : _orderedPartitionIds.first;
 
-            if ((partitionId < data.partitionId - 1) ||
-                (partitionId > data.partitionId + 1)) {
-              return const SizedBox.shrink();
-            }
+              if ((partitionId < data.partitionId - 1) ||
+                  (partitionId > data.partitionId + 1)) {
+                return const SizedBox.shrink();
+              }
 
-            return BlocProvider(
-              create: (context) =>
-                  QuranPageBloc(bloc.pageDataSource, bloc.snapshotService),
-              child: PartitionView(partitionIndex: partitionId),
-            );
-          },
+              return BlocProvider(
+                create: (context) =>
+                    QuranPageBloc(bloc.pageDataSource, bloc.snapshotService),
+                child: PartitionView(partitionIndex: partitionId),
+              );
+            },
+          ),
         );
       },
     );

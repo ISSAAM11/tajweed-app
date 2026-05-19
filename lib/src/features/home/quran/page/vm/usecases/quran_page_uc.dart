@@ -20,6 +20,7 @@ extension QuranPageUc on QuranPageBloc {
     emit(
       QuranPageLoaded(
         surahName: chap.nameArabic,
+        surahNameSimple: chap.nameSimple,
         partitionMode: PartitionMode.page,
         partitionId: partitionId,
         currentPage: pageNo,
@@ -99,7 +100,11 @@ extension QuranPageUc on QuranPageBloc {
     final chap = await pageDataSource.getChapterHeader(newPage);
 
     emit(
-      state.copyWith(surahName: chap.nameArabic, partitionId: newPartitionId),
+      state.copyWith(
+        surahName: chap.nameArabic,
+        surahNameSimple: chap.nameSimple,
+        partitionId: newPartitionId,
+      ),
     );
   }
 

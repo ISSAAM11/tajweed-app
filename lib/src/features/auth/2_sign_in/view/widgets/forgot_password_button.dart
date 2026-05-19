@@ -1,3 +1,5 @@
+import 'package:tajweed_ai/l10n/app_localizations.dart';
+
 import '../../../../common/widgets/custom_text_button.dart';
 import '../../../../../base/screens/exports.dart';
 
@@ -10,7 +12,7 @@ class ForgotPasswordButton extends StatelessWidget {
     children: [
       const Spacer(),
       CustomTextButton(
-        title: 'Forgot Password?',
+        title: AppLocalizations.of(context)!.authForgotPassword,
         onTap: onTap,
         textColor: AppColors.primary,
       ),

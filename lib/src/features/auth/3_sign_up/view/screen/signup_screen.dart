@@ -1,5 +1,3 @@
-import 'package:tajweed_ai/src/features/auth/3_sign_up/view/snackbars/_index.dart';
-
 import '../../../../../base/screens/exports.dart';
 import '../widgets/signup_body.dart';
 
@@ -13,7 +11,7 @@ class SignUpScreen extends Feature<SignUpBloc, SignUpState> {
         dependencies: SignUpDependencies().inject,
         onUpdate: (context, state) => switch (state) {
           Error() => appMessenger.showSnackBar(
-            WarningSnackbar(message: state.message),
+            WarningSnackbar(context: context, message: state.message),
           ),
           ResendPinSuccess() => appMessenger.showSnackBar(
             SuccessSnackbar(message: state.message),
@@ -21,7 +19,6 @@ class SignUpScreen extends Feature<SignUpBloc, SignUpState> {
           Success() => appMessenger.showSnackBar(
             SuccessSnackbar(message: state.message),
           ),
-
           _ => null,
         },
       );

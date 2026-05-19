@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/app/index.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 
-class LastSelectedSurahWidget extends StatelessWidget {
-  final LastSelectedPage? lastSurah;
-  final VoidCallback? onContinue;
+class LastReadingCard extends StatelessWidget {
+  final LastSelectedPage lastSelected;
+  final VoidCallback onContinue;
 
-  const LastSelectedSurahWidget({
+  const LastReadingCard({
     super.key,
-    required this.lastSurah,
-    this.onContinue,
+    required this.lastSelected,
+    required this.onContinue,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (lastSurah == null) return const SizedBox.shrink();
-
     final metrics = AppMetrics.lastSelectedSurahWidget;
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final surahName = isArabic ? lastSelected.nameArabic : lastSelected.name;
 
     return Container(
       height: metrics.height,
@@ -50,7 +52,7 @@ class LastSelectedSurahWidget extends StatelessWidget {
                       ),
                       SizedBox(width: metrics.iconTextSpacing),
                       Text(
-                        "Last read",
+                        l10n.lastReadingLabel,
                         style: AppFonts.lato
                             .withSize(FontSizes.indication)
                             .withColor(AppColors.greyDarkest)
@@ -60,7 +62,7 @@ class LastSelectedSurahWidget extends StatelessWidget {
                   ),
                   SizedBox(height: metrics.columnSpacing),
                   Text(
-                    lastSurah!.name,
+                    surahName,
                     style: AppFonts.lato
                         .withSize(FontSizes.headline4)
                         .withColor(AppColors.greyDarkest)
@@ -71,8 +73,8 @@ class LastSelectedSurahWidget extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: "Page No: "),
-                        TextSpan(text: "${lastSurah!.pageNumber}"),
+                        TextSpan(text: '${l10n.verseNumberLabel}: '),
+                        TextSpan(text: '${lastSelected.verseKey.ayah}'),
                       ],
                     ),
                     style: AppFonts.lato
@@ -84,7 +86,7 @@ class LastSelectedSurahWidget extends StatelessWidget {
                   ElevatedButton(
                     onPressed: onContinue,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: AppColors.scaffold,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                           metrics.buttonBorderRadius,
@@ -98,7 +100,7 @@ class LastSelectedSurahWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "Continue",
+                          l10n.continueReadingLabel,
                           style: AppFonts.lato
                               .withSize(FontSizes.caption)
                               .withColor(AppColors.greyDarkest)
@@ -106,7 +108,7 @@ class LastSelectedSurahWidget extends StatelessWidget {
                         ),
                         SizedBox(width: metrics.buttonIconSpacing),
                         Icon(
-                          Icons.arrow_forward,
+                          isArabic ? Icons.arrow_back : Icons.arrow_forward,
                           color: AppColors.greyDarkest,
                           size: metrics.continueButtonIconSize,
                         ),

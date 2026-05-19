@@ -87,6 +87,77 @@ class _QuranPageViewer {
   final double popupElevation = 8;
 }
 
+class _HomeScreen {
+  const _HomeScreen._();
+
+  // Dark shelf under the AppBar
+  final double darkShelfHeight = 40;
+  final double darkShelfBottomRadius = 30;
+
+  // Horizontal padding of the body
+  final EdgeInsets bodyPadding = const EdgeInsets.symmetric(horizontal: 16);
+  final EdgeInsets bodyPaddingSubtitle = const EdgeInsets.symmetric(
+    horizontal: 8,
+  );
+
+  // Vertical gap between the last-reading card and the section title
+  final double sectionTopSpacing = 24;
+  final double sectionBottomSpacing = 16;
+
+  // Grid
+  final double gridCrossSpacing = 14;
+  final double gridMainSpacing = 14;
+  final double gridChildAspectRatio = 0.95;
+}
+
+class _HomeActionCard {
+  const _HomeActionCard._();
+
+  final double radius = 24;
+  final EdgeInsets contentPadding = const EdgeInsets.all(16);
+
+  final double iconSize = 64;
+  final double titleSpacing = 8;
+  final double badgeSpacing = 10;
+
+  final EdgeInsets badgePadding = const EdgeInsets.symmetric(
+    horizontal: 12,
+    vertical: 4,
+  );
+  final double badgeRadius = 20;
+
+  final double progressBarHeight = 4;
+  final double progressBarRadius = 2;
+  final double progressBarSpacing = 6;
+  final double progressLabelSpacing = 4;
+
+  final double borderWidth = 1;
+}
+
+class _SettingsScreen {
+  const _SettingsScreen._();
+
+  final EdgeInsets bodyPadding = const EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 24,
+  );
+  final EdgeInsets sectionTitlePadding = const EdgeInsets.only(
+    left: 4,
+    right: 4,
+    bottom: 12,
+  );
+
+  final double optionRowHeight = 64;
+  final double optionRowRadius = 16;
+  final EdgeInsets optionRowPadding = const EdgeInsets.symmetric(
+    horizontal: 16,
+  );
+  final double optionRowBorderWidth = 1.5;
+
+  final double selectionIconSize = 22;
+  final double optionGap = 12;
+}
+
 class _SurahNameCard {
   const _SurahNameCard._();
 

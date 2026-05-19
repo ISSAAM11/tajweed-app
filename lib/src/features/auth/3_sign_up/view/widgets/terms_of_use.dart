@@ -5,10 +5,12 @@ class _TermsOfUse extends StatelessWidget {
 
   final Observable<bool> isChecked;
   final VoidCallback? onTermsPressed;
+
   void showTermsOfUseDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
-      barrierDismissible: true, // user must choose
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.secondary,
@@ -16,29 +18,23 @@ class _TermsOfUse extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppMetrics.buttons.radius),
           ),
           title: Text(
-            "Terms of Use",
+            l10n.authTermsOfUseTitle,
             style: AppStyles.title.semiBold().copyWith(color: AppColors.black),
           ),
           content: SizedBox(
-            height: 250, // make it scrollable
+            height: 250,
             child: SingleChildScrollView(
-              child: Text("""
-By using this app, you agree to the following Terms of Use:
-
-1. You will use the app responsibly.
-2. You will not misuse or exploit its features.
-3. The app may collect data as per our Privacy Policy.
-4. We may update the Terms at any time.
-
-Please read carefully before continuing.
-              """, style: AppStyles.subtitle.copyWith(color: AppColors.black)),
+              child: Text(
+                l10n.authTermsOfUseBody,
+                style: AppStyles.subtitle.copyWith(color: AppColors.black),
+              ),
             ),
           ),
           actions: [
             LoadingButton(
-              title: 'OK',
+              title: l10n.snackbarOk,
               onTap: () {
-                Navigator.of(context).pop(true); // user accepted
+                Navigator.of(context).pop(true);
               },
               titleFontSize: FontSizes.title,
             ),
@@ -49,39 +45,42 @@ Please read carefully before continuing.
   }
 
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      Observer(
-        observes: isChecked,
-        builder: (BuildContext context, value) => Checkbox(
-          fillColor: WidgetStateProperty.all(AppColors.secondary),
-          checkColor: AppColors.primaryDark,
-          value: value,
-          onChanged: (_) {
-            isChecked.toggle();
-          },
-        ),
-      ),
-      Expanded(
-        child: RichText(
-          text: TextSpan(
-            text: "I agree to the ",
-            style: AppStyles.indication.semiBold().greyDark(),
-            children: [
-              TextSpan(
-                text: "Terms of Use",
-                style: const TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
-                ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => showTermsOfUseDialog(context),
-              ),
-            ],
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Row(
+      children: [
+        Observer(
+          observes: isChecked,
+          builder: (BuildContext context, value) => Checkbox(
+            fillColor: WidgetStateProperty.all(AppColors.secondary),
+            checkColor: AppColors.primaryDark,
+            value: value,
+            onChanged: (_) {
+              isChecked.toggle();
+            },
           ),
         ),
-      ),
-    ],
-  );
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              text: l10n.authIAgreeToThe,
+              style: AppStyles.indication.semiBold().greyDark(),
+              children: [
+                TextSpan(
+                  text: l10n.authTermsOfUseTitle,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => showTermsOfUseDialog(context),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

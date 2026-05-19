@@ -1,5 +1,6 @@
 //? Base needed imports
 
+import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_bloc.dart';
@@ -30,7 +31,10 @@ class SurahListingBody extends SubWidget<QuranListingBloc> {
       onSelectMode: (mode) => bloc.changeListingMode(mode),
     ),
     QuranListingErrorState() => Center(
-      child: Text("Error: ${(state as QuranListingErrorState).message}"),
+      child: Text(
+        '${AppLocalizations.of(context)!.errorPrefix}: '
+        '${(state as QuranListingErrorState).message}',
+      ),
     ),
     _ => CircularProgressIndicator(
       strokeWidth: 2,

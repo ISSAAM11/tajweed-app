@@ -5,6 +5,14 @@ import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_bloc.dart'
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_state.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/quran_page_body.dart';
 
+String _displaySurahName(BuildContext context, QuranPageState state) {
+  final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+  if (isArabic) return state.surahName;
+  return state.surahNameSimple.isNotEmpty
+      ? state.surahNameSimple
+      : state.surahName;
+}
+
 final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
   final QuranPageArgs args;
   QuranPageScreen({super.key, required this.args})
@@ -28,13 +36,15 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
             bottomLeft: Radius.circular(20),
             bottomRight: Radius.circular(20),
           ),
-          child: AppBar(
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: AppBar(
             title: BlocBuilder<QuranPageBloc, QuranPageState>(
               builder: (context, state) {
                 return Column(
                   children: [
                     Text(
-                      state.surahName,
+                      _displaySurahName(context, state),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -52,6 +62,7 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
                 Navigator.pop(context);
               },
             ),
+          ),
           ),
         ),
       ),

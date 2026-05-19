@@ -1,3 +1,4 @@
+import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
@@ -22,12 +23,11 @@ class QuranListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
-        // Header outside ListView
         if (header != null) header!,
 
-        // ListView without header
         Expanded(
           child: ListView.separated(
             separatorBuilder: (context, index) {
@@ -42,7 +42,7 @@ class QuranListView extends StatelessWidget {
 
               if (item is ChapterItem) return _buildSurahItem(item, index);
 
-              return _buildPartitionItem(item, index);
+              return _buildPartitionItem(item, index, l10n);
             },
           ),
         ),
@@ -52,7 +52,7 @@ class QuranListView extends StatelessWidget {
 
   Widget _buildSurahItem(ChapterItem chapterItem, int index) {
     return SurahNameCard(
-      name: chapterItem.nameArabic,
+      nameArabic: chapterItem.nameArabic,
       nameEnglish: chapterItem.nameSimple,
       glyph: chapterItem.nameGlyph,
       versesCount: chapterItem.versesCount,
@@ -65,8 +65,12 @@ class QuranListView extends StatelessWidget {
     );
   }
 
-  Widget _buildPartitionItem(PartitionItem item, int index) {
-    final String label = _getPartitionLabel(item);
+  Widget _buildPartitionItem(
+    PartitionItem item,
+    int index,
+    AppLocalizations l10n,
+  ) {
+    final String label = _getPartitionLabel(item, l10n);
     final int pageNumber = _getPartitionPageNumber(item);
 
     // Process ayah words
@@ -101,13 +105,14 @@ class QuranListView extends StatelessWidget {
     );
   }
 
-  String _getPartitionLabel(PartitionItem item) {
-    if (item is JuzItem) return 'Juz. ${item.juzNumber}';
-    if (item is PageItem) return 'Page. ${item.pageNumber}';
-    if (item is RukuItem) return 'Ruku. ${item.rukuNumber}';
-    if (item is HizbItem)
-      return '${item.fraction.label} Hizb. ${item.juzNumber}';
-    return 'Partition';
+  String _getPartitionLabel(PartitionItem item, AppLocalizations l10n) {
+    if (item is JuzItem) return '${l10n.partitionJuz} ${item.juzNumber}';
+    if (item is PageItem) return '${l10n.partitionPage} ${item.pageNumber}';
+    if (item is RukuItem) return '${l10n.partitionRuku} ${item.rukuNumber}';
+    if (item is HizbItem) {
+      return '${item.fraction.label} ${l10n.partitionHizb} ${item.juzNumber}';
+    }
+    return '';
   }
 
   int _getPartitionPageNumber(PartitionItem item) {

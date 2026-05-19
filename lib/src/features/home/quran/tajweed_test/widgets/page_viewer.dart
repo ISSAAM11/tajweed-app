@@ -76,8 +76,8 @@ class _PageViewerState extends State<PageViewer> {
               image: ResizeImage(
                 AssetImage(
                   widget.page.pageNo % 2 == 0
-                      ? "assets/images/background/left_background-normal.jpg"
-                      : "assets/images/background/left_background-normal.jpg",
+                      ? "assets/images/background/left_background2.jpg"
+                      : "assets/images/background/right_background2.jpg",
                 ),
                 height: 110,
               ),

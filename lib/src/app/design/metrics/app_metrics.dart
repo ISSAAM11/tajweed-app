@@ -30,6 +30,9 @@ abstract final class AppMetrics {
   static const lastSelectedSurahWidget = _LastSelectedSurahWidget._();
   static const surahNameCard = _SurahNameCard._();
   static const quranPageViewer = _QuranPageViewer._();
+  static const homeScreen = _HomeScreen._();
+  static const homeActionCard = _HomeActionCard._();
+  static const settingsScreen = _SettingsScreen._();
 
   static const mapDefaultCentralPoint = GeoCoordinates(
     35.501212354988134,

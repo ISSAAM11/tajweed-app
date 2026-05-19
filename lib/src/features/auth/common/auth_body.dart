@@ -1,4 +1,6 @@
 //? Base needed imports
+import 'package:tajweed_ai/l10n/app_localizations.dart';
+
 import '../../../base/screens/exports.dart';
 import '../../common/widgets/app_logo.dart';
 import '../../common/widgets/or_devider.dart';
@@ -61,7 +63,8 @@ class AuthBody extends StatelessWidget {
         Text('Tajweed AI', style: AppStyles.headline1.bold().primary()),
         VerticalSpacing(AppMetrics.spacing.xs),
         Text(
-          "Master Qur'an Recitation with AI Guidance.",
+          AppLocalizations.of(context)!.authTagline,
+          textAlign: TextAlign.center,
           style: AppStyles.subtitle.medium().greyRegular(),
         ),
         VerticalSpacing(AppMetrics.spacing.md),

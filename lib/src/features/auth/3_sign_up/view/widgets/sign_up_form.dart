@@ -1,5 +1,6 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:pinput/pinput.dart';
+import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/features/auth/3_sign_up/view/widgets/birth_field_picker.dart';
 import 'package:tajweed_ai/src/features/auth/3_sign_up/view/widgets/country_field_picker.dart';
 import 'package:tajweed_ai/src/features/common/widgets/custom_text_button.dart';

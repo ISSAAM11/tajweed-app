@@ -6,12 +6,14 @@ import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 class ChapterHeaderDto {
   final int id;
   final String nameArabic;
+  final String nameSimple;
   final String nameGlyph;
   final bool bismillahPre;
   final RevelationPlace revelationPlace;
   ChapterHeaderDto({
     required this.id,
     required this.nameArabic,
+    required this.nameSimple,
     required this.nameGlyph,
     required this.bismillahPre,
     required this.revelationPlace,
@@ -19,6 +21,7 @@ class ChapterHeaderDto {
   ChapterHeaderDto.fromChapterRow(ChapterRow row)
     : id = row.id,
       nameArabic = row.nameArabic,
+      nameSimple = row.nameSimple,
       nameGlyph = row.nameGlyph,
       bismillahPre = row.bismillahPre,
       revelationPlace = row.revelationPlace;

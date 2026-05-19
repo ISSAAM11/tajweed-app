@@ -1,4 +1,6 @@
 //? Base needed imports
+import 'package:tajweed_ai/l10n/app_localizations.dart';
+
 import '../../../../../base/screens/exports.dart';
 
 //? Widgets Imports
@@ -17,31 +19,34 @@ class SignInBody extends SubWidget<SignInBloc> {
   const SignInBody(this.state, {super.key});
 
   @override
-  Widget build(BuildContext context) => AuthBody(
-    buttonTitle: "Sign In",
-    onButtonTap: bloc.signInWithEmailAndPassword,
-    isLoading: state is Loading,
-    showOrDivider: true,
-    showSocialLogin: true,
-    showGuestOption: true,
-    accountQuestionFirstText: "Don't have an Account? ",
-    accountQuestionSecondText: "create one",
-    onAccountQuestionTap: () => globalContext.go(signUpRoute.path),
-    guestQuestionFirstText: "Or continue as ",
-    guestQuestionSecondText: "Guest",
-    onGuestQuestionTap: bloc.continueAsGuest,
-    onGoogleTap: bloc.signInWithGoogle,
-    onFacebookTap: bloc.signInWithFacebook,
-    onAppleTap: bloc.signInWithApple,
-    child: SignInForm(
-      formKey: bloc.formKey,
-      emailController: bloc.email.controller,
-      emailFocusNode: bloc.email.node,
-      passwordController: bloc.password.controller,
-      passwordFocusNode: bloc.password.node,
-      onForgotPassword: () {
-        //TODO: Go to forgot password
-      },
-    ),
-  );
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AuthBody(
+      buttonTitle: l10n.authSignIn,
+      onButtonTap: bloc.signInWithEmailAndPassword,
+      isLoading: state is Loading,
+      showOrDivider: true,
+      showSocialLogin: true,
+      showGuestOption: true,
+      accountQuestionFirstText: l10n.authNoAccountQuestion,
+      accountQuestionSecondText: l10n.authCreateOne,
+      onAccountQuestionTap: () => globalContext.go(signUpRoute.path),
+      guestQuestionFirstText: l10n.authOrContinueAs,
+      guestQuestionSecondText: l10n.authGuest,
+      onGuestQuestionTap: () => globalContext.go('/home'),
+      onGoogleTap: bloc.signInWithGoogle,
+      onFacebookTap: bloc.signInWithFacebook,
+      onAppleTap: bloc.signInWithApple,
+      child: SignInForm(
+        formKey: bloc.formKey,
+        emailController: bloc.email.controller,
+        emailFocusNode: bloc.email.node,
+        passwordController: bloc.password.controller,
+        passwordFocusNode: bloc.password.node,
+        onForgotPassword: () {
+          //TODO: Go to forgot password
+        },
+      ),
+    );
+  }
 }

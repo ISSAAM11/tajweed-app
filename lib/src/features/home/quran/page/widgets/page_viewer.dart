@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/app/design/metrics/app_metrics.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_fonts.dart';
@@ -253,6 +254,7 @@ class PageMetaBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       alignment: Alignment.center,
@@ -261,14 +263,15 @@ class PageMetaBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Juz ${pageMetaBlock.juz}, Hizb ${pageMetaBlock.hizb}",
+            '${l10n.partitionJuz} ${pageMetaBlock.juz}, '
+            '${l10n.partitionHizb} ${pageMetaBlock.hizb}',
             style: AppFonts.lato
                 .withSize(FontSizes.subtitle)
                 .withColor(AppColors.accent)
                 .semiBold(),
           ),
           Text(
-            "Page $pageNo",
+            '${l10n.partitionPage} $pageNo',
             style: AppFonts.lato
                 .withSize(FontSizes.subtitle)
                 .withColor(AppColors.accent)

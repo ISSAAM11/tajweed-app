@@ -99,6 +99,7 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
             header = ChapterHeaderDto(
               id: chap.id,
               nameArabic: chap.nameArabic,
+              nameSimple: chap.nameSimple,
               nameGlyph: chap.nameGlyph,
               bismillahPre: chap.bismillahPre,
               revelationPlace: chap.revelationPlace,

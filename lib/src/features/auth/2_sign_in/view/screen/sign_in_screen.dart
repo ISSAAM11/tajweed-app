@@ -1,8 +1,9 @@
+import 'package:tajweed_ai/l10n/app_localizations.dart';
+
 import '../../../../../base/screens/exports.dart';
 import '../../binding/sign_in_deps.dart';
 import '../../vm/bloc/sign_in_bloc.dart';
 import '../../vm/states/sign_in_states.dart';
-import '../snackbars/_index.dart';
 import '../widgets/sign_in_body.dart';
 
 final class SignInScreen extends Feature<SignInBloc, SignInState> {
@@ -10,9 +11,13 @@ final class SignInScreen extends Feature<SignInBloc, SignInState> {
     : super(
         dependencies: SignInDependencies().inject,
         onUpdate: (context, state) => switch (state) {
-          Success() => appMessenger.showSnackBar(SuccessSnackbar()),
+          Success() => appMessenger.showSnackBar(
+            SuccessSnackbar(
+              message: AppLocalizations.of(context)!.signedInSuccess,
+            ),
+          ),
           Error() => appMessenger.showSnackBar(
-            FailureSnackbar(message: state.message),
+            FailureSnackbar(context: context, message: state.message),
           ),
           _ => null,
         },
