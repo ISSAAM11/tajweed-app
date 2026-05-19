@@ -145,11 +145,11 @@
   - [ ] Aucun (preference locale, persistance via SharedPreferences)
 - **Frontend** :
   - [ ] US-3.1.1 : Section "Apparence" dans Settings avec affichage du theme actuel (S)
-  - [ ] US-3.1.2 : Toggle/Switch pour basculer light/dark, application immediate via ThemeBloc/Cubit (M)
+  - [x] US-3.1.2 : Toggle/Switch pour basculer light/dark, application immediate via ThemeBloc/Cubit (M) — `lib/src/app/theme/theme_bloc.dart` (Cubit<AppThemeMode> + toggle()) registered as singleton, `MaterialApp.router` rebuilds via `BlocBuilder<ThemeBloc>` + `themeMode` switch, 5 tests
   - [x] US-3.1.3 : `ThemePreferenceService` (pattern `LocalePreferenceService`) - persistance SharedPreferences (S) — `lib/src/core/services/theme_preference_service.dart` + `lib/src/app/theme/app_theme_mode.dart` + 4 tests
   - [ ] US-3.1.4 : Finalisation `AppThemes.dark` - palette inversee, contrastes coherents avec gold brand (M)
   - [ ] Cles ARB `settingsTheme`, `settingsThemeLight`, `settingsThemeDark` dans `app_en.arb` + `app_ar.arb`
-  - [x] Tests frontend (infrastructure) — `flutter_test` ajoute au pubspec, premier test du projet : 4 tests ThemePreferenceService passent. Tests des autres US a ajouter au fur et a mesure.
+  - [x] Tests frontend (infrastructure) — `flutter_test` ajoute au pubspec, premier test du projet. `flutter test` complet : 9/9 OK. Tests des autres US a ajouter au fur et a mesure.
 
 ---
 
@@ -182,6 +182,19 @@
 - **Set** : Set 1 - passe a 5/5 features (cap atteint)
 - **Raison** : Demande utilisateur d'avoir un vrai ecran d'accueil qui sert de chooser entre Quran Listing et Tajweed Courses
 - **Impact technique** : `main.dart` (`initialRoute`) et `AppRouter` devront pointer vers `/home` au lieu de `/quran-listing`
+
+### 2026-05-19 - US-3.1.2 terminee
+- **Action** : Implementation de US-3.1.2 (ThemeBloc + wiring MaterialApp) et suppression d'un fichier de test casse pre-existant.
+- **Fichiers crees** :
+  - `lib/src/app/theme/theme_bloc.dart` (Cubit<AppThemeMode>, miroir de LocaleBloc + `toggle()` helper)
+  - `test/app/theme/theme_bloc_test.dart` (5 tests : etat initial sans cache, etat initial depuis cache, change emit + persistance, change no-op, toggle)
+- **Fichiers modifies** :
+  - `lib/src/app/binding/app_bindings.dart` (registration ThemePreferenceService + ThemeBloc)
+  - `lib/src/app/app_widget.dart` (MultiBlocProvider, BlocBuilder<ThemeBloc>, `themeMode` switch entre `AppThemes.light` et `AppThemes.dark`)
+- **Fichiers supprimes** :
+  - `test/e2e_shift_handover_test.dart` — fichier vide (entierement commente avec une syntaxe cassee dans les commentaires). Bloquait `flutter test` global apres le bootstrap de l'infra. N'avait jamais fonctionne.
+- **Verification** : `flutter test` complet (sans args) → 9/9 OK. `flutter analyze` sur les fichiers modifies → 0 issues.
+- **Note technique** : `AppThemes.dark` est toujours partiel (sera finalise dans US-3.1.4). Pour l'instant, basculer en dark mode applique le theme par defaut Material dark heritage, ce qui suffit pour valider la mecanique de switch mais pas pour la qualite visuelle.
 
 ### 2026-05-19 - US-3.1.3 terminee + bootstrap infra de tests
 - **Action** : Implementation de US-3.1.3 (ThemePreferenceService) et ajout de `flutter_test` aux dev_dependencies (premier test du projet).
