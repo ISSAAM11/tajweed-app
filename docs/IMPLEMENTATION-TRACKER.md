@@ -10,15 +10,15 @@
 - **Total features** : 6
 - **Total User Stories** : 24
 - **Effort total** : 18 jours
-- **Set actif** : Set 1
-- **Progression globale** : 0% (0/6 features terminees)
+- **Set actif** : Set 1 (Set 2 contient 1 feature terminee)
+- **Progression globale** : 17% (1/6 features terminees, 4/24 US terminees)
 
 ### Status par Set
 
 | Set | Objectif | Features | Status |
 |-----|----------|----------|--------|
 | Set 1 | Finalisation MVP - Auth & Home | 5/5 | En cours (cap atteint) |
-| Set 2 | Polish & Personnalisation | 1/5 | A faire |
+| Set 2 | Polish & Personnalisation | 1/5 | 1 feature terminee |
 
 ---
 
@@ -133,9 +133,10 @@
 
 ### [Feature 3.1] Settings Theme Toggle
 
-- **Status** : En cours - Frontend
+- **Status** : Termine
 - **Branche** : `feat/IB-f3.1-us1-4`
 - **Started** : 2026-05-19
+- **Completed** : 2026-05-19
 - **Module** : Settings (nouveau module)
 - **Effort** : 3 jours (4 User Stories)
 - **Complexite** : Moyenne
@@ -144,12 +145,12 @@
 - **Backend** :
   - [ ] Aucun (preference locale, persistance via SharedPreferences)
 - **Frontend** :
-  - [ ] US-3.1.1 : Section "Apparence" dans Settings avec affichage du theme actuel (S)
+  - [x] US-3.1.1 : Section "Apparence" dans Settings avec affichage du theme actuel (S) — `SettingsAppearanceSection` (public widget extrait de `settings_screen.dart`), insertion dans `SettingsScreen` apres la section langue, 2 widget tests
   - [x] US-3.1.2 : Toggle/Switch pour basculer light/dark, application immediate via ThemeBloc/Cubit (M) — `lib/src/app/theme/theme_bloc.dart` (Cubit<AppThemeMode> + toggle()) registered as singleton, `MaterialApp.router` rebuilds via `BlocBuilder<ThemeBloc>` + `themeMode` switch, 5 tests
   - [x] US-3.1.3 : `ThemePreferenceService` (pattern `LocalePreferenceService`) - persistance SharedPreferences (S) — `lib/src/core/services/theme_preference_service.dart` + `lib/src/app/theme/app_theme_mode.dart` + 4 tests
   - [x] US-3.1.4 : Finalisation `AppThemes.dark` - palette inversee, contrastes coherents avec gold brand (M) — 6 nouveaux tokens dans `AppColors` (`darkScaffold`, `darkSurface`, `darkSurfaceVariant`, `darkBorder`, `darkTextPrimary`, `darkTextSecondary`), `AppThemes.dark` etendu (colorScheme dark, scaffold, AppBar, card, divider, inputs, dialog, listTile, tooltip, snackbar, chip, textButton), 4 tests, `DESIGN_SYSTEM.md` documente
-  - [ ] Cles ARB `settingsTheme`, `settingsThemeLight`, `settingsThemeDark` dans `app_en.arb` + `app_ar.arb`
-  - [x] Tests frontend (infrastructure) — `flutter_test` ajoute au pubspec, premier test du projet. `flutter test` complet : 9/9 OK. Tests des autres US a ajouter au fur et a mesure.
+  - [x] Cles ARB `settingsAppearance`, `settingsThemeLight`, `settingsThemeDark` dans `app_en.arb` + `app_ar.arb`
+  - [x] Tests frontend (infrastructure + couverture) — `flutter_test` ajoute au pubspec, infra de test creee. `flutter test` complet : 15/15 OK (4 ThemePreferenceService + 5 ThemeBloc + 4 AppThemes + 2 SettingsAppearanceSection).
 
 ---
 
@@ -182,6 +183,18 @@
 - **Set** : Set 1 - passe a 5/5 features (cap atteint)
 - **Raison** : Demande utilisateur d'avoir un vrai ecran d'accueil qui sert de chooser entre Quran Listing et Tajweed Courses
 - **Impact technique** : `main.dart` (`initialRoute`) et `AppRouter` devront pointer vers `/home` au lieu de `/quran-listing`
+
+### 2026-05-19 - Feature 3.1 TERMINEE (US-3.1.1 + cloture)
+- **Action** : Implementation de US-3.1.1 (Settings UI section + ARB) et cloture de la Feature 3.1.
+- **Fichiers crees** :
+  - `test/features/settings/theme_section_test.dart` : 2 widget tests (rendu des labels EN, tap Dark switche le bloc).
+- **Fichiers modifies** :
+  - `lib/l10n/app_en.arb` : ajout `settingsAppearance`, `settingsThemeLight`, `settingsThemeDark`.
+  - `lib/l10n/app_ar.arb` : memes cles avec traductions arabes (المظهر, فاتح, داكن).
+  - `lib/src/features/settings/widgets/settings_screen.dart` : extraction d'un widget public `SettingsAppearanceSection` (rebuilds via BlocBuilder<ThemeBloc>, taps appellent `themeBloc.change()`). Section "Apparence" inseree sous la section langue, avec un gap de `AppMetrics.spacing.md`. Nouveau widget prive `_ThemeOption` (mirroir de `_LanguageOption`).
+- **Decision design** : `SettingsAppearanceSection` est extraite en widget PUBLIC plutot qu'integree directement dans `_SettingsScreenState`. Raison : permet un widget test isole (sans devoir wirer LocaleBloc + SettingsBloc + routing). Mirroir de `LocaleBloc` dans `SettingsBloc` non reproduit pour `ThemeBloc` — la section parle directement au ThemeBloc global via `get<ThemeBloc>()`. Plus simple, pas de synchronisation a maintenir.
+- **Verification** : `flutter test` complet → 15/15 OK. `flutter analyze` sur les fichiers modifies → 0 issues.
+- **Progression** : Feature 3.1 100% terminee (4/4 US). Set 2 : 1/5 features. Progression globale : 17% (4/24 US).
 
 ### 2026-05-19 - US-3.1.4 terminee
 - **Action** : Finalisation du theme dark de l'app, avec une palette coherente qui preserve le gold brand et inverse les surfaces/greys.
