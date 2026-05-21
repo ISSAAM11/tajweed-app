@@ -5,6 +5,7 @@ import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router
 import 'package:tajweed_ai/src/features/home/quran/tajweed_test/router/quran_page_router.dart';
 import 'package:tajweed_ai/src/features/home/screen/router/home_screen_route.dart';
 import 'package:tajweed_ai/src/features/legal/router/legal_router.dart';
+import 'package:tajweed_ai/src/features/my_account/router/my_account_router.dart';
 import 'package:tajweed_ai/src/features/settings/router/settings_route.dart';
 
 import '../../features/auth/export.dart';
@@ -23,6 +24,7 @@ final router = GoRouter(
     tajweedRoute,
     settingsRoute,
     termsOfUseRoute,
+    myAccountRoute,
   ],
 );
 

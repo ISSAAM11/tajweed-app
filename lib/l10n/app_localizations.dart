@@ -278,6 +278,66 @@ abstract class AppLocalizations {
   /// **'These Terms of Use govern your use of Tajweed AI. By using the app you agree to these terms.\n\nTajweed AI is provided as-is for educational and personal use to help you read and reflect on the Quran with correct Tajweed. We do our best to ensure the Quran text and Tajweed indications displayed are accurate, but we make no warranty of completeness.\n\nWe respect your privacy: no personal data is collected without your consent. Reading progress and settings are stored locally on your device.\n\nThe full Terms of Use will be published with future releases. For questions, please contact us through the app store listing.'**
   String get termsOfUseBody;
 
+  /// No description provided for @myAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Account'**
+  String get myAccountTitle;
+
+  /// No description provided for @myAccountYourAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account'**
+  String get myAccountYourAccount;
+
+  /// No description provided for @myAccountComingSoonSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get myAccountComingSoonSection;
+
+  /// No description provided for @myAccountChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get myAccountChangePassword;
+
+  /// No description provided for @myAccountAvatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar'**
+  String get myAccountAvatar;
+
+  /// No description provided for @myAccountLinkedAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked accounts'**
+  String get myAccountLinkedAccounts;
+
+  /// No description provided for @myAccountSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get myAccountSignOut;
+
+  /// No description provided for @myAccountSignOutConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out?'**
+  String get myAccountSignOutConfirmTitle;
+
+  /// No description provided for @myAccountSignOutConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll need to sign in again to access your account.'**
+  String get myAccountSignOutConfirmMessage;
+
+  /// No description provided for @myAccountSignOutCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get myAccountSignOutCancel;
+
   /// No description provided for @snackbarRetry.
   ///
   /// In en, this message translates to:

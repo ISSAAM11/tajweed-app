@@ -100,6 +100,37 @@ class AppLocalizationsAr extends AppLocalizations {
       'تحكم شروط الاستخدام هذه استخدامك لتطبيق تجويد AI. باستخدامك التطبيق فإنك توافق على هذه الشروط.\n\nيُقدَّم تطبيق تجويد AI كما هو لأغراض تعليمية وشخصية لمساعدتك على قراءة القرآن والتدبر فيه بتجويد سليم. نبذل قصارى جهدنا لضمان دقة نص القرآن وعلامات التجويد المعروضة، دون ضمان الكمال.\n\nنحن نحترم خصوصيتك: لا يتم جمع أي بيانات شخصية دون موافقتك. يتم تخزين تقدّمك في القراءة وإعداداتك محلياً على جهازك.\n\nسيتم نشر شروط الاستخدام الكاملة مع الإصدارات المستقبلية. للأسئلة، يرجى التواصل من خلال صفحة التطبيق في المتجر.';
 
   @override
+  String get myAccountTitle => 'حسابي';
+
+  @override
+  String get myAccountYourAccount => 'حسابك';
+
+  @override
+  String get myAccountComingSoonSection => 'قريباً';
+
+  @override
+  String get myAccountChangePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get myAccountAvatar => 'الصورة الرمزية';
+
+  @override
+  String get myAccountLinkedAccounts => 'الحسابات المرتبطة';
+
+  @override
+  String get myAccountSignOut => 'تسجيل الخروج';
+
+  @override
+  String get myAccountSignOutConfirmTitle => 'تسجيل الخروج؟';
+
+  @override
+  String get myAccountSignOutConfirmMessage =>
+      'ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى حسابك.';
+
+  @override
+  String get myAccountSignOutCancel => 'إلغاء';
+
+  @override
   String get snackbarRetry => 'إعادة المحاولة';
 
   @override
