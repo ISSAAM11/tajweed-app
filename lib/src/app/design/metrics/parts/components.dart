@@ -158,6 +158,24 @@ class _SettingsScreen {
   final double optionGap = 12;
 }
 
+class _ComingSoonTile {
+  const _ComingSoonTile._();
+
+  final double rowHeight = 64;
+  final double rowRadius = 16;
+  final EdgeInsets rowPadding = const EdgeInsets.symmetric(horizontal: 16);
+  final double rowBorderWidth = 1.5;
+
+  final double iconSize = 22;
+  final double iconTextSpacing = 12;
+
+  final EdgeInsets badgePadding = const EdgeInsets.symmetric(
+    horizontal: 10,
+    vertical: 4,
+  );
+  final double badgeRadius = 12;
+}
+
 class _SurahNameCard {
   const _SurahNameCard._();
 

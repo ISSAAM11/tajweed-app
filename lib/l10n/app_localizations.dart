@@ -206,6 +206,12 @@ abstract class AppLocalizations {
   /// **'Coming soon'**
   String get comingSoon;
 
+  /// No description provided for @comingSoonMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is coming soon. Stay tuned!'**
+  String get comingSoonMessage;
+
   /// No description provided for @snackbarRetry.
   ///
   /// In en, this message translates to:

@@ -63,6 +63,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get comingSoon => 'Coming soon';
 
   @override
+  String get comingSoonMessage => 'This feature is coming soon. Stay tuned!';
+
+  @override
   String get snackbarRetry => 'Retry';
 
   @override

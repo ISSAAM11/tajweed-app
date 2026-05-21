@@ -63,6 +63,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get comingSoon => 'قريباً';
 
   @override
+  String get comingSoonMessage => 'هذه الميزة قادمة قريباً. ترقّب!';
+
+  @override
   String get snackbarRetry => 'إعادة المحاولة';
 
   @override
