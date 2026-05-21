@@ -7,18 +7,18 @@
 
 ## Dashboard
 
-- **Total features** : 6
-- **Total User Stories** : 24
-- **Effort total** : 18 jours
-- **Set actif** : Set 1 (Set 2 contient 1 feature terminee)
-- **Progression globale** : 17% (1/6 features terminees, 4/24 US terminees)
+- **Total features** : 7
+- **Total User Stories** : 29
+- **Effort total** : 21 jours
+- **Set actif** : Set 2 (2 features terminees)
+- **Progression globale** : 31% (2/7 features terminees, 9/29 US terminees)
 
 ### Status par Set
 
 | Set | Objectif | Features | Status |
 |-----|----------|----------|--------|
 | Set 1 | Finalisation MVP - Auth & Home | 5/5 | En cours (cap atteint) |
-| Set 2 | Polish & Personnalisation | 1/5 | 1 feature terminee |
+| Set 2 | Polish & Personnalisation | 2/5 | 2 features terminees |
 
 ---
 
@@ -152,6 +152,27 @@
   - [x] Cles ARB `settingsAppearance`, `settingsThemeLight`, `settingsThemeDark` dans `app_en.arb` + `app_ar.arb`
   - [x] Tests frontend (infrastructure + couverture) — `flutter_test` ajoute au pubspec, infra de test creee. `flutter test` complet : 15/15 OK (4 ThemePreferenceService + 5 ThemeBloc + 4 AppThemes + 2 SettingsAppearanceSection).
 
+### [Feature 3.2] Dark Mode Palette Rollout
+
+- **Status** : Termine (manuel QA a finaliser apres `flutter run`)
+- **Branche** : `feat/IB-f3.1-us1-4` (continuee depuis Feature 3.1)
+- **Started** : 2026-05-20
+- **Completed** : 2026-05-20
+- **Module** : Settings (design system)
+- **Effort** : 3 jours (5 User Stories)
+- **Complexite** : Moyenne
+- **Localisation** : `lib/src/app/design/colors/`, `lib/src/app/design/themes/`, `lib/src/features/**/widgets/`
+- **Note** : Feature 3.1 a livre l'infrastructure (ThemeBloc, persistance, toggle Settings, AppThemes.dark partiel). Mais l'audit a revele 127 references directes a `AppColors.*` dans 28 fichiers widget, et zero usage de `Theme.of(context).colorScheme` — donc basculer en dark mode ne change que le chrome Material (AppBar, Card via theme par defaut). Cette feature applique la palette spec "Serene Tajweed Night" et migre les widgets vers la lecture theme-reactive canonique. Le light mode reste intact (le spec light propose un palette Charcoal-primary qui contredit l'identite gold-on-white shipped — traite comme aspirationnel).
+- **Backend** :
+  - [ ] Aucun
+- **Frontend** :
+  - [x] US-3.2.1 : Rafraichir `AppColors.dark*` aux valeurs spec (S) — 6 tokens mis a jour + 10 nouveaux tokens (`darkSurfaceContainerLowest`, `darkSurfaceContainerLow`, `darkSurfaceContainerHighest`, `darkSurfaceBright`, `darkOutline`, `darkPrimary`, `darkOnPrimary`, `darkPrimaryContainer`, `darkError`, `darkOnError`). `bottomBarDarkColor` aligne sur le nouveau `darkScaffold` (#131313).
+  - [x] US-3.2.2 : Cabler `AppThemes.dark.colorScheme` aux nouveaux tokens (M) — `ColorScheme.dark` complete (primary→darkPrimary, surface→darkScaffold, surfaceContainer/Low/Lowest/High/Highest, outline/outlineVariant, error/onError). `cardTheme` dark : no shadow, tonal layering. AppThemes.light egalement renforce avec surfaceContainerHigh explicite pour preserver l'identite light. 7 tests dans `app_themes_test.dart` (was 4) : tous OK.
+  - [x] US-3.2.3 : Migration des 9 widgets hotspots vers `Theme.of(context).colorScheme.*` (M) — settings_screen, form_input, home_action_card, surah_listing_screen, loading_button, surah_name_card migres. last_reading_card / home_header / page_viewer (principal) confirmes brand-locked (zero migration necessaire).
+  - [x] US-3.2.4 : Migration des widgets restants (S) — third_step, terms_of_use, did_user_have_an_account, social_login_button, bottom_picker, animated_stepper, or_devider, second_step, quran_list_view (avec ajout BuildContext au _buildPartitionItem), signup_screen, sign_in_screen, home_screen, custom_date_picker. Refactoring de `custom_date_picker` : decoration container deplacee de `initState` vers `build` pour acceder a `Theme.of(context)`. tajweed_test / tajweed_text / app_logo confirmes brand-locked.
+  - [x] US-3.2.5 : Sync docs (S) — `DESIGN_SYSTEM.md` mis a jour : nouvelle table de tokens dark (16 entrees, mapping spec inclus), nouvelle section "How to consume colors in a widget" avec la regle two-bucket (brand-locked vs theme-reactive) et table de mapping AppColors.* → colorScheme.*.
+  - [x] Tests frontend — 18/18 OK (4 ThemePreferenceService + 5 ThemeBloc + 7 AppThemes + 2 SettingsAppearanceSection). 3 nouveaux tests dans `app_themes_test.dart` couvrant les obsidian surface tiers + outline tokens + AppBar brand-signature.
+
 ---
 
 ## Backlog - Features Ajoutees
@@ -164,10 +185,41 @@
 | 2026-05-18 | 1.4 Tajweed Courses Screen | Home | Set 1 | 3j | Bootstrap initial - demande utilisateur |
 | 2026-05-18 | 1.5 Quran Listing | Home | Set 1 | 2j | Extrait de l'ancien 1.3 - n'est plus la home |
 | 2026-05-19 | 3.1 Settings Theme Toggle | Settings | Set 2 | 3j | Demande utilisateur (exercice VibeCoding guide) |
+| 2026-05-20 | 3.2 Dark Mode Palette Rollout | Settings | Set 2 | 3j | Demande utilisateur (apres creation DESIGN-DARK-MODE.md / DESIGN-LIGHT-MODE.md) |
 
 ---
 
 ## Journal de bord
+
+### 2026-05-20 - Feature 3.2 TERMINEE (US-3.2.1 a US-3.2.5)
+- **Action** : Implementation complete de la Feature 3.2 dans la meme session que son bootstrap.
+- **Fichiers crees** : aucun nouveau fichier source ; 3 tests ajoutes a `test/app/design/app_themes_test.dart` (now 7 tests, was 4).
+- **Fichiers modifies (palette + theme)** :
+  - `lib/src/app/design/colors/app_colors.dart` : 6 tokens dark mis a jour aux valeurs spec, 10 nouveaux tokens dark ajoutes, `bottomBarDarkColor` aligne.
+  - `lib/src/app/design/themes/app_themes.dart` : `ColorScheme.dark` etendue avec 7 tiers de surfaces + outline tokens + dark error variants ; `AppThemes.light.colorScheme` renforce avec `surfaceContainerHigh/etc.` explicites pour preserver l'identite ; `cardTheme` dark sans shadow (tonal layering).
+- **Fichiers modifies (widget migration)** : 13 widgets migres vers `Theme.of(context).colorScheme.*` — settings_screen, form_input, home_action_card, surah_listing_screen, loading_button, surah_name_card, third_step, terms_of_use, did_user_have_an_account, social_login_button, bottom_picker, animated_stepper, or_devider, second_step, quran_list_view, signup_screen, sign_in_screen, home_screen, custom_date_picker. Note : `custom_date_picker` a necessite un refactoring (decoration deplacee de `initState` vers `build` pour acceder au context).
+- **Fichiers confirmes brand-locked (zero migration)** : last_reading_card (carte gold/cream), home_header (AppBar), page_viewer principal et tajweed_test (paper-textured pages), tajweed_text (texte arabe sur paper), app_logo (logo gold), forgot_password_button (lien gold).
+- **Documentation** : `DESIGN_SYSTEM.md` mis a jour avec la nouvelle table de tokens dark (16 entrees, mapping spec) et nouvelle section "How to consume colors in a widget" (regle two-bucket : brand-locked vs theme-reactive, table de migration AppColors.* → colorScheme.*).
+- **Decisions design** :
+  - `darkPrimary` (#F2CA50) plus lumineux que le light primary (#D4AF37) pour rester lisible sur obsidian — preserve la cohesion brand via `darkPrimaryContainer` qui reprend le light primary.
+  - `darkTextPrimary` = #E5E2E1 (cream chaud) au lieu de blanc pur (#F5F5F5 ancien) pour reduire la fatigue oculaire en mode sombre (recommendation spec).
+  - Tonal layering > shadows en mode dark : `cardTheme.dark` desactive elevation et shadow.
+  - AppBar reste `greyDarkest` dans les deux modes (decision Feature 3.1 preservee).
+  - Light mode preserve byte-identique : ajout explicite de `surfaceContainerHigh: AppColors.greyBackground` pour eviter la derive auto-derivee.
+- **Verification** : `flutter test` complet → 18/18 OK (was 15). `flutter analyze` : 6 issues pre-existantes non liees a Feature 3.2 (unused imports + TODO prints dans tajweed_test). Manuel `flutter run` requis pour valider visuellement chaque ecran (US-3.2.5 verification finale).
+- **Progression** : Feature 3.2 100% terminee (5/5 US). Set 2 : 2/5 features. Progression globale : 31% (9/29 US).
+
+### 2026-05-20 - Bootstrap Feature 3.2
+- **Action** : Creation de la Feature 3.2 "Dark Mode Palette Rollout" suite a la creation des specs `DESIGN-DARK-MODE.md` et `DESIGN-LIGHT-MODE.md` par l'utilisateur.
+- **Audit Phase 1** : 127 references directes a `AppColors.*` dans 28 fichiers widget, zero usage de `Theme.of(context).colorScheme`. Top hotspots : settings_screen (19), form_input (15), home_action_card (11). La Feature 3.1 a livre l'infrastructure mais le wiring widget n'a pas suivi.
+- **Audit Phase 2** : 19 des 44 tokens du spec dark sont manquants ou ont une valeur hex incorrecte. La palette actuelle (`darkScaffold` #1A1A1A, etc.) ne reflete pas la spec "Serene Tajweed Night" (#131313 + tiered surfaces).
+- **Decisions** :
+  - **Palette dark strict, light intact** — applique la spec dark fidelement; ignore la spec light (Charcoal-primary) qui contredit l'identite gold-on-white shipped.
+  - **API: `Theme.of(context).colorScheme.*` canonique** (pas de custom extension) — pattern Flutter standard, facile a apprendre pour un debutant, ergonomie chain-friendly avec `.withColor()`.
+  - **Deux-bucket rule** : brand-locked (primary, error, AppBar) reste sur `AppColors.*` direct ; theme-reactive (scaffold, text, surface, borders) migre vers `Theme.of(context).colorScheme.*`.
+  - Per-theme Tajweed colors **defer** (consomme nulle part actuellement).
+  - Nouveaux fonts (Noto Serif / Plus Jakarta Sans / Work Sans) **defer** (Feature 3.3 future si voulu) — assets ~500KB.
+- **Plan** : 5 US (3.2.1 palette → 3.2.2 ColorScheme → 3.2.3 hotspots → 3.2.4 reste → 3.2.5 QA + docs). Plan complet dans `C:\Users\Hp\.claude\plans\how-to-apply-this-indexed-cerf.md`.
 
 ### 2026-05-18 - Bootstrap du tracker
 - **Action** : Creation initiale de `docs/IMPLEMENTATION-TRACKER.md` et `docs/commercial/LISTE-DES-FONCTIONS.md`
