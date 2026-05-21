@@ -18,7 +18,7 @@ class DidUserHaveAnAccount extends StatelessWidget {
     children: [
       Text(
         firstText,
-        style: AppStyles.subtitle.medium().withColor(AppColors.black),
+        style: AppStyles.subtitle.medium().withColor(Theme.of(context).colorScheme.onSurface),
       ),
       CustomTextButton(title: secondText, onTap: onTap),
     ],

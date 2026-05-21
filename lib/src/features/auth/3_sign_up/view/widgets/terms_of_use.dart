@@ -47,6 +47,7 @@ class _TermsOfUse extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final scheme = Theme.of(context).colorScheme;
     return Row(
       children: [
         Observer(
@@ -64,7 +65,7 @@ class _TermsOfUse extends StatelessWidget {
           child: RichText(
             text: TextSpan(
               text: l10n.authIAgreeToThe,
-              style: AppStyles.indication.semiBold().greyDark(),
+              style: AppStyles.indication.semiBold().copyWith(color: scheme.onSurface),
               children: [
                 TextSpan(
                   text: l10n.authTermsOfUseTitle,

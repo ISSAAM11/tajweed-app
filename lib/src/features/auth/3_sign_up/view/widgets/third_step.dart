@@ -17,16 +17,17 @@ class _Step3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final scheme = Theme.of(context).colorScheme;
     final defaultPinTheme = PinTheme(
       width: 50,
       height: 56,
       textStyle: AppStyles.headline3.semiBold().copyWith(
-        color: AppColors.black,
+        color: scheme.onSurface,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: scheme.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: scheme.outlineVariant),
       ),
     );
     return Column(
@@ -40,7 +41,7 @@ class _Step3 extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           l10n.authVerificationMessage,
-          style: AppStyles.title.semiBold().copyWith(color: AppColors.black),
+          style: AppStyles.title.semiBold().copyWith(color: scheme.onSurface),
           textAlign: TextAlign.center,
         ),
         VerticalSpacing(AppMetrics.scaffold.horizontalBodyPadding),
