@@ -338,6 +338,96 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get myAccountSignOutCancel;
 
+  /// No description provided for @tajweedCoursesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tajweed Rules'**
+  String get tajweedCoursesTitle;
+
+  /// No description provided for @tajweedCoursesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Tajweed (تجويد) is the set of rules that govern correct pronunciation of the Quran. Below are the core rules every reciter should know.'**
+  String get tajweedCoursesIntro;
+
+  /// No description provided for @tajweedCoursesInteractive.
+  ///
+  /// In en, this message translates to:
+  /// **'Interactive lessons'**
+  String get tajweedCoursesInteractive;
+
+  /// No description provided for @tajweedRuleMaddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Madd (المدّ) — Elongation'**
+  String get tajweedRuleMaddTitle;
+
+  /// No description provided for @tajweedRuleMaddDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Prolonging a vowel sound by 2, 4, or 6 counts depending on the type. Madd Tabi\'i is the natural elongation of 2 counts.'**
+  String get tajweedRuleMaddDescription;
+
+  /// No description provided for @tajweedRuleGhunnahTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ghunnah (الغُنّة) — Nasalization'**
+  String get tajweedRuleGhunnahTitle;
+
+  /// No description provided for @tajweedRuleGhunnahDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A nasal sound produced when pronouncing letters Noon (ن) or Meem (م) with shaddah, held for about 2 counts.'**
+  String get tajweedRuleGhunnahDescription;
+
+  /// No description provided for @tajweedRuleIdghamTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Idgham (الإدغام) — Merging'**
+  String get tajweedRuleIdghamTitle;
+
+  /// No description provided for @tajweedRuleIdghamDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Merging a Noon Sakinah or Tanween into one of the letters: ي، ر، م، ل، و، ن. The merging may include Ghunnah depending on the letter.'**
+  String get tajweedRuleIdghamDescription;
+
+  /// No description provided for @tajweedRuleIkhfaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ikhfa (الإخفاء) — Concealment'**
+  String get tajweedRuleIkhfaTitle;
+
+  /// No description provided for @tajweedRuleIkhfaDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiding the sound of Noon Sakinah or Tanween between Idgham and Izhar when followed by any of 15 specific letters, with Ghunnah.'**
+  String get tajweedRuleIkhfaDescription;
+
+  /// No description provided for @tajweedRuleIqlabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Iqlab (الإقلاب) — Conversion'**
+  String get tajweedRuleIqlabTitle;
+
+  /// No description provided for @tajweedRuleIqlabDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Converting a Noon Sakinah or Tanween into a hidden Meem when followed by the letter Ba (ب), with Ghunnah.'**
+  String get tajweedRuleIqlabDescription;
+
+  /// No description provided for @tajweedRuleQalqalaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Qalqala (القلقلة) — Echoing'**
+  String get tajweedRuleQalqalaTitle;
+
+  /// No description provided for @tajweedRuleQalqalaDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A bouncing echo sound on the letters: ق، ط، ب، ج، د when they have a sukoon. Stronger at the end of a verse.'**
+  String get tajweedRuleQalqalaDescription;
+
   /// No description provided for @snackbarRetry.
   ///
   /// In en, this message translates to:

@@ -131,6 +131,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myAccountSignOutCancel => 'Cancel';
 
   @override
+  String get tajweedCoursesTitle => 'Tajweed Rules';
+
+  @override
+  String get tajweedCoursesIntro =>
+      'Tajweed (تجويد) is the set of rules that govern correct pronunciation of the Quran. Below are the core rules every reciter should know.';
+
+  @override
+  String get tajweedCoursesInteractive => 'Interactive lessons';
+
+  @override
+  String get tajweedRuleMaddTitle => 'Madd (المدّ) — Elongation';
+
+  @override
+  String get tajweedRuleMaddDescription =>
+      'Prolonging a vowel sound by 2, 4, or 6 counts depending on the type. Madd Tabi\'i is the natural elongation of 2 counts.';
+
+  @override
+  String get tajweedRuleGhunnahTitle => 'Ghunnah (الغُنّة) — Nasalization';
+
+  @override
+  String get tajweedRuleGhunnahDescription =>
+      'A nasal sound produced when pronouncing letters Noon (ن) or Meem (م) with shaddah, held for about 2 counts.';
+
+  @override
+  String get tajweedRuleIdghamTitle => 'Idgham (الإدغام) — Merging';
+
+  @override
+  String get tajweedRuleIdghamDescription =>
+      'Merging a Noon Sakinah or Tanween into one of the letters: ي، ر، م، ل، و، ن. The merging may include Ghunnah depending on the letter.';
+
+  @override
+  String get tajweedRuleIkhfaTitle => 'Ikhfa (الإخفاء) — Concealment';
+
+  @override
+  String get tajweedRuleIkhfaDescription =>
+      'Hiding the sound of Noon Sakinah or Tanween between Idgham and Izhar when followed by any of 15 specific letters, with Ghunnah.';
+
+  @override
+  String get tajweedRuleIqlabTitle => 'Iqlab (الإقلاب) — Conversion';
+
+  @override
+  String get tajweedRuleIqlabDescription =>
+      'Converting a Noon Sakinah or Tanween into a hidden Meem when followed by the letter Ba (ب), with Ghunnah.';
+
+  @override
+  String get tajweedRuleQalqalaTitle => 'Qalqala (القلقلة) — Echoing';
+
+  @override
+  String get tajweedRuleQalqalaDescription =>
+      'A bouncing echo sound on the letters: ق، ط، ب، ج، د when they have a sukoon. Stronger at the end of a verse.';
+
+  @override
   String get snackbarRetry => 'Retry';
 
   @override

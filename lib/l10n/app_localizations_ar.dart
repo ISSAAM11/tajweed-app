@@ -131,6 +131,58 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myAccountSignOutCancel => 'إلغاء';
 
   @override
+  String get tajweedCoursesTitle => 'أحكام التجويد';
+
+  @override
+  String get tajweedCoursesIntro =>
+      'التجويد هو مجموعة من الأحكام التي تضبط النطق الصحيح للقرآن الكريم. فيما يلي الأحكام الأساسية التي ينبغي أن يعرفها كل قارئ.';
+
+  @override
+  String get tajweedCoursesInteractive => 'دروس تفاعلية';
+
+  @override
+  String get tajweedRuleMaddTitle => 'المدّ — التطويل';
+
+  @override
+  String get tajweedRuleMaddDescription =>
+      'إطالة الحرف بمقدار حركتين أو أربع أو ست حركات حسب نوعه. المدّ الطبيعي مقداره حركتان.';
+
+  @override
+  String get tajweedRuleGhunnahTitle => 'الغُنّة — صوت أنفي';
+
+  @override
+  String get tajweedRuleGhunnahDescription =>
+      'صوت يخرج من الخيشوم عند نطق النون (ن) أو الميم (م) المشددة، مقدارها حركتان.';
+
+  @override
+  String get tajweedRuleIdghamTitle => 'الإدغام — الإدخال';
+
+  @override
+  String get tajweedRuleIdghamDescription =>
+      'إدخال النون الساكنة أو التنوين في أحد حروف: (ي، ر، م، ل، و، ن). قد يكون بغنة أو بدون غنة حسب الحرف.';
+
+  @override
+  String get tajweedRuleIkhfaTitle => 'الإخفاء — الستر';
+
+  @override
+  String get tajweedRuleIkhfaDescription =>
+      'إخفاء النون الساكنة أو التنوين عند خمسة عشر حرفاً مع بقاء الغنة، حالة وسط بين الإدغام والإظهار.';
+
+  @override
+  String get tajweedRuleIqlabTitle => 'الإقلاب — التحويل';
+
+  @override
+  String get tajweedRuleIqlabDescription =>
+      'قلب النون الساكنة أو التنوين ميماً مخفاة مع الغنة عند ملاقاة حرف الباء (ب).';
+
+  @override
+  String get tajweedRuleQalqalaTitle => 'القلقلة — الاهتزاز';
+
+  @override
+  String get tajweedRuleQalqalaDescription =>
+      'اهتزاز الصوت عند نطق حروف (ق، ط، ب، ج، د) إذا كانت ساكنة. تكون أقوى عند الوقف.';
+
+  @override
   String get snackbarRetry => 'إعادة المحاولة';
 
   @override
