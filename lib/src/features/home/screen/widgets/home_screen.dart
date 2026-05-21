@@ -21,7 +21,7 @@ final class HomeScreen extends Feature<HomeScreenBloc, HomeScreenState> {
     final metrics = AppMetrics.homeScreen;
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: HomeHeader(
         onMenu: () {},
         onSearch: () {},
@@ -89,7 +89,7 @@ class _SectionTitle extends StatelessWidget {
       AppLocalizations.of(context)!.homeSectionTitle,
       style: AppFonts.lato
           .withSize(FontSizes.title)
-          .withColor(AppColors.greyMedium)
+          .withColor(Theme.of(context).colorScheme.onSurfaceVariant)
           .medium(),
     );
   }
