@@ -503,7 +503,7 @@ extension WidgetModifier on Widget {
                   AppColors.secondary.withValues(alpha: 0.3),
                   AppColors.primaryLight.withValues(alpha: 0.1),
                   AppColors.primary.withValues(alpha: 0.05),
-                  Colors.white,
+                  AppColors.primary.withValues(alpha: 0.05),
                 ],
             stops: stops ?? [0.0, 0.3, 0.7, 1.0],
           ),

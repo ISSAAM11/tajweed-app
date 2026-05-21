@@ -10,6 +10,13 @@ final class AppThemes {
 
     colorScheme: const ColorScheme.light(
       surface: AppColors.scaffold,
+      // Explicit surface tiers so widgets reading scheme.surfaceContainerHigh
+      // get the same value as the legacy AppColors.greyBackground.
+      surfaceContainerLowest: AppColors.scaffold,
+      surfaceContainerLow: AppColors.scaffold,
+      surfaceContainer: AppColors.greyBackground,
+      surfaceContainerHigh: AppColors.greyBackground,
+      surfaceContainerHighest: AppColors.greyLight,
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       shadow: AppColors.shadow,
@@ -18,6 +25,9 @@ final class AppThemes {
       onPrimary: Colors.white,
       onSecondary: AppColors.greyDark,
       onSurface: AppColors.greyDark,
+      onSurfaceVariant: AppColors.greyMedium,
+      outline: AppColors.greyMedium,
+      outlineVariant: AppColors.greyLight,
     ),
     scaffoldBackgroundColor: AppColors.scaffold,
 
@@ -242,28 +252,47 @@ final class AppThemes {
   static final ThemeData dark = light.copyWith(
     brightness: Brightness.dark,
     colorScheme: const ColorScheme.dark(
-      surface: AppColors.darkSurface,
-      primary: AppColors.primary,
+      // Brand — dark-mode gold variant for better luminance against obsidian
+      primary: AppColors.darkPrimary,
+      onPrimary: AppColors.darkOnPrimary,
+      primaryContainer: AppColors.darkPrimaryContainer,
+      onPrimaryContainer: AppColors.darkOnPrimary,
       secondary: AppColors.secondary,
-      tertiary: AppColors.tertiary,
-      shadow: AppColors.shadow,
-      error: AppColors.error,
-      onPrimary: Colors.white,
       onSecondary: AppColors.greyDark,
+      tertiary: AppColors.tertiary,
+      // Surface tiers — "Serene Tajweed Night" obsidian palette
+      surface: AppColors.darkScaffold,
+      surfaceContainerLowest: AppColors.darkSurfaceContainerLowest,
+      surfaceContainerLow: AppColors.darkSurfaceContainerLow,
+      surfaceContainer: AppColors.darkSurface,
+      surfaceContainerHigh: AppColors.darkSurfaceVariant,
+      surfaceContainerHighest: AppColors.darkSurfaceContainerHighest,
+      surfaceBright: AppColors.darkSurfaceBright,
+      surfaceDim: AppColors.darkScaffold,
       onSurface: AppColors.darkTextPrimary,
-      onError: Colors.white,
+      onSurfaceVariant: AppColors.darkTextSecondary,
+      // Outlines
+      outline: AppColors.darkOutline,
+      outlineVariant: AppColors.darkBorder,
+      // Error
+      error: AppColors.darkError,
+      onError: AppColors.darkOnError,
+      // Shadow
+      shadow: AppColors.shadow,
     ),
     scaffoldBackgroundColor: AppColors.darkScaffold,
-    canvasColor: AppColors.darkSurface,
+    canvasColor: AppColors.darkScaffold,
 
     //! App Bar — keep dark grey background (same as light) so brand stays consistent
     appBarTheme: light.appBarTheme.copyWith(
       backgroundColor: AppColors.greyDarkest,
     ),
 
-    //! Card — darker surface, no shadow tint
+    //! Card — surface-container per spec; no shadow (tonal layering replaces shadow in dark)
     cardTheme: light.cardTheme.copyWith(
       color: AppColors.darkSurface,
+      shadowColor: Colors.transparent,
+      elevation: 0,
     ),
 
     //! Divider
