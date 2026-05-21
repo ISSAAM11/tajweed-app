@@ -66,6 +66,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get comingSoonMessage => 'هذه الميزة قادمة قريباً. ترقّب!';
 
   @override
+  String get settingsAccountSection => 'الحساب';
+
+  @override
+  String get settingsGuestLabel => 'ضيف';
+
+  @override
+  String get settingsGuestSubtitle => 'اضغط لإدارة حسابك';
+
+  @override
+  String get settingsComingSoonSection => 'قريباً';
+
+  @override
+  String get settingsNotifications => 'الإشعارات';
+
+  @override
+  String get settingsDailyReminders => 'تذكيرات يومية';
+
+  @override
+  String get settingsAboutSection => 'حول';
+
+  @override
+  String get settingsVersion => 'الإصدار';
+
+  @override
+  String get settingsTermsOfUse => 'شروط الاستخدام';
+
+  @override
+  String get termsOfUseTitle => 'شروط الاستخدام';
+
+  @override
+  String get termsOfUseBody =>
+      'تحكم شروط الاستخدام هذه استخدامك لتطبيق تجويد AI. باستخدامك التطبيق فإنك توافق على هذه الشروط.\n\nيُقدَّم تطبيق تجويد AI كما هو لأغراض تعليمية وشخصية لمساعدتك على قراءة القرآن والتدبر فيه بتجويد سليم. نبذل قصارى جهدنا لضمان دقة نص القرآن وعلامات التجويد المعروضة، دون ضمان الكمال.\n\nنحن نحترم خصوصيتك: لا يتم جمع أي بيانات شخصية دون موافقتك. يتم تخزين تقدّمك في القراءة وإعداداتك محلياً على جهازك.\n\nسيتم نشر شروط الاستخدام الكاملة مع الإصدارات المستقبلية. للأسئلة، يرجى التواصل من خلال صفحة التطبيق في المتجر.';
+
+  @override
   String get snackbarRetry => 'إعادة المحاولة';
 
   @override

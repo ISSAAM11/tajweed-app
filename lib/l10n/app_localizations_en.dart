@@ -66,6 +66,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get comingSoonMessage => 'This feature is coming soon. Stay tuned!';
 
   @override
+  String get settingsAccountSection => 'Account';
+
+  @override
+  String get settingsGuestLabel => 'Guest';
+
+  @override
+  String get settingsGuestSubtitle => 'Tap to manage your account';
+
+  @override
+  String get settingsComingSoonSection => 'Coming soon';
+
+  @override
+  String get settingsNotifications => 'Notifications';
+
+  @override
+  String get settingsDailyReminders => 'Daily reminders';
+
+  @override
+  String get settingsAboutSection => 'About';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsTermsOfUse => 'Terms of Use';
+
+  @override
+  String get termsOfUseTitle => 'Terms of Use';
+
+  @override
+  String get termsOfUseBody =>
+      'These Terms of Use govern your use of Tajweed AI. By using the app you agree to these terms.\n\nTajweed AI is provided as-is for educational and personal use to help you read and reflect on the Quran with correct Tajweed. We do our best to ensure the Quran text and Tajweed indications displayed are accurate, but we make no warranty of completeness.\n\nWe respect your privacy: no personal data is collected without your consent. Reading progress and settings are stored locally on your device.\n\nThe full Terms of Use will be published with future releases. For questions, please contact us through the app store listing.';
+
+  @override
   String get snackbarRetry => 'Retry';
 
   @override

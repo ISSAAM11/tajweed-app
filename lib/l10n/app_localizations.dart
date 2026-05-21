@@ -212,6 +212,72 @@ abstract class AppLocalizations {
   /// **'This feature is coming soon. Stay tuned!'**
   String get comingSoonMessage;
 
+  /// No description provided for @settingsAccountSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsAccountSection;
+
+  /// No description provided for @settingsGuestLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get settingsGuestLabel;
+
+  /// No description provided for @settingsGuestSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to manage your account'**
+  String get settingsGuestSubtitle;
+
+  /// No description provided for @settingsComingSoonSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get settingsComingSoonSection;
+
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsDailyReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminders'**
+  String get settingsDailyReminders;
+
+  /// No description provided for @settingsAboutSection.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAboutSection;
+
+  /// No description provided for @settingsVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settingsVersion;
+
+  /// No description provided for @settingsTermsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get settingsTermsOfUse;
+
+  /// No description provided for @termsOfUseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get termsOfUseTitle;
+
+  /// No description provided for @termsOfUseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'These Terms of Use govern your use of Tajweed AI. By using the app you agree to these terms.\n\nTajweed AI is provided as-is for educational and personal use to help you read and reflect on the Quran with correct Tajweed. We do our best to ensure the Quran text and Tajweed indications displayed are accurate, but we make no warranty of completeness.\n\nWe respect your privacy: no personal data is collected without your consent. Reading progress and settings are stored locally on your device.\n\nThe full Terms of Use will be published with future releases. For questions, please contact us through the app store listing.'**
+  String get termsOfUseBody;
+
   /// No description provided for @snackbarRetry.
   ///
   /// In en, this message translates to:
