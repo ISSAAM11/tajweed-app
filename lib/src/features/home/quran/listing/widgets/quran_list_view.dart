@@ -24,6 +24,7 @@ class QuranListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final dividerColor = Theme.of(context).colorScheme.outlineVariant;
     return Column(
       children: [
         if (header != null) header!,
@@ -33,7 +34,7 @@ class QuranListView extends StatelessWidget {
             separatorBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
-                child: Divider(thickness: 1, color: Colors.grey.shade300),
+                child: Divider(thickness: 1, color: dividerColor),
               );
             },
             itemCount: itemCount,
@@ -42,7 +43,7 @@ class QuranListView extends StatelessWidget {
 
               if (item is ChapterItem) return _buildSurahItem(item, index);
 
-              return _buildPartitionItem(item, index, l10n);
+              return _buildPartitionItem(context, item, index, l10n);
             },
           ),
         ),
@@ -66,6 +67,7 @@ class QuranListView extends StatelessWidget {
   }
 
   Widget _buildPartitionItem(
+    BuildContext context,
     PartitionItem item,
     int index,
     AppLocalizations l10n,
@@ -95,7 +97,7 @@ class QuranListView extends StatelessWidget {
         style: TextStyle(
           fontFamily: 'QPC-V2-Font-p$pageNumber',
           fontSize: 14,
-          color: AppColors.greyDark,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         textDirection: TextDirection.rtl,
         overflow: TextOverflow.ellipsis,

@@ -15,6 +15,7 @@ class ListHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final scheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: double.infinity,
       child: Container(
@@ -30,10 +31,7 @@ class ListHeader extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(
-                        color: Colors.black12,
-                        width: 1,
-                      ),
+                      bottom: BorderSide(color: scheme.outlineVariant, width: 1),
                     ),
                   ),
                   width: 65,
@@ -43,7 +41,9 @@ class ListHeader extends StatelessWidget {
                       Text(
                         _localizedPartitionLabel(l10n, mode),
                         style: TextStyle(
-                          color: isSelected ? Colors.black87 : Colors.black38,
+                          color: isSelected
+                              ? scheme.onSurface
+                              : scheme.onSurfaceVariant,
                           fontWeight: FontWeight.w600,
                           fontSize: FontSizes.title,
                         ),
@@ -55,7 +55,9 @@ class ListHeader extends StatelessWidget {
                         height: 2,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(12)),
-                          color: isSelected ? Colors.black87 : Colors.black12,
+                          color: isSelected
+                              ? scheme.onSurface
+                              : scheme.outlineVariant,
                         ),
                       ),
                     ],
