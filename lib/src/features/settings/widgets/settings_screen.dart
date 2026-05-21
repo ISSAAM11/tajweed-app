@@ -20,7 +20,7 @@ final class SettingsScreen extends Feature<SettingsBloc, SettingsState> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Directionality(
@@ -121,7 +121,7 @@ class _SectionTitle extends StatelessWidget {
         label,
         style: AppFonts.lato
             .withSize(FontSizes.subtitle)
-            .withColor(AppColors.greyMedium)
+            .withColor(Theme.of(context).colorScheme.onSurfaceVariant)
             .semiBold(),
       ),
     );
@@ -142,8 +142,9 @@ class _LanguageOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final metrics = AppMetrics.settingsScreen;
-    final borderColor = selected ? AppColors.primary : AppColors.greyLight;
-    final labelColor = selected ? AppColors.primaryDark : AppColors.greyDark;
+    final scheme = Theme.of(context).colorScheme;
+    final borderColor = selected ? AppColors.primary : scheme.outlineVariant;
+    final labelColor = selected ? scheme.primary : scheme.onSurface;
 
     return InkWell(
       borderRadius: BorderRadius.circular(metrics.optionRowRadius),
@@ -152,7 +153,7 @@ class _LanguageOption extends StatelessWidget {
         height: metrics.optionRowHeight,
         padding: metrics.optionRowPadding,
         decoration: BoxDecoration(
-          color: AppColors.scaffold,
+          color: scheme.surface,
           borderRadius: BorderRadius.circular(metrics.optionRowRadius),
           border: Border.all(
             color: borderColor,
@@ -172,7 +173,7 @@ class _LanguageOption extends StatelessWidget {
             ),
             Icon(
               selected ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: selected ? AppColors.primary : AppColors.greyRegular,
+              color: selected ? scheme.primary : scheme.onSurfaceVariant,
               size: metrics.selectionIconSize,
             ),
           ],
@@ -196,8 +197,9 @@ class _ThemeOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final metrics = AppMetrics.settingsScreen;
-    final borderColor = selected ? AppColors.primary : AppColors.greyLight;
-    final labelColor = selected ? AppColors.primaryDark : AppColors.greyDark;
+    final scheme = Theme.of(context).colorScheme;
+    final borderColor = selected ? AppColors.primary : scheme.outlineVariant;
+    final labelColor = selected ? scheme.primary : scheme.onSurface;
 
     return InkWell(
       borderRadius: BorderRadius.circular(metrics.optionRowRadius),
@@ -206,7 +208,7 @@ class _ThemeOption extends StatelessWidget {
         height: metrics.optionRowHeight,
         padding: metrics.optionRowPadding,
         decoration: BoxDecoration(
-          color: AppColors.scaffold,
+          color: scheme.surface,
           borderRadius: BorderRadius.circular(metrics.optionRowRadius),
           border: Border.all(
             color: borderColor,
@@ -226,7 +228,7 @@ class _ThemeOption extends StatelessWidget {
             ),
             Icon(
               selected ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: selected ? AppColors.primary : AppColors.greyRegular,
+              color: selected ? scheme.primary : scheme.onSurfaceVariant,
               size: metrics.selectionIconSize,
             ),
           ],
