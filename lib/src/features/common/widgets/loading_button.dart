@@ -180,7 +180,7 @@ class OutlinedLoadingButton extends StatelessWidget {
               .absorbWhen(isLoading)
               .decorate( margin: EdgeInsets.all(borderWidth),
         decoration: BoxDecoration(
-          color: backgroundColor ?? Colors.white,
+          color: backgroundColor ?? Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(AppMetrics.buttons.radius - borderWidth),
         ),
         ).decorate(width: width,

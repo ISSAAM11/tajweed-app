@@ -76,6 +76,7 @@ class GenericFieldPicker extends StatelessWidget {
         break;
     }
 
+    final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => _openPicker(context),
       child: InputDecorator(
@@ -83,7 +84,7 @@ class GenericFieldPicker extends StatelessWidget {
           labelText: type == PickerType.country
               ? "Enter your country"
               : "Enter your Birthday",
-          labelStyle: AppStyles.indication.greyDark(),
+          labelStyle: AppStyles.indication.copyWith(color: scheme.onSurfaceVariant),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
             borderSide: BorderSide(
@@ -92,7 +93,7 @@ class GenericFieldPicker extends StatelessWidget {
             ),
           ),
           filled: true,
-          fillColor: AppColors.greyBackground,
+          fillColor: scheme.surfaceContainerHigh,
           contentPadding: EdgeInsets.symmetric(
             horizontal: AppMetrics.inputs.horizontalContentPadding - 10,
             vertical: AppMetrics.inputs.verticalContentPadding,
@@ -100,13 +101,13 @@ class GenericFieldPicker extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.grey, size: 18),
+            Icon(icon, color: scheme.onSurfaceVariant, size: 18),
             const SizedBox(width: 10),
             Text(
               displayText,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
-              style: AppStyles.title.withColor(AppColors.black),
+              style: AppStyles.title.withColor(scheme.onSurface),
             ).expanded(),
           ],
         ),
