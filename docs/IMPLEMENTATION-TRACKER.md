@@ -9,8 +9,8 @@
 
 - **Total features** : 9
 - **Total User Stories** : ~35
-- **Set actif** : Release v1 (cible : v1.0.0)
-- **Progression globale** : 22% (2/9 features terminees)
+- **Set actif** : Release v1 (cible : v1.0.0) — **3 features Release v1 LIVREES, build APK pret**
+- **Progression globale** : 56% (5/9 features terminees : 3.1, 3.2, 3.3, 3.4, 1.4)
 
 ### Status par Set
 
@@ -109,7 +109,7 @@
 
 ### [Feature 1.4] Tajweed Courses Screen
 
-- **Status** : **Actif (Release v1)** — scope reduit a contenu statique pour la release
+- **Status** : **Termine (Release v1)** — contenu statique livre 2026-05-21
 - **Module** : Home
 - **Effort** : 3 jours (4 User Stories)
 - **Complexite** : Moyenne
@@ -195,7 +195,7 @@
 
 ### [Feature 3.3] Settings Polish (Release v1 extension)
 
-- **Status** : **Actif (Release v1)**
+- **Status** : **Termine (Release v1)** — livre 2026-05-21
 - **Module** : Settings
 - **Effort** : 1.5 jours (5 User Stories)
 - **Complexite** : Simple
@@ -212,7 +212,7 @@
 
 ### [Feature 3.4] My Account Screen (Release v1)
 
-- **Status** : **Actif (Release v1)**
+- **Status** : **Termine (Release v1)** — livre 2026-05-21
 - **Module** : Account (nouveau)
 - **Effort** : 2 jours (4 User Stories)
 - **Complexite** : Moyenne
@@ -232,7 +232,7 @@
 
 ## Widget Transverse - ComingSoonBadge
 
-- **Status** : **Actif (Release v1, pre-requis 3.3 + 3.4)**
+- **Status** : **Termine (Release v1)** — livre 2026-05-21
 - **Localisation** : `lib/src/features/common/widgets/coming_soon_badge.dart` (a creer)
 - **Description** : Tuile / chip reutilisable, visuellement attenuee, qui declenche un snackbar (ou dialog) localise au tap. Utilisee partout ou une feature differee est affichee.
 - **Cles ARB requises** : `comingSoonLabel` ("Coming soon" / "Bientot disponible"), `comingSoonMessage` (message du snackbar) — ajoutees dans `app_en.arb` + `app_ar.arb`.
@@ -256,6 +256,16 @@
 ---
 
 ## Journal de bord
+
+### 2026-05-21 - Release v1 LIVREE (Features 1.4 + 3.3 + 3.4)
+- **Action** : Implementation complete des 3 features de la Release v1 dans la meme session que le bootstrap. Version bumpee a 1.0.0+1 dans `pubspec.yaml`.
+- **Feature 3.3 (Settings Polish)** : `SettingsScreen` etendu avec 4 nouvelles sections — Account card (chevron vers /my-account), Coming Soon (Notifications + Daily reminders via `ComingSoonTile`), About (version via `package_info_plus` + Terms of Use). Nouvelle route `/terms-of-use` avec un `TermsOfUseScreen` statique. 11 nouvelles cles ARB.
+- **Feature 3.4 (My Account)** : Nouveau module `lib/src/features/my_account/`. Ecran StatelessWidget — profile header "Guest" placeholder, 3 tuiles Coming Soon (Change password, Avatar, Linked accounts), bouton Sign Out avec dialog de confirmation. Sign out clear `FlutterSecureStorage` et redirige vers `/sign-in`. 10 nouvelles cles ARB.
+- **Feature 1.4 (Tajweed Courses)** : Nouveau module `lib/src/features/tajweed_courses/`. Ecran statique avec intro + 6 cartes de regles (Madd, Ghunnah, Idgham, Ikhfa, Iqlab, Qalqala) + tuile Coming Soon "Interactive lessons". Wirage du tile "Tajweed Lessons" du home vers `/tajweed-courses`. 14 nouvelles cles ARB.
+- **Widget transverse `ComingSoonTile`** : Cree dans `lib/src/features/common/widgets/`. Theme-reactive (lit `Theme.of(context).colorScheme.*`), tap declenche un info snackbar localise. Metrics block dedie `AppMetrics.comingSoonTile`. ARB key `comingSoonMessage` ajoutee (reutilise `comingSoon` existant pour le badge).
+- **Cleanup** : Suppression de l'import non utilise dans `app_config.dart` et de la note "dev mode" obsolete dans `CLAUDE.md`. main.dart n'avait deja plus de devRoute, donc rien a retirer la.
+- **Verification** : `flutter test` complet → 18/18 OK. `flutter analyze` → 5 issues pre-existantes uniquement (tajweed_test mock + ayah_popup print). EN/AR + Light/Dark verification visuelle a faire par l'utilisateur via `flutter run`.
+- **Progression** : 5/9 features terminees. Release v1 prete pour `flutter build apk --release`.
 
 ### 2026-05-21 - Bootstrap Release v1 (Features 3.3 + 3.4 + ComingSoonBadge)
 - **Action** : Definition du scope Release v1.0.0 — la v1 ne porte que 3 ecrans (Tajweed Courses, Settings polish, My Account). Le reste du backlog est gate derriere un widget `ComingSoonBadge` reutilisable.
