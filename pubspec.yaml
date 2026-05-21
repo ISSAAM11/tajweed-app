@@ -78,8 +78,11 @@ flutter:
     - assets/images/background/left_background2.jpg
     - assets/images/background/right_background2.jpg
     - assets/images/background/left_background-normal.jpg
+    - assets/images/background/left_background_dark.jpg
+    - assets/images/background/right_background_dark.jpg
 
     - assets/images/background/surah-header-background1.png
+    - assets/images/background/surah-header-background-dark.png
     - assets/images/background/tajweed-rules.png
     - assets/images/background/basmalah.png
     - assets/images/home/listing/background-last-read.png
