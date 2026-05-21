@@ -28,7 +28,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.menu, color: AppColors.scaffold),
         ),
         title: Text(
-          'Tajweed app',
+          'Tajweed',
           style: AppFonts.nunito
               .withSize(FontSizes.headline3)
               .withColor(AppColors.scaffold)

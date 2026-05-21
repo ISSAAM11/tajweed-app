@@ -12,6 +12,7 @@ class AnimatedStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Observer(
       observes: currentStep,
       builder: (BuildContext context, currentStep) => Row(
@@ -28,13 +29,13 @@ class AnimatedStepper extends StatelessWidget {
                 border: Border.all(
                   color: isCompleted
                       ? AppColors
-                            .primaryDark // active border
-                      : AppColors.greyRegular, // inactive border
+                            .primaryDark // active border (brand)
+                      : scheme.outlineVariant, // inactive border
                   width: 2,
                 ),
                 color: isCompleted
                     ? AppColors.primaryLight
-                    : AppColors.disabledColor,
+                    : scheme.surfaceContainerHigh,
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -47,7 +48,7 @@ class AnimatedStepper extends StatelessWidget {
                       )
                     : Text(
                         "${stepIndex + 1}",
-                        style: AppStyles.indication.semiBold().greyMedium(),
+                        style: AppStyles.indication.semiBold().copyWith(color: scheme.onSurfaceVariant),
                       ),
               ),
             );
@@ -63,7 +64,7 @@ class AnimatedStepper extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isActive
                       ? AppColors.primaryLight
-                      : Colors.grey.shade400,
+                      : scheme.outlineVariant,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),

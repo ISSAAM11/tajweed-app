@@ -25,7 +25,7 @@ final class SurahListingScreen
     final lastSelectedPage = get<LastSelectedSurahService>().get();
 
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Directionality(

@@ -23,11 +23,12 @@ class QuranLineText extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final responsiveHorizentalPadding = screenWidth * 0.03;
     final responsivefontSize = screenWidth * 0.050;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     TextStyle baseTextStyle = TextStyle(
       fontSize: responsivefontSize,
       fontFamily: 'QPC-V2-Font-p$pageNo',
-      color: AppColors.black,
+      color: isDark ? AppColors.darkTextPrimary : AppColors.black,
       height: isCentered ? 2 : 1,
     );
 

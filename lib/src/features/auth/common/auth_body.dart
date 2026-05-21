@@ -65,7 +65,9 @@ class AuthBody extends StatelessWidget {
         Text(
           AppLocalizations.of(context)!.authTagline,
           textAlign: TextAlign.center,
-          style: AppStyles.subtitle.medium().greyRegular(),
+          style: AppStyles.subtitle.medium().withColor(
+            Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         VerticalSpacing(AppMetrics.spacing.md),
         //$ Form

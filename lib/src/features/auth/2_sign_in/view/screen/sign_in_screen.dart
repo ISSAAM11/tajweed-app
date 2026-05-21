@@ -26,7 +26,7 @@ final class SignInScreen extends Feature<SignInBloc, SignInState> {
   @override
   Widget build(BuildContext context, SignInState state) {
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SignInBody(state),
     );
   }

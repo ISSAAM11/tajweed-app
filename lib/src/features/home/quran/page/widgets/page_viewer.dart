@@ -68,6 +68,15 @@ class _PageViewerState extends State<PageViewer> {
     final contentWidgets = allWidgets.where((w) => w is! PageMetaBar).toList();
     final screenHeight = MediaQuery.of(context).size.height;
     final responsiveVerticalPadding = screenHeight * 0.015;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isLeftPage = widget.page.pageNo % 2 == 0;
+    final backgroundAsset = isLeftPage
+        ? (isDark
+              ? "assets/images/background/left_background_dark.jpg"
+              : "assets/images/background/left_background2.jpg")
+        : (isDark
+              ? "assets/images/background/right_background_dark.jpg"
+              : "assets/images/background/right_background2.jpg");
     return Stack(
       key: _stackKey,
       children: [
@@ -75,11 +84,7 @@ class _PageViewerState extends State<PageViewer> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: ResizeImage(
-                AssetImage(
-                  widget.page.pageNo % 2 == 0
-                      ? "assets/images/background/left_background2.jpg"
-                      : "assets/images/background/right_background2.jpg",
-                ),
+                AssetImage(backgroundAsset),
                 height: AppMetrics.quranPageViewer.backgroundResizeHeight.toInt(),
               ),
               fit: BoxFit.cover,
@@ -150,7 +155,7 @@ class _PageViewerState extends State<PageViewer> {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.scaffold,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(
               AppMetrics.quranPageViewer.popupRadius,
             ),
@@ -213,6 +218,7 @@ class SurahHeader extends StatelessWidget {
     }
     final screenWidth = MediaQuery.of(context).size.width;
     final responsivefontSize = screenWidth * 0.047;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: AppMetrics.quranPageViewer.contentHorizontalMargin),
@@ -222,7 +228,9 @@ class SurahHeader extends StatelessWidget {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
-            'assets/images/background/surah-header-background1.png',
+            isDark
+                ? 'assets/images/background/surah-header-background-dark.png'
+                : 'assets/images/background/surah-header-background1.png',
           ),
           fit: BoxFit.contain,
         ),
@@ -234,7 +242,9 @@ class SurahHeader extends StatelessWidget {
           int.parse(headerBlock.chapter.nameGlyph, radix: 16),
         ),
         style: AppFonts.surahNamesFont
-            .withColor(AppColors.surahGlyphColor)
+            .withColor(
+              isDark ? AppColors.darkPrimary : AppColors.surahGlyphColor,
+            )
             .semiBold()
             .withSize(responsivefontSize),
       ),
@@ -255,6 +265,8 @@ class PageMetaBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final metaColor = isDark ? AppColors.darkPrimary : AppColors.accent;
     return Container(
       width: double.infinity,
       alignment: Alignment.center,
@@ -267,14 +279,14 @@ class PageMetaBar extends StatelessWidget {
             '${l10n.partitionHizb} ${pageMetaBlock.hizb}',
             style: AppFonts.lato
                 .withSize(FontSizes.subtitle)
-                .withColor(AppColors.accent)
+                .withColor(metaColor)
                 .semiBold(),
           ),
           Text(
             '${l10n.partitionPage} $pageNo',
             style: AppFonts.lato
                 .withSize(FontSizes.subtitle)
-                .withColor(AppColors.accent)
+                .withColor(metaColor)
                 .semiBold(),
           ),
         ],
@@ -291,12 +303,13 @@ class BasmalahWidget extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final responsivefontSize = screenWidth * 0.05;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Text(
       "ﱁ ﱂ ﱃ ﱄ",
       style: TextStyle(
         fontFamily: 'QPC-V2-Font-p1',
         fontSize: responsivefontSize,
-        color: AppColors.surahGlyphColor,
+        color: isDark ? AppColors.darkPrimary : AppColors.surahGlyphColor,
       ),
       textAlign: TextAlign.center,
     );

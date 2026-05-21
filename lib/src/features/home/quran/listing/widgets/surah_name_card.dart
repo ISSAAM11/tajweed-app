@@ -31,6 +31,7 @@ class SurahNameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final metrics = AppMetrics.surahNameCard;
     final l10n = AppLocalizations.of(context)!;
+    final scheme = Theme.of(context).colorScheme;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final displayName = isArabic ? nameArabic : (nameEnglish ?? nameArabic);
     final placeLabel = switch (revelationPlace) {
@@ -64,7 +65,7 @@ class SurahNameCard extends StatelessWidget {
                       "$orderNumber",
                       style: AppFonts.poppins
                           .withSize(metrics.numberFontSize)
-                          .withColor(AppColors.greyDarkest)
+                          .withColor(scheme.onSurface)
                           .bold(),
                     ),
                   ),
@@ -76,14 +77,14 @@ class SurahNameCard extends StatelessWidget {
                         displayName,
                         style: AppFonts.poppins
                             .withSize(metrics.englishNameFontSize)
-                            .withColor(AppColors.black)
+                            .withColor(scheme.onSurface)
                             .semiBold(),
                       ),
                       Text(
                         '$placeLabel, ${l10n.versesCount(versesCount)}',
                         style: AppFonts.poppins
                             .withSize(metrics.metadataFontSize)
-                            .withColor(AppColors.greyMedium)
+                            .withColor(scheme.onSurfaceVariant)
                             .medium(),
                       ),
                     ],

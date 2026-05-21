@@ -70,10 +70,32 @@ abstract final class AppColors {
 
   // Background Colors
   static const Color bottomBarColor = greyBackground;
-  static const Color bottomBarDarkColor = Color(0xFF1A1A1A);
+  static const Color bottomBarDarkColor = Color(0xFF131313); // matches darkScaffold
   static const Color scaffold = Colors.white;
   static const Color black = Colors.black;
   static const Color transparent = Colors.transparent;
+
+  // Dark Theme Surfaces — "Serene Tajweed Night" spec (DESIGN-DARK-MODE.md)
+  // Obsidian-tiered surfaces with warm cream-on-dark text.
+  static const Color darkScaffold = Color(0xFF131313); // spec: surface / background
+  static const Color darkSurface = Color(0xFF201F1F); // spec: surface-container — cards, dialogs, snackbars
+  static const Color darkSurfaceVariant = Color(0xFF2A2A2A); // spec: surface-container-high — input fills, tooltips
+  static const Color darkBorder = Color(0xFF4D4635); // spec: outline-variant — dividers, unfocused borders
+  static const Color darkTextPrimary = Color(0xFFE5E2E1); // spec: on-surface — warm cream, less eye strain than pure white
+  static const Color darkTextSecondary = Color(0xFFD0C5AF); // spec: on-surface-variant — warm cream tint, secondary text
+  // Extra dark surface tiers (spec)
+  static const Color darkSurfaceContainerLowest = Color(0xFF0E0E0E);
+  static const Color darkSurfaceContainerLow = Color(0xFF1C1B1B);
+  static const Color darkSurfaceContainerHighest = Color(0xFF353534);
+  static const Color darkSurfaceBright = Color(0xFF393939);
+  static const Color darkOutline = Color(0xFF99907C); // spec: outline — stronger borders, decorative lines
+  // Dark-mode brand variants — gold gets a touch more luminance against obsidian
+  static const Color darkPrimary = Color(0xFFF2CA50); // spec: primary in dark — brighter gold for contrast
+  static const Color darkOnPrimary = Color(0xFF3C2F00); // spec: on-primary
+  static const Color darkPrimaryContainer = Color(0xFFD4AF37); // the light-mode gold becomes the container in dark
+  // Dark-mode error
+  static const Color darkError = Color(0xFFFFB4AB); // spec: error in dark — softer red that reads on obsidian
+  static const Color darkOnError = Color(0xFF690005); // spec: on-error
 
   // Quran page colors
   static const Color ayahHighlight = Color(0x4DFFC107);   // amber 30% opacity

@@ -8,10 +8,10 @@
 
 ## Statistiques
 
-- **Modules** : 2 (Auth, Home)
-- **Features** : 5
-- **User Stories** : 20
-- **Effort total** : 15 jours
+- **Modules** : 3 (Auth, Home, Settings)
+- **Features** : 6
+- **User Stories** : 24
+- **Effort total** : 18 jours
 
 ---
 
@@ -104,3 +104,26 @@ Page d'accueil et navigation vers les sections principales.
 
 - **Effort total** : 2 jours
 - **Dependances** : Feature 1.3 (point d'entree depuis la home)
+
+---
+
+## Module 3 : Settings
+
+Personnalisation de l'application (theme, langue, preferences utilisateur).
+
+### Feature 3.1 - Settings Theme Toggle
+
+- **Complexite** : Moyenne
+- **Description** : Ajouter un toggle dans l'ecran Settings permettant a l'utilisateur de basculer entre theme clair et theme sombre. La preference est persistee localement et appliquee immediatement. S'appuie sur l'infrastructure `AppThemes` (light + dark partiel) deja presente dans `lib/src/app/design/themes/` et sur le pattern `LocalePreferenceService` pour la persistance.
+- **Lot** : Set 2
+
+| ID | User Story | Taille | Jours |
+|----|-----------|--------|-------|
+| US-3.1.1 | En tant qu'utilisateur, je veux voir mon theme actuel (clair/sombre) sur l'ecran Settings afin de savoir quel mode est actif | S | 0.5 |
+| US-3.1.2 | En tant qu'utilisateur, je veux basculer le theme via un toggle/switch afin de changer l'apparence de l'app instantanement | M | 1 |
+| US-3.1.3 | En tant qu'utilisateur, je veux que mon choix de theme soit persiste afin qu'il soit applique au prochain demarrage | S | 0.5 |
+| US-3.1.4 | En tant qu'utilisateur, je veux que le theme sombre soit visuellement coherent (palette inversee, contrastes) afin de garder la qualite visuelle | M | 1 |
+
+- **Effort total** : 3 jours
+- **Dependances** : Aucune
+

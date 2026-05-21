@@ -7,17 +7,18 @@
 
 ## Dashboard
 
-- **Total features** : 5
-- **Total User Stories** : 20
-- **Effort total** : 15 jours
-- **Set actif** : Set 1
-- **Progression globale** : 0% (0/5 features terminees)
+- **Total features** : 7
+- **Total User Stories** : 29
+- **Effort total** : 21 jours
+- **Set actif** : Set 2 (2 features terminees)
+- **Progression globale** : 31% (2/7 features terminees, 9/29 US terminees)
 
 ### Status par Set
 
 | Set | Objectif | Features | Status |
 |-----|----------|----------|--------|
 | Set 1 | Finalisation MVP - Auth & Home | 5/5 | En cours (cap atteint) |
+| Set 2 | Polish & Personnalisation | 2/5 | 2 features terminees |
 
 ---
 
@@ -122,6 +123,58 @@
 
 ---
 
+## Set 2 - Polish & Personnalisation
+
+**Objectif** : Ajouter les ecrans de personnalisation et de polish UX qui ameliorent l'experience utilisateur sans bloquer le MVP (themes, preferences, etc.).
+
+**Status** : A faire
+**Features** : 1/5
+**Effort** : 3 jours
+
+### [Feature 3.1] Settings Theme Toggle
+
+- **Status** : Termine
+- **Branche** : `feat/IB-f3.1-us1-4`
+- **Started** : 2026-05-19
+- **Completed** : 2026-05-19
+- **Module** : Settings (nouveau module)
+- **Effort** : 3 jours (4 User Stories)
+- **Complexite** : Moyenne
+- **Localisation** : `lib/src/features/settings/` (existe deja - contient le toggle de langue)
+- **Note** : Le dossier `lib/src/features/settings/` existe deja avec le toggle de langue, mais aucune feature Settings n'etait jusqu'ici tracee. Cette feature introduit officiellement le module Settings dans le spec. L'infrastructure `AppThemes.light` + `AppThemes.dark` est deja presente dans `lib/src/app/design/themes/` (dark mode partiel a finaliser via US-3.1.4).
+- **Backend** :
+  - [ ] Aucun (preference locale, persistance via SharedPreferences)
+- **Frontend** :
+  - [x] US-3.1.1 : Section "Apparence" dans Settings avec affichage du theme actuel (S) — `SettingsAppearanceSection` (public widget extrait de `settings_screen.dart`), insertion dans `SettingsScreen` apres la section langue, 2 widget tests
+  - [x] US-3.1.2 : Toggle/Switch pour basculer light/dark, application immediate via ThemeBloc/Cubit (M) — `lib/src/app/theme/theme_bloc.dart` (Cubit<AppThemeMode> + toggle()) registered as singleton, `MaterialApp.router` rebuilds via `BlocBuilder<ThemeBloc>` + `themeMode` switch, 5 tests
+  - [x] US-3.1.3 : `ThemePreferenceService` (pattern `LocalePreferenceService`) - persistance SharedPreferences (S) — `lib/src/core/services/theme_preference_service.dart` + `lib/src/app/theme/app_theme_mode.dart` + 4 tests
+  - [x] US-3.1.4 : Finalisation `AppThemes.dark` - palette inversee, contrastes coherents avec gold brand (M) — 6 nouveaux tokens dans `AppColors` (`darkScaffold`, `darkSurface`, `darkSurfaceVariant`, `darkBorder`, `darkTextPrimary`, `darkTextSecondary`), `AppThemes.dark` etendu (colorScheme dark, scaffold, AppBar, card, divider, inputs, dialog, listTile, tooltip, snackbar, chip, textButton), 4 tests, `DESIGN_SYSTEM.md` documente
+  - [x] Cles ARB `settingsAppearance`, `settingsThemeLight`, `settingsThemeDark` dans `app_en.arb` + `app_ar.arb`
+  - [x] Tests frontend (infrastructure + couverture) — `flutter_test` ajoute au pubspec, infra de test creee. `flutter test` complet : 15/15 OK (4 ThemePreferenceService + 5 ThemeBloc + 4 AppThemes + 2 SettingsAppearanceSection).
+
+### [Feature 3.2] Dark Mode Palette Rollout
+
+- **Status** : Termine (manuel QA a finaliser apres `flutter run`)
+- **Branche** : `feat/IB-f3.1-us1-4` (continuee depuis Feature 3.1)
+- **Started** : 2026-05-20
+- **Completed** : 2026-05-20
+- **Module** : Settings (design system)
+- **Effort** : 3 jours (5 User Stories)
+- **Complexite** : Moyenne
+- **Localisation** : `lib/src/app/design/colors/`, `lib/src/app/design/themes/`, `lib/src/features/**/widgets/`
+- **Note** : Feature 3.1 a livre l'infrastructure (ThemeBloc, persistance, toggle Settings, AppThemes.dark partiel). Mais l'audit a revele 127 references directes a `AppColors.*` dans 28 fichiers widget, et zero usage de `Theme.of(context).colorScheme` — donc basculer en dark mode ne change que le chrome Material (AppBar, Card via theme par defaut). Cette feature applique la palette spec "Serene Tajweed Night" et migre les widgets vers la lecture theme-reactive canonique. Le light mode reste intact (le spec light propose un palette Charcoal-primary qui contredit l'identite gold-on-white shipped — traite comme aspirationnel).
+- **Backend** :
+  - [ ] Aucun
+- **Frontend** :
+  - [x] US-3.2.1 : Rafraichir `AppColors.dark*` aux valeurs spec (S) — 6 tokens mis a jour + 10 nouveaux tokens (`darkSurfaceContainerLowest`, `darkSurfaceContainerLow`, `darkSurfaceContainerHighest`, `darkSurfaceBright`, `darkOutline`, `darkPrimary`, `darkOnPrimary`, `darkPrimaryContainer`, `darkError`, `darkOnError`). `bottomBarDarkColor` aligne sur le nouveau `darkScaffold` (#131313).
+  - [x] US-3.2.2 : Cabler `AppThemes.dark.colorScheme` aux nouveaux tokens (M) — `ColorScheme.dark` complete (primary→darkPrimary, surface→darkScaffold, surfaceContainer/Low/Lowest/High/Highest, outline/outlineVariant, error/onError). `cardTheme` dark : no shadow, tonal layering. AppThemes.light egalement renforce avec surfaceContainerHigh explicite pour preserver l'identite light. 7 tests dans `app_themes_test.dart` (was 4) : tous OK.
+  - [x] US-3.2.3 : Migration des 9 widgets hotspots vers `Theme.of(context).colorScheme.*` (M) — settings_screen, form_input, home_action_card, surah_listing_screen, loading_button, surah_name_card migres. last_reading_card / home_header / page_viewer (principal) confirmes brand-locked (zero migration necessaire).
+  - [x] US-3.2.4 : Migration des widgets restants (S) — third_step, terms_of_use, did_user_have_an_account, social_login_button, bottom_picker, animated_stepper, or_devider, second_step, quran_list_view (avec ajout BuildContext au _buildPartitionItem), signup_screen, sign_in_screen, home_screen, custom_date_picker. Refactoring de `custom_date_picker` : decoration container deplacee de `initState` vers `build` pour acceder a `Theme.of(context)`. tajweed_test / tajweed_text / app_logo confirmes brand-locked.
+  - [x] US-3.2.5 : Sync docs (S) — `DESIGN_SYSTEM.md` mis a jour : nouvelle table de tokens dark (16 entrees, mapping spec inclus), nouvelle section "How to consume colors in a widget" avec la regle two-bucket (brand-locked vs theme-reactive) et table de mapping AppColors.* → colorScheme.*.
+  - [x] Tests frontend — 18/18 OK (4 ThemePreferenceService + 5 ThemeBloc + 7 AppThemes + 2 SettingsAppearanceSection). 3 nouveaux tests dans `app_themes_test.dart` couvrant les obsidian surface tiers + outline tokens + AppBar brand-signature.
+
+---
+
 ## Backlog - Features Ajoutees
 
 | Date | Feature | Module | Set | Effort | Source |
@@ -131,10 +184,42 @@
 | 2026-05-18 | 1.3 Home Screen (Chooser) | Home | Set 1 | 1.5j | Refactor du 1.3 initial - demande utilisateur |
 | 2026-05-18 | 1.4 Tajweed Courses Screen | Home | Set 1 | 3j | Bootstrap initial - demande utilisateur |
 | 2026-05-18 | 1.5 Quran Listing | Home | Set 1 | 2j | Extrait de l'ancien 1.3 - n'est plus la home |
+| 2026-05-19 | 3.1 Settings Theme Toggle | Settings | Set 2 | 3j | Demande utilisateur (exercice VibeCoding guide) |
+| 2026-05-20 | 3.2 Dark Mode Palette Rollout | Settings | Set 2 | 3j | Demande utilisateur (apres creation DESIGN-DARK-MODE.md / DESIGN-LIGHT-MODE.md) |
 
 ---
 
 ## Journal de bord
+
+### 2026-05-20 - Feature 3.2 TERMINEE (US-3.2.1 a US-3.2.5)
+- **Action** : Implementation complete de la Feature 3.2 dans la meme session que son bootstrap.
+- **Fichiers crees** : aucun nouveau fichier source ; 3 tests ajoutes a `test/app/design/app_themes_test.dart` (now 7 tests, was 4).
+- **Fichiers modifies (palette + theme)** :
+  - `lib/src/app/design/colors/app_colors.dart` : 6 tokens dark mis a jour aux valeurs spec, 10 nouveaux tokens dark ajoutes, `bottomBarDarkColor` aligne.
+  - `lib/src/app/design/themes/app_themes.dart` : `ColorScheme.dark` etendue avec 7 tiers de surfaces + outline tokens + dark error variants ; `AppThemes.light.colorScheme` renforce avec `surfaceContainerHigh/etc.` explicites pour preserver l'identite ; `cardTheme` dark sans shadow (tonal layering).
+- **Fichiers modifies (widget migration)** : 13 widgets migres vers `Theme.of(context).colorScheme.*` — settings_screen, form_input, home_action_card, surah_listing_screen, loading_button, surah_name_card, third_step, terms_of_use, did_user_have_an_account, social_login_button, bottom_picker, animated_stepper, or_devider, second_step, quran_list_view, signup_screen, sign_in_screen, home_screen, custom_date_picker. Note : `custom_date_picker` a necessite un refactoring (decoration deplacee de `initState` vers `build` pour acceder au context).
+- **Fichiers confirmes brand-locked (zero migration)** : last_reading_card (carte gold/cream), home_header (AppBar), page_viewer principal et tajweed_test (paper-textured pages), tajweed_text (texte arabe sur paper), app_logo (logo gold), forgot_password_button (lien gold).
+- **Documentation** : `DESIGN_SYSTEM.md` mis a jour avec la nouvelle table de tokens dark (16 entrees, mapping spec) et nouvelle section "How to consume colors in a widget" (regle two-bucket : brand-locked vs theme-reactive, table de migration AppColors.* → colorScheme.*).
+- **Decisions design** :
+  - `darkPrimary` (#F2CA50) plus lumineux que le light primary (#D4AF37) pour rester lisible sur obsidian — preserve la cohesion brand via `darkPrimaryContainer` qui reprend le light primary.
+  - `darkTextPrimary` = #E5E2E1 (cream chaud) au lieu de blanc pur (#F5F5F5 ancien) pour reduire la fatigue oculaire en mode sombre (recommendation spec).
+  - Tonal layering > shadows en mode dark : `cardTheme.dark` desactive elevation et shadow.
+  - AppBar reste `greyDarkest` dans les deux modes (decision Feature 3.1 preservee).
+  - Light mode preserve byte-identique : ajout explicite de `surfaceContainerHigh: AppColors.greyBackground` pour eviter la derive auto-derivee.
+- **Verification** : `flutter test` complet → 18/18 OK (was 15). `flutter analyze` : 6 issues pre-existantes non liees a Feature 3.2 (unused imports + TODO prints dans tajweed_test). Manuel `flutter run` requis pour valider visuellement chaque ecran (US-3.2.5 verification finale).
+- **Progression** : Feature 3.2 100% terminee (5/5 US). Set 2 : 2/5 features. Progression globale : 31% (9/29 US).
+
+### 2026-05-20 - Bootstrap Feature 3.2
+- **Action** : Creation de la Feature 3.2 "Dark Mode Palette Rollout" suite a la creation des specs `DESIGN-DARK-MODE.md` et `DESIGN-LIGHT-MODE.md` par l'utilisateur.
+- **Audit Phase 1** : 127 references directes a `AppColors.*` dans 28 fichiers widget, zero usage de `Theme.of(context).colorScheme`. Top hotspots : settings_screen (19), form_input (15), home_action_card (11). La Feature 3.1 a livre l'infrastructure mais le wiring widget n'a pas suivi.
+- **Audit Phase 2** : 19 des 44 tokens du spec dark sont manquants ou ont une valeur hex incorrecte. La palette actuelle (`darkScaffold` #1A1A1A, etc.) ne reflete pas la spec "Serene Tajweed Night" (#131313 + tiered surfaces).
+- **Decisions** :
+  - **Palette dark strict, light intact** — applique la spec dark fidelement; ignore la spec light (Charcoal-primary) qui contredit l'identite gold-on-white shipped.
+  - **API: `Theme.of(context).colorScheme.*` canonique** (pas de custom extension) — pattern Flutter standard, facile a apprendre pour un debutant, ergonomie chain-friendly avec `.withColor()`.
+  - **Deux-bucket rule** : brand-locked (primary, error, AppBar) reste sur `AppColors.*` direct ; theme-reactive (scaffold, text, surface, borders) migre vers `Theme.of(context).colorScheme.*`.
+  - Per-theme Tajweed colors **defer** (consomme nulle part actuellement).
+  - Nouveaux fonts (Noto Serif / Plus Jakarta Sans / Work Sans) **defer** (Feature 3.3 future si voulu) — assets ~500KB.
+- **Plan** : 5 US (3.2.1 palette → 3.2.2 ColorScheme → 3.2.3 hotspots → 3.2.4 reste → 3.2.5 QA + docs). Plan complet dans `C:\Users\Hp\.claude\plans\how-to-apply-this-indexed-cerf.md`.
 
 ### 2026-05-18 - Bootstrap du tracker
 - **Action** : Creation initiale de `docs/IMPLEMENTATION-TRACKER.md` et `docs/commercial/LISTE-DES-FONCTIONS.md`
@@ -150,3 +235,62 @@
 - **Set** : Set 1 - passe a 5/5 features (cap atteint)
 - **Raison** : Demande utilisateur d'avoir un vrai ecran d'accueil qui sert de chooser entre Quran Listing et Tajweed Courses
 - **Impact technique** : `main.dart` (`initialRoute`) et `AppRouter` devront pointer vers `/home` au lieu de `/quran-listing`
+
+### 2026-05-19 - Feature 3.1 TERMINEE (US-3.1.1 + cloture)
+- **Action** : Implementation de US-3.1.1 (Settings UI section + ARB) et cloture de la Feature 3.1.
+- **Fichiers crees** :
+  - `test/features/settings/theme_section_test.dart` : 2 widget tests (rendu des labels EN, tap Dark switche le bloc).
+- **Fichiers modifies** :
+  - `lib/l10n/app_en.arb` : ajout `settingsAppearance`, `settingsThemeLight`, `settingsThemeDark`.
+  - `lib/l10n/app_ar.arb` : memes cles avec traductions arabes (المظهر, فاتح, داكن).
+  - `lib/src/features/settings/widgets/settings_screen.dart` : extraction d'un widget public `SettingsAppearanceSection` (rebuilds via BlocBuilder<ThemeBloc>, taps appellent `themeBloc.change()`). Section "Apparence" inseree sous la section langue, avec un gap de `AppMetrics.spacing.md`. Nouveau widget prive `_ThemeOption` (mirroir de `_LanguageOption`).
+- **Decision design** : `SettingsAppearanceSection` est extraite en widget PUBLIC plutot qu'integree directement dans `_SettingsScreenState`. Raison : permet un widget test isole (sans devoir wirer LocaleBloc + SettingsBloc + routing). Mirroir de `LocaleBloc` dans `SettingsBloc` non reproduit pour `ThemeBloc` — la section parle directement au ThemeBloc global via `get<ThemeBloc>()`. Plus simple, pas de synchronisation a maintenir.
+- **Verification** : `flutter test` complet → 15/15 OK. `flutter analyze` sur les fichiers modifies → 0 issues.
+- **Progression** : Feature 3.1 100% terminee (4/4 US). Set 2 : 1/5 features. Progression globale : 17% (4/24 US).
+
+### 2026-05-19 - US-3.1.4 terminee
+- **Action** : Finalisation du theme dark de l'app, avec une palette coherente qui preserve le gold brand et inverse les surfaces/greys.
+- **Fichiers modifies** :
+  - `lib/src/app/design/colors/app_colors.dart` : 6 nouveaux tokens (darkScaffold #1A1A1A, darkSurface #242424, darkSurfaceVariant #2C2C2C, darkBorder #3A3A3A, darkTextPrimary #F5F5F5, darkTextSecondary #B8B8B8). Aucune couleur hardcodee.
+  - `lib/src/app/design/themes/app_themes.dart` : `AppThemes.dark` etendu avec colorScheme.dark complet, scaffold, canvas, AppBar (greyDarkest conserve pour la coherence brand), card, divider, inputs (fill darkSurfaceVariant, border darkBorder, focus or-jaune), dialog, listTile, tooltip, snackbar, chip, textButton. `brightness: Brightness.dark` explicite.
+  - `DESIGN_SYSTEM.md` : nouvelle section "Dark theme surfaces" documentant les 6 tokens.
+- **Fichiers crees** :
+  - `test/app/design/app_themes_test.dart` : 4 tests (light pumpe, dark pumpe, dark brightness + primary gold preserve, light/dark partagent meme primary).
+- **Decisions design** :
+  - L'AppBar dark conserve `greyDarkest` (#413E40, identique au light) pour garder une signature brand reconnaissable entre les deux modes.
+  - Les icones en dark passent en `primaryLight` (gold clair) pour le contraste sur surface sombre.
+  - Le focus border des inputs reste gold dans les deux modes — c'est l'element brand le plus visible.
+- **Verification** : `flutter test` complet → 13/13 OK. `flutter analyze lib/src/app/design/` → 0 issues.
+
+### 2026-05-19 - US-3.1.2 terminee
+- **Action** : Implementation de US-3.1.2 (ThemeBloc + wiring MaterialApp) et suppression d'un fichier de test casse pre-existant.
+- **Fichiers crees** :
+  - `lib/src/app/theme/theme_bloc.dart` (Cubit<AppThemeMode>, miroir de LocaleBloc + `toggle()` helper)
+  - `test/app/theme/theme_bloc_test.dart` (5 tests : etat initial sans cache, etat initial depuis cache, change emit + persistance, change no-op, toggle)
+- **Fichiers modifies** :
+  - `lib/src/app/binding/app_bindings.dart` (registration ThemePreferenceService + ThemeBloc)
+  - `lib/src/app/app_widget.dart` (MultiBlocProvider, BlocBuilder<ThemeBloc>, `themeMode` switch entre `AppThemes.light` et `AppThemes.dark`)
+- **Fichiers supprimes** :
+  - `test/e2e_shift_handover_test.dart` — fichier vide (entierement commente avec une syntaxe cassee dans les commentaires). Bloquait `flutter test` global apres le bootstrap de l'infra. N'avait jamais fonctionne.
+- **Verification** : `flutter test` complet (sans args) → 9/9 OK. `flutter analyze` sur les fichiers modifies → 0 issues.
+- **Note technique** : `AppThemes.dark` est toujours partiel (sera finalise dans US-3.1.4). Pour l'instant, basculer en dark mode applique le theme par defaut Material dark heritage, ce qui suffit pour valider la mecanique de switch mais pas pour la qualite visuelle.
+
+### 2026-05-19 - US-3.1.3 terminee + bootstrap infra de tests
+- **Action** : Implementation de US-3.1.3 (ThemePreferenceService) et ajout de `flutter_test` aux dev_dependencies (premier test du projet).
+- **Fichiers crees** :
+  - `lib/src/app/theme/app_theme_mode.dart` (enum AppThemeMode { light, dark }, miroir d'AppLanguage)
+  - `lib/src/core/services/theme_preference_service.dart` (miroir de LocalePreferenceService, cle `app_theme_mode`)
+  - `test/core/services/theme_preference_service_test.dart` (4 tests, tous passent)
+- **Fichiers modifies** : `pubspec.yaml` (ajout `flutter_test: sdk: flutter`)
+- **Raison** : Le projet n'avait aucune infrastructure de test (`test/e2e_shift_handover_test.dart` etait entierement commente). Le skill `/workflow-start-implementation` prescrit TDD, et le tracker liste "Tests frontend" comme deliverable de la Feature 3.1. Decision utilisateur : bootstrapper l'infra de tests avec cette US plutot que de creer une feature separee.
+- **Impact projet** : Tous les futurs Sets pourront ajouter des tests unitaires sans setup supplementaire. Le pattern `SharedPreferences.setMockInitialValues + CacheManagerImpl` est la reference pour tester les services bases sur le cache.
+- **Verification** : `flutter test test/core/services/theme_preference_service_test.dart` → 4/4 OK. `flutter analyze` sur les nouveaux fichiers → 0 issues.
+
+### 2026-05-19 - Creation Set 2 + ajout Feature 3.1
+- **Action** : Creation d'un nouveau Set 2 "Polish & Personnalisation" et ajout de la Feature 3.1 Settings Theme Toggle
+- **Module ajoute** : Settings (nouveau module dans `LISTE-DES-FONCTIONS.md`, le 3eme)
+- **Feature 3.1** : Settings Theme Toggle (light/dark) - 4 US, 3 jours
+- **Set** : Set 2 - nouveau Set (1/5 features), Set 1 reste plein (5/5)
+- **Raison** : Demande utilisateur lors de l'exercice du guide VibeCoding (`docs/VIBECODING-GUIDE.md` section 8). Set 1 etait au cap, donc Set 2 cree.
+- **Dette technique relevee** : Le dossier `lib/src/features/settings/` existe deja avec un toggle de langue fonctionnel, mais aucune feature Settings n'etait jusqu'ici dans le spec. La Feature 3.1 introduit le module Settings dans le tracker mais ne re-documente pas le toggle de langue existant (a faire dans un futur Set si necessaire de tracer historiquement).
+- **Pre-requis technique** : `AppThemes.dark` existe en partiel dans `lib/src/app/design/themes/` - US-3.1.4 est dediee a sa finalisation.

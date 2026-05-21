@@ -12,13 +12,14 @@ class HomeActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final metrics = AppMetrics.homeActionCard;
     final isHighlighted = action.highlighted;
+    final scheme = Theme.of(context).colorScheme;
 
     final backgroundColor = isHighlighted
         ? AppColors.primaryLight
-        : AppColors.scaffold;
+        : scheme.surface;
     final foregroundColor = isHighlighted
         ? AppColors.greyDarkest
-        : AppColors.greyDarkest;
+        : scheme.onSurface;
 
     return Material(
       color: backgroundColor,

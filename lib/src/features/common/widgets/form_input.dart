@@ -141,6 +141,7 @@ class _State extends State<FormInput> {
     TextInputType? keyboardType,
     void Function(String)? onChanged,
   }) {
+    final scheme = Theme.of(context).colorScheme;
     return TextFormField(
       cursorColor: lightTheme ? AppColors.primary : AppColors.scaffold,
       enabled: widget.enabled,
@@ -149,7 +150,7 @@ class _State extends State<FormInput> {
       textCapitalization: widget.textCapitalization,
       enableInteractiveSelection: true,
       controller: widget.controller,
-      style: widget.style ?? AppStyles.subtitle.withColor(AppColors.greyDark),
+      style: widget.style ?? AppStyles.subtitle.withColor(scheme.onSurface),
       obscureText: obscure,
       minLines: isPassword ? 1 : widget.minLines,
       maxLines: isPassword ? 1 : widget.maxLines,
@@ -175,7 +176,7 @@ class _State extends State<FormInput> {
               widget.displayCounter
               ? Text(
                   "$currentLength/$maxLength",
-                  style: AppStyles.indication.withColor(AppColors.greyRegular),
+                  style: AppStyles.indication.withColor(scheme.onSurfaceVariant),
                 )
               : null,
       inputFormatters: widget.inputFormatters,
@@ -214,25 +215,25 @@ class _State extends State<FormInput> {
           borderRadius: BorderRadius.circular(AppMetrics.inputs.radius),
         ),
         isDense: true,
-        fillColor: widget.fillColor ?? AppColors.greyBackground,
+        fillColor: widget.fillColor ?? scheme.surfaceContainerHigh,
         filled: true,
         labelText: widget.label,
-        labelStyle: AppStyles.indication.withColor(AppColors.greyRegular),
+        labelStyle: AppStyles.indication.withColor(scheme.onSurfaceVariant),
         floatingLabelBehavior: widget.centerLabel
             ? FloatingLabelBehavior.always
             : FloatingLabelBehavior.auto,
         alignLabelWithHint: widget.centerLabel,
         hintText: widget.hint ?? "",
         hintStyle: AppStyles.indication.withColor(
-          widget.hintColor ?? AppColors.hint,
+          widget.hintColor ?? scheme.onSurfaceVariant,
         ),
         errorStyle: AppStyles.caption.withColor(AppColors.error),
         prefixIcon: prefixIcon ?? widget.prefixIcon,
         prefixIconConstraints:
             widget.prefixConstraints ?? AppMetrics.inputs.prefixIconConstraints,
-        prefixIconColor: AppColors.greyRegular,
+        prefixIconColor: scheme.onSurfaceVariant,
         suffixIcon: suffixIcon,
-        suffixIconColor: AppColors.greyRegular,
+        suffixIconColor: scheme.onSurfaceVariant,
       ),
     ).decorate(
       decoration: BoxDecoration(

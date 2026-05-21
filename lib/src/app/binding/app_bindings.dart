@@ -5,7 +5,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:generic_requester/generic_requester.dart' show Dio;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tajweed_ai/src/app/locale/locale_bloc.dart';
+import 'package:tajweed_ai/src/app/theme/theme_bloc.dart';
 import 'package:tajweed_ai/src/core/services/locale_preference_service.dart';
+import 'package:tajweed_ai/src/core/services/theme_preference_service.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
@@ -65,6 +67,14 @@ final class AppBinding extends AppBindings {
     );
     di.registerSingleton<LocaleBloc>(
       LocaleBloc(get<LocalePreferenceService>()),
+    );
+
+    // 📦 Theme
+    di.registerLazySingleton<ThemePreferenceService>(
+      () => ThemePreferenceService(get<CacheManager<SharedPreferences>>()),
+    );
+    di.registerSingleton<ThemeBloc>(
+      ThemeBloc(get<ThemePreferenceService>()),
     );
 
     // 📦 Datasource (prewarmed)

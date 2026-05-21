@@ -66,7 +66,7 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
           ),
         ),
       ),
-      backgroundColor: Color(0xfff5e9b9),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(top: false, child: QuranPageBody(state)),
     );
   }

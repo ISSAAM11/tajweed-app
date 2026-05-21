@@ -26,7 +26,7 @@ class SignUpScreen extends Feature<SignUpBloc, SignUpState> {
   @override
   Widget build(BuildContext context, SignUpState state) {
     return Scaffold(
-      backgroundColor: AppColors.scaffold,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SignupBody(state),
     );
   }

@@ -62,8 +62,10 @@ class _CustomDatePickerState extends State<CustomDatePicker>
   late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
 
-  late final BoxDecoration _containerDecoration;
-  late final BorderRadius _borderRadius;
+  static const _borderRadius = BorderRadius.only(
+    topLeft: Radius.circular(20),
+    topRight: Radius.circular(20),
+  );
   static const _spacing = SizedBox(width: 16);
 
   @override
@@ -77,15 +79,6 @@ class _CustomDatePickerState extends State<CustomDatePicker>
     if (widget.minDate != null && _selectedDate.isBefore(widget.minDate!)) {
       _selectedDate = widget.minDate!;
     }
-
-    _borderRadius = const BorderRadius.only(
-      topLeft: Radius.circular(20),
-      topRight: Radius.circular(20),
-    );
-    _containerDecoration = BoxDecoration(
-      color: widget.backgroundColor ?? AppColors.greyBackground,
-      borderRadius: _borderRadius,
-    );
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -126,6 +119,10 @@ class _CustomDatePickerState extends State<CustomDatePicker>
 
   @override
   Widget build(BuildContext context) {
+    final containerDecoration = BoxDecoration(
+      color: widget.backgroundColor ?? Theme.of(context).colorScheme.surfaceContainer,
+      borderRadius: _borderRadius,
+    );
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -136,7 +133,7 @@ class _CustomDatePickerState extends State<CustomDatePicker>
       },
       child: SafeArea(
         child: Container(
-          decoration: _containerDecoration,
+          decoration: containerDecoration,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

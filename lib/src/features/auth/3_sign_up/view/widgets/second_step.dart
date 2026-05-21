@@ -132,6 +132,7 @@ class OptionSelector<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     final children = options.map((option) {
       final label = labelBuilder != null
           ? labelBuilder!(option)
@@ -146,10 +147,11 @@ class OptionSelector<T> extends StatelessWidget {
       );
     }).toList();
 
+    final titleStyle = AppStyles.indication.semiBold().copyWith(color: onSurface);
     return direction == Axis.horizontal
         ? Row(
             children: [
-              Text(title, style: AppStyles.indication.semiBold().greyDark()),
+              Text(title, style: titleStyle),
               const HorizontalSpacing(AppMetrics.defaultElevation),
               ...children,
             ],
@@ -157,7 +159,7 @@ class OptionSelector<T> extends StatelessWidget {
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: AppStyles.indication.semiBold().greyDark()),
+              Text(title, style: titleStyle),
               const SizedBox(height: 8),
               Wrap(children: children),
             ],
@@ -182,7 +184,7 @@ class _RadioButton extends StatelessWidget {
     padding: const EdgeInsets.all(9),
     showCheckmark: true,
     checkmarkColor: AppColors.primaryDark,
-    label: Text(label, style: AppStyles.subtitle.greyDark()),
+    label: Text(label, style: AppStyles.subtitle.copyWith(color: Theme.of(context).colorScheme.onSurface)),
     selected: isSelected,
     onSelected: (selected) {
       if (selected) onSelected();
