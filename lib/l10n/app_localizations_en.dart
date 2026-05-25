@@ -183,6 +183,167 @@ class AppLocalizationsEn extends AppLocalizations {
       'A bouncing echo sound on the letters: ق، ط، ب، ج، د when they have a sukoon. Stronger at the end of a verse.';
 
   @override
+  String get tajweedRuleExamplesSection => 'Examples';
+
+  @override
+  String get tajweedRuleMaddLongDescription =>
+      'Madd (المدّ) is the elongation of a vowel sound carried by one of the three Madd letters: Alif (ا), Waw (و), or Yaa (ي). The baseline elongation — Madd Tabi\'i — is exactly 2 counts. When a Madd letter is followed by a Hamza or a Sukoon, the count increases to 4 or 6 depending on the rule type. Shortening a Madd can alter the meaning of a word entirely, so precision is essential.';
+
+  @override
+  String get tajweedRuleMaddExample1Reference => 'Al-Baqarah 2:30';
+
+  @override
+  String get tajweedRuleMaddExample1Transliteration => 'qaa-la';
+
+  @override
+  String get tajweedRuleMaddExample1Explanation =>
+      'The Alif after Qaaf is a Madd Tabi\'i letter — the vowel is held for exactly 2 counts before moving to Lam.';
+
+  @override
+  String get tajweedRuleMaddExample2Reference => 'Al-Baqarah 2:8';
+
+  @override
+  String get tajweedRuleMaddExample2Transliteration => 'ya-qoo-lu';
+
+  @override
+  String get tajweedRuleMaddExample2Explanation =>
+      'The Waw after Qaaf carries a Madd Tabi\'i — the \'oo\' sound is held for 2 counts before completing the word.';
+
+  @override
+  String get tajweedRuleGhunnahLongDescription =>
+      'Ghunnah (الغُنّة) is a nasal resonance produced through the nasal passage — not the mouth. It occurs whenever Noon (ن) or Meem (م) carries a Shaddah (تشديد), indicating a doubled letter. The duration of Ghunnah is 2 counts. Beyond these standalone cases, Ghunnah also accompanies the rules of Idgham (with Ghunnah), Ikhfa, and Iqlab, giving Quranic recitation its characteristic nasal melody.';
+
+  @override
+  String get tajweedRuleGhunnahExample1Reference => 'Al-Baqarah 2:6';
+
+  @override
+  String get tajweedRuleGhunnahExample1Transliteration => 'in-na';
+
+  @override
+  String get tajweedRuleGhunnahExample1Explanation =>
+      'Noon with Shaddah (إِنَّ) produces a 2-count nasal resonance — the sound comes entirely from the nose, not the mouth.';
+
+  @override
+  String get tajweedRuleGhunnahExample2Reference => 'Al-Baqarah 2:28';
+
+  @override
+  String get tajweedRuleGhunnahExample2Transliteration => 'thum-ma';
+
+  @override
+  String get tajweedRuleGhunnahExample2Explanation =>
+      'Meem with Shaddah (ثُمَّ) produces a 2-count Ghunnah — the lips stay together while the nasal resonance is held.';
+
+  @override
+  String get tajweedRuleIdghamLongDescription =>
+      'Idgham (الإدغام) means \'to merge\'. When Noon Sakinah (نْ) or Tanween is followed by one of the letters ي ن م و ل ر, the noon is absorbed into that letter and both are pronounced as one. There are two types — With Ghunnah: if the following letter is ي ن م و, skip the noon but apply a 2-count nasal resonance with the merged letter. Without Ghunnah: if the following letter is ل or ر, skip the noon entirely and pronounce the next letter cleanly with no nasalization.';
+
+  @override
+  String get tajweedRuleIdghamExample1Reference => 'Al-Zalzalah 99:7';
+
+  @override
+  String get tajweedRuleIdghamExample1Transliteration => 'man ya\'-mal';
+
+  @override
+  String get tajweedRuleIdghamExample1Explanation =>
+      'With Ghunnah — the Noon Sakinah in \'man\' (مَن) merges into Yaa (يَعْمَلْ) with a 2-count Ghunnah. The noon disappears and only the Ghunnah + Yaa remain.';
+
+  @override
+  String get tajweedRuleIdghamExample2Reference => 'Al-Baqarah 2:5';
+
+  @override
+  String get tajweedRuleIdghamExample2Transliteration => 'mir-rab-bi-him';
+
+  @override
+  String get tajweedRuleIdghamExample2Explanation =>
+      'Without Ghunnah — the Noon Sakinah of \'min\' (مِن) merges into Raa (رَّبِّهِمْ) cleanly, with no nasal sound at all. The transition is immediate and silent.';
+
+  @override
+  String get tajweedRuleIdghamShafawyTitle =>
+      'Idgham Shafawi (الإدغام الشفوي) — Labial Merging';
+
+  @override
+  String get tajweedRuleIdghamShafawyDescription =>
+      'Merging Meem Sakinah (مْ) into a following Meem (م) with a 2-count Ghunnah.';
+
+  @override
+  String get tajweedRuleIdghamShafawyLongDescription =>
+      'Idgham Shafawi (الإدغام الشفوي) is a sub-rule of Idgham that concerns Meem Sakinah (مْ), not Noon Sakinah. When Meem Sakinah is immediately followed by another Meem (م), the two Meems merge into one doubled Meem accompanied by a 2-count Ghunnah. The lips come together and the nasal resonance is held before releasing. It is called Shafawi (labial) because it is produced at the lips. This rule applies regardless of where the Meems appear — across words or within a word.';
+
+  @override
+  String get tajweedRuleIdghamShafawyExample1Reference => 'Az-Zukhruf 43:77';
+
+  @override
+  String get tajweedRuleIdghamShafawyExample1Transliteration =>
+      'an-tum maa-ki-thoon';
+
+  @override
+  String get tajweedRuleIdghamShafawyExample1Explanation =>
+      'Meem Sakinah at the end of \'antum\' (أَنتُم) merges into the Meem of \'maakithoon\' (مَّاكِثُونَ) with Ghunnah. Both Meems become one doubled sound held for 2 counts.';
+
+  @override
+  String get tajweedRuleIkhfaLongDescription =>
+      'Ikhfa (الإخفاء) means \'to conceal\'. When Noon Sakinah (نْ) or Tanween is followed by any of 15 specific letters (ت ث ج د ذ س ش ص ض ط ظ ف ق ك), the noon sound is neither fully pronounced nor fully merged — it is hidden as a nasal resonance while the mouth moves toward the next letter. Always accompanied by a 2-count Ghunnah, Ikhfa is a middle state between the clarity of Izhar and the full merge of Idgham. Ikhfa Shafawi is a related rule that applies when Meem Sakinah (مْ) meets Ba (ب).';
+
+  @override
+  String get tajweedRuleIkhfaExample1Reference => 'An-Nas 114:4';
+
+  @override
+  String get tajweedRuleIkhfaExample1Transliteration => 'min shar-ri';
+
+  @override
+  String get tajweedRuleIkhfaExample1Explanation =>
+      'Noon Sakinah is concealed before Sheen. The sound is between a full noon and its disappearance — a nasal resonance held for 2 counts before transitioning to Sheen.';
+
+  @override
+  String get tajweedRuleIkhfaExample2Reference => 'Al-Imran 3:101';
+
+  @override
+  String get tajweedRuleIkhfaExample2Transliteration =>
+      'ya\'-ta-sim bil-laa-hi';
+
+  @override
+  String get tajweedRuleIkhfaExample2Explanation =>
+      'Ikhfa Shafawi: Meem Sakinah (يَعْتَصِم) is concealed before Ba (بِاللَّهِ). The lips almost close as if saying Meem, a 2-count Ghunnah is held, then Ba is pronounced.';
+
+  @override
+  String get tajweedRuleIqlabLongDescription =>
+      'Iqlab (الإقلاب) means \'to convert\' or \'to flip\'. When Noon Sakinah (نْ) or Tanween is immediately followed by Ba (ب), the noon is converted into a concealed Meem (م). The lips come together as if pronouncing Meem, a 2-count Ghunnah is applied through the nose, and then Ba is pronounced. Ba is the only letter that triggers this rule, making Iqlab straightforward to identify. In the Mushaf, a small \'م\' above the noon or tanween marks this rule.';
+
+  @override
+  String get tajweedRuleIqlabExample1Reference => 'Al-Baqarah 2:27';
+
+  @override
+  String get tajweedRuleIqlabExample1Transliteration => 'mim ba\'-di';
+
+  @override
+  String get tajweedRuleIqlabExample1Explanation =>
+      'Noon Sakinah converts to a concealed Meem before Ba. The lips come together for a 2-count Ghunnah, then Ba is pronounced — the noon is never heard.';
+
+  @override
+  String get tajweedRuleQalqalaLongDescription =>
+      'Qalqala (القلقلة) means \'to vibrate\' or \'to echo\'. When any of the five Qalqala letters — ق، ط، ب، ج، د — has a Sukoon (no vowel), a slight bouncing or echoing sound is added at the end of the letter\'s pronunciation. In the middle of a word (Qalqala Sughra), the echo is subtle to maintain flow. At the end of a verse when pausing (Qalqala Kubra), the echo is strong and deliberate. When the Qalqala letter also has a Shaddah, the echo is the strongest (Qalqala Akbar).';
+
+  @override
+  String get tajweedRuleQalqalaExample1Reference => 'Al-Baqarah 2:10';
+
+  @override
+  String get tajweedRuleQalqalaExample1Transliteration => 'yaj-\'a-loon';
+
+  @override
+  String get tajweedRuleQalqalaExample1Explanation =>
+      'Jeem with Sukoon in the middle of the word produces a subtle Qalqala (Sughra) — a brief echo before moving to the next letter.';
+
+  @override
+  String get tajweedRuleQalqalaExample2Reference => 'Al-Ikhlas 112:3';
+
+  @override
+  String get tajweedRuleQalqalaExample2Transliteration => 'wa-lam yu-lad';
+
+  @override
+  String get tajweedRuleQalqalaExample2Explanation =>
+      'Dal with Sukoon at the end of the verse produces a strong Qalqala (Kubra) when pausing — the echo is clear and deliberate.';
+
+  @override
   String get snackbarRetry => 'Retry';
 
   @override

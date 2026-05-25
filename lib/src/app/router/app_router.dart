@@ -8,6 +8,7 @@ import 'package:tajweed_ai/src/features/legal/router/legal_router.dart';
 import 'package:tajweed_ai/src/features/my_account/router/my_account_router.dart';
 import 'package:tajweed_ai/src/features/settings/router/settings_route.dart';
 import 'package:tajweed_ai/src/features/tajweed_courses/router/tajweed_courses_router.dart';
+import 'package:tajweed_ai/src/features/tajweed_courses/router/tajweed_rule_detail_route.dart';
 
 import '../../features/auth/export.dart';
 import '../config/app_config.dart';
@@ -27,6 +28,7 @@ final router = GoRouter(
     termsOfUseRoute,
     myAccountRoute,
     tajweedCoursesRoute,
+    tajweedRuleDetailRoute,
   ],
 );
 
