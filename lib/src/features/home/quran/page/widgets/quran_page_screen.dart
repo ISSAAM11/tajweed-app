@@ -32,37 +32,40 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-          ),
+          borderRadius: BorderRadius.only(),
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: AppBar(
-            title: BlocBuilder<QuranPageBloc, QuranPageState>(
-              builder: (context, state) {
-                return Column(
-                  children: [
-                    Text(
-                      _displaySurahName(context, state),
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        height: 1,
+              title: BlocBuilder<QuranPageBloc, QuranPageState>(
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      Text(
+                        _displaySurahName(context, state),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          height: 1,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            ),
+                    ],
+                  );
+                },
+              ),
 
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () => context.push('/settings'),
+                  icon: const Icon(Icons.settings, color: AppColors.scaffold),
+                ),
+              ],
             ),
-          ),
           ),
         ),
       ),

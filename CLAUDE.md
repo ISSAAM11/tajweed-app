@@ -33,8 +33,6 @@ flutter build apk --release
 flutter build appbundle --release
 ```
 
-> **Dev mode note:** `main.dart` currently hardcodes the initial route to `/quran-listing`, bypassing auth. To test the auth flow, remove the `devRoute` argument from `AppConfig.setInitialRoute(...)` in `main.dart`.
-
 ## Architecture
 
 ### Layer Structure
