@@ -28,7 +28,6 @@ class QuranLineText extends StatelessWidget {
     TextStyle baseTextStyle = TextStyle(
       fontSize: responsivefontSize,
       fontFamily: 'QPC-V2-Font-p$pageNo',
-      fontWeight: FontWeight.bold,
       color: isDark ? AppColors.darkTextPrimary : AppColors.black,
       height: isCentered ? 2 : 1,
     );

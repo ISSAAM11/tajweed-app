@@ -309,7 +309,6 @@ class BasmalahWidget extends StatelessWidget {
       style: TextStyle(
         fontFamily: 'QPC-V2-Font-p1',
         fontSize: responsivefontSize,
-        fontWeight: FontWeight.bold,
         color: isDark ? AppColors.darkPrimary : AppColors.surahGlyphColor,
       ),
       textAlign: TextAlign.center,
