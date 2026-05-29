@@ -949,6 +949,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I agree to the '**
   String get authIAgreeToThe;
+
+  /// No description provided for @audioPlayAyah.
+  ///
+  /// In en, this message translates to:
+  /// **'Play this ayah'**
+  String get audioPlayAyah;
+
+  /// No description provided for @audioPlayPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Play this page'**
+  String get audioPlayPage;
+
+  /// No description provided for @audioPlaySurah.
+  ///
+  /// In en, this message translates to:
+  /// **'Play this surah'**
+  String get audioPlaySurah;
+
+  /// No description provided for @audioDownloadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Download audio'**
+  String get audioDownloadTitle;
+
+  /// No description provided for @audioDownloadMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Download surah audio for offline playback?'**
+  String get audioDownloadMessage;
+
+  /// No description provided for @audioDownloadConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get audioDownloadConfirm;
+
+  /// No description provided for @audioDownloadCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get audioDownloadCancel;
+
+  /// No description provided for @audioDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading audio...'**
+  String get audioDownloading;
+
+  /// No description provided for @audioNoInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get audioNoInternet;
+
+  /// No description provided for @cheikhPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose reciter'**
+  String get cheikhPickerTitle;
+
+  /// No description provided for @settingsReciterSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Reciter'**
+  String get settingsReciterSection;
 }
 
 class _AppLocalizationsDelegate

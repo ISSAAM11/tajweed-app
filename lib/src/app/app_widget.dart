@@ -2,6 +2,7 @@ import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/app/locale/locale_bloc.dart';
 import 'package:tajweed_ai/src/app/theme/app_theme_mode.dart';
 import 'package:tajweed_ai/src/app/theme/theme_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/vm/cheikh_cubit.dart';
 import 'package:tajweed_ai/src/features/settings/vm/app_language.dart';
 
 import '../base/screens/exports.dart';
@@ -27,6 +28,7 @@ class AppWidget extends StatelessWidget {
       providers: [
         BlocProvider<LocaleBloc>.value(value: get<LocaleBloc>()),
         BlocProvider<ThemeBloc>.value(value: get<ThemeBloc>()),
+        BlocProvider<CheikhCubit>.value(value: get<CheikhCubit>()),
       ],
       child: BlocBuilder<LocaleBloc, AppLanguage>(
         builder: (context, language) => BlocBuilder<ThemeBloc, AppThemeMode>(

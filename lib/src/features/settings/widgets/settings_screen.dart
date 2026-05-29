@@ -3,6 +3,9 @@ import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/app/theme/app_theme_mode.dart';
 import 'package:tajweed_ai/src/app/theme/theme_bloc.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/models/cheikh_reciter.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/vm/cheikh_cubit.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/widgets/cheikh_picker_sheet.dart';
 import 'package:tajweed_ai/src/features/settings/binding/settings_deps.dart';
 import 'package:tajweed_ai/src/features/settings/vm/app_language.dart';
 import 'package:tajweed_ai/src/features/settings/vm/settings_bloc.dart';
@@ -64,6 +67,8 @@ final class SettingsScreen extends Feature<SettingsBloc, SettingsState> {
             ),
             SizedBox(height: AppMetrics.spacing.md),
             const SettingsAppearanceSection(),
+            SizedBox(height: AppMetrics.spacing.md),
+            const _ReciterSection(),
             SizedBox(height: AppMetrics.spacing.md),
             const _ComingSoonSection(),
             SizedBox(height: AppMetrics.spacing.md),
@@ -413,6 +418,81 @@ class _LanguageOption extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ReciterSection extends StatelessWidget {
+  const _ReciterSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final metrics = AppMetrics.settingsScreen;
+    final scheme = Theme.of(context).colorScheme;
+    final cheikhCubit = get<CheikhCubit>();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SectionTitle(label: l10n.settingsReciterSection),
+        BlocBuilder<CheikhCubit, CheikhReciter>(
+          bloc: cheikhCubit,
+          builder: (context, selected) => InkWell(
+            borderRadius: BorderRadius.circular(metrics.optionRowRadius),
+            onTap: () => showModalBottomSheet(
+              context: context,
+              builder: (_) => BlocProvider.value(
+                value: cheikhCubit,
+                child: const CheikhPickerSheet(),
+              ),
+            ),
+            child: Container(
+              height: metrics.optionRowHeight,
+              padding: metrics.optionRowPadding,
+              decoration: BoxDecoration(
+                color: scheme.surface,
+                borderRadius: BorderRadius.circular(metrics.optionRowRadius),
+                border: Border.all(
+                  color: scheme.outlineVariant,
+                  width: metrics.optionRowBorderWidth,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.mic_none_rounded,
+                    color: scheme.onSurfaceVariant,
+                    size: metrics.selectionIconSize,
+                  ),
+                  SizedBox(width: AppMetrics.spacing.xs),
+                  Expanded(
+                    child: Text(
+                      l10n.settingsReciterSection,
+                      style: AppFonts.lato
+                          .withSize(FontSizes.title)
+                          .withColor(scheme.onSurface)
+                          .medium(),
+                    ),
+                  ),
+                  Text(
+                    selected.nameArabic,
+                    style: AppFonts.lato
+                        .withSize(FontSizes.subtitle)
+                        .withColor(scheme.onSurfaceVariant),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: scheme.onSurfaceVariant,
+                    size: 22,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

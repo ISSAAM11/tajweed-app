@@ -33,6 +33,7 @@ dependencies:
   path_provider: ^2.1.5
   html: ^0.15.6
   just_audio: ^0.9.0
+  audio_session: ^0.1.21
   path: ^1.9.1
   scrollable_positioned_list: ^0.3.8
   package_info_plus: ^8.0.2
@@ -44,6 +45,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.6
   drift_dev: ^2.28.1
+  mocktail: ^0.3.0
   build_runner: ^2.7.0
 
   #= Flutter Launcher Icons
@@ -78,6 +80,9 @@ flutter:
     # - assets/json/
     - assets/fonts/
     - assets/db/prebuilt.db
+    - assets/db/cheikh_registry.db
+    - assets/db/surah-recitation-ahmad-alnufais.db
+    - assets/db/ayah-recitation-abdur-rahman-as-sudais-recitation.db
     - assets/images/background/left_background2.jpg
     - assets/images/background/right_background2.jpg
     - assets/images/background/left_background-normal.jpg

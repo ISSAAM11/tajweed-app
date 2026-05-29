@@ -176,6 +176,24 @@ class _ComingSoonTile {
   final double badgeRadius = 12;
 }
 
+class _AudioBar {
+  const _AudioBar._();
+
+  final double height = 68;
+  final double iconSize = 26;
+  final double stopIconSize = 20;
+  final double progressBarHeight = 2;
+  final EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+  final double infoFontSize = 11;
+  final double borderRadius = 18;
+  final double horizontalMargin = 12;
+  final double bottomMargin = 16;
+  final double backgroundOpacity = 0.90;
+  final double overlayOpacity = 0.18;
+  final double blurSigma = 12.0;
+  final double elevation = 12;
+}
+
 class _SurahNameCard {
   const _SurahNameCard._();
 

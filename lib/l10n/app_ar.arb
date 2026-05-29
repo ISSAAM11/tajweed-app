@@ -141,5 +141,17 @@
   "authResendCode": "إعادة إرسال الرمز",
   "authTermsOfUseTitle": "شروط الاستخدام",
   "authTermsOfUseBody": "باستخدامك لهذا التطبيق، فإنك توافق على شروط الاستخدام التالية:\n\n1. سوف تستخدم التطبيق بمسؤولية.\n2. لن تسيء استخدام ميزاته أو تستغلها.\n3. قد يجمع التطبيق بيانات وفقاً لسياسة الخصوصية الخاصة بنا.\n4. قد نقوم بتحديث الشروط في أي وقت.\n\nيُرجى القراءة بعناية قبل المتابعة.",
-  "authIAgreeToThe": "أوافق على "
+  "authIAgreeToThe": "أوافق على ",
+
+  "audioPlayAyah": "استمع لهذه الآية",
+  "audioPlayPage": "استمع لهذه الصفحة",
+  "audioPlaySurah": "استمع لهذه السورة",
+  "audioDownloadTitle": "تحميل الصوت",
+  "audioDownloadMessage": "تحميل صوت السورة للتشغيل دون إنترنت؟",
+  "audioDownloadConfirm": "تحميل",
+  "audioDownloadCancel": "إلغاء",
+  "audioDownloading": "جارٍ التحميل...",
+  "audioNoInternet": "لا يوجد اتصال بالإنترنت",
+  "cheikhPickerTitle": "اختر القارئ",
+  "settingsReciterSection": "القارئ"
 }

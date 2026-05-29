@@ -469,4 +469,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get authIAgreeToThe => 'أوافق على ';
+
+  @override
+  String get audioPlayAyah => 'استمع لهذه الآية';
+
+  @override
+  String get audioPlayPage => 'استمع لهذه الصفحة';
+
+  @override
+  String get audioPlaySurah => 'استمع لهذه السورة';
+
+  @override
+  String get audioDownloadTitle => 'تحميل الصوت';
+
+  @override
+  String get audioDownloadMessage => 'تحميل صوت السورة للتشغيل دون إنترنت؟';
+
+  @override
+  String get audioDownloadConfirm => 'تحميل';
+
+  @override
+  String get audioDownloadCancel => 'إلغاء';
+
+  @override
+  String get audioDownloading => 'جارٍ التحميل...';
+
+  @override
+  String get audioNoInternet => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get cheikhPickerTitle => 'اختر القارئ';
+
+  @override
+  String get settingsReciterSection => 'القارئ';
 }

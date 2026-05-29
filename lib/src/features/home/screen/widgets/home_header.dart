@@ -23,10 +23,7 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         backgroundColor: AppColors.greyDarkest,
         elevation: 0,
-        leading: IconButton(
-          onPressed: onMenu,
-          icon: const Icon(Icons.menu, color: AppColors.scaffold),
-        ),
+
         title: Text(
           'Tajweed',
           style: AppFonts.nunito

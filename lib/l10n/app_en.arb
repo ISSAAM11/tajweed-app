@@ -146,5 +146,17 @@
   "authResendCode": "resend code",
   "authTermsOfUseTitle": "Terms of Use",
   "authTermsOfUseBody": "By using this app, you agree to the following Terms of Use:\n\n1. You will use the app responsibly.\n2. You will not misuse or exploit its features.\n3. The app may collect data as per our Privacy Policy.\n4. We may update the Terms at any time.\n\nPlease read carefully before continuing.",
-  "authIAgreeToThe": "I agree to the "
+  "authIAgreeToThe": "I agree to the ",
+
+  "audioPlayAyah": "Play this ayah",
+  "audioPlayPage": "Play this page",
+  "audioPlaySurah": "Play this surah",
+  "audioDownloadTitle": "Download audio",
+  "audioDownloadMessage": "Download surah audio for offline playback?",
+  "audioDownloadConfirm": "Download",
+  "audioDownloadCancel": "Cancel",
+  "audioDownloading": "Downloading audio...",
+  "audioNoInternet": "No internet connection",
+  "cheikhPickerTitle": "Choose reciter",
+  "settingsReciterSection": "Reciter"
 }

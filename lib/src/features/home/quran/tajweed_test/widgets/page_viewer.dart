@@ -16,12 +16,14 @@ class PageViewer extends StatefulWidget {
 
 class _PageViewerState extends State<PageViewer> {
   int? selectedAyah;
+  int? selectedSurah;
   Offset? _popupPosition;
   GlobalKey? _selectedParentKey;
 
   void _removePopup() {
     setState(() {
       selectedAyah = null;
+      selectedSurah = null;
       _popupPosition = null;
       _selectedParentKey = null;
     });
@@ -43,8 +45,10 @@ class _PageViewerState extends State<PageViewer> {
           pageNo: widget.page.pageNo,
           lineWords: block.lineWords,
           isCentered: block.isCentered,
-          onAyahTap: (ayahNumber, position) {
-            _handleAyahTap(ayahNumber, position, _selectedParentKey);
+          selectedAyah: selectedAyah,
+          selectedSurah: selectedSurah,
+          onAyahTap: (surah, ayahNumber, position) {
+            _handleAyahTap(surah, ayahNumber, position, _selectedParentKey);
           },
         ),
         BasmalahBlockDto() => BasmalahWidget(),
@@ -189,16 +193,15 @@ class _PageViewerState extends State<PageViewer> {
     );
   }
 
-  // Update your onAyahTap callback:
-  void _handleAyahTap(int ayahNumber, Offset position, GlobalKey? parentKey) {
+  void _handleAyahTap(int surah, int ayahNumber, Offset position, GlobalKey? parentKey) {
     setState(() {
-      if (selectedAyah == ayahNumber) {
+      if (selectedAyah == ayahNumber && selectedSurah == surah) {
         _removePopup();
       } else {
+        selectedSurah = surah;
         selectedAyah = ayahNumber;
         _popupPosition = position;
-        _selectedParentKey =
-            parentKey; // this valur it is null  ////////////////////////////////////////////////////////////////////////////////////
+        _selectedParentKey = parentKey;
       }
     });
   }

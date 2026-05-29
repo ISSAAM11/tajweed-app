@@ -34,6 +34,7 @@ abstract final class AppMetrics {
   static const homeActionCard = _HomeActionCard._();
   static const settingsScreen = _SettingsScreen._();
   static const comingSoonTile = _ComingSoonTile._();
+  static const audioBar = _AudioBar._();
 
   static const mapDefaultCentralPoint = GeoCoordinates(
     35.501212354988134,
