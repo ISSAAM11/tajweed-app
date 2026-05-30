@@ -34,6 +34,7 @@ class QuranLineText extends StatelessWidget {
       fontSize: responsivefontSize,
       fontFamily: 'QPC-V2-Font-p$pageNo',
       color: isDark ? AppColors.darkTextPrimary : AppColors.black,
+      height: isCentered ? 2 : 1,
     );
 
     if (lineWords.isEmpty) {

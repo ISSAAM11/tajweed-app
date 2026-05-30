@@ -9,9 +9,9 @@
 ## Statistiques
 
 - **Modules** : 3 (Auth, Home, Settings)
-- **Features** : 6
-- **User Stories** : 24
-- **Effort total** : 18 jours
+- **Features** : 7
+- **User Stories** : 29
+- **Effort total** : 20.5 jours
 
 ---
 
@@ -104,6 +104,23 @@ Page d'accueil et navigation vers les sections principales.
 
 - **Effort total** : 2 jours
 - **Dependances** : Feature 1.3 (point d'entree depuis la home)
+
+### Feature 1.6 - Recitation Test
+
+- **Complexite** : Complexe
+- **Description** : NOUVEAU - Ecran de validation de la recitation en temps reel. L'utilisateur recite une sourate courte (Al-Fatiha) a voix haute ; l'app streame l'audio du micro via WebSocket vers un backend Django qui relaie a Deepgram (STT streaming), compare les mots reconnus lettre par lettre aux mots attendus du Coran, et renvoie un verdict par mot. Chaque mot devient vert (correct) ou rouge (faux/oublie) en temps reel. Lancee depuis la 4e action de la home (anciennement "Quran reflection"). Spec detaillee : `docs/specs/recitation-test/`.
+- **Lot** : Set 3
+
+| ID | User Story | Taille | Jours |
+|----|-----------|--------|-------|
+| US-1.6.1 | En tant qu'utilisateur, je veux ouvrir l'ecran "Recitation Test" depuis la home afin de m'entrainer a reciter | XS | 0.25 |
+| US-1.6.2 | En tant qu'utilisateur, je veux voir la sourate affichee mot par mot dans une couleur neutre afin de savoir ce que je dois reciter | S | 0.5 |
+| US-1.6.3 | En tant qu'utilisateur, je veux demarrer et arreter l'enregistrement (avec gestion de la permission micro) afin de controler ma session | S | 0.5 |
+| US-1.6.4 | En tant qu'utilisateur, je veux que chaque mot devienne vert (correct) ou rouge (faux) en temps reel pendant que je recite afin d'avoir un retour immediat | M | 1 |
+| US-1.6.5 | En tant qu'utilisateur, je veux reinitialiser la session pour reessayer afin de m'entrainer plusieurs fois | XS | 0.25 |
+
+- **Effort total** : 2.5 jours (frontend ; backend Django + integration Deepgram comptes separement)
+- **Dependances** : Backend Django + Deepgram (validation complete). Aucune dependance de navigation.
 
 ---
 

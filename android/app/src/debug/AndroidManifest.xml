@@ -4,4 +4,9 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Debug-only: allow cleartext ws:// / http:// to the local dev backend
+         (e.g. 10.0.2.2). Android 9+ blocks cleartext by default; release builds
+         are unaffected by this debug overlay. -->
+    <application android:usesCleartextTraffic="true" />
 </manifest>

@@ -1015,6 +1015,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reciter'**
   String get settingsReciterSection;
+
+  /// No description provided for @homeRecitationTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Recitation Test'**
+  String get homeRecitationTest;
+
+  /// No description provided for @homeStartRecitationTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Start recitation'**
+  String get homeStartRecitationTest;
+
+  /// No description provided for @recitationTestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recitation Test'**
+  String get recitationTestTitle;
+
+  /// No description provided for @recitationInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Recite the surah aloud — each word turns green when correct.'**
+  String get recitationInstruction;
+
+  /// No description provided for @recitationListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get recitationListening;
+
+  /// No description provided for @recitationStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get recitationStart;
+
+  /// No description provided for @recitationStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get recitationStop;
+
+  /// No description provided for @recitationTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get recitationTryAgain;
+
+  /// No description provided for @recitationMicDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission denied. Enable it in settings to record.'**
+  String get recitationMicDenied;
+
+  /// No description provided for @recitationConnectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection lost. Please try again.'**
+  String get recitationConnectionError;
 }
 
 class _AppLocalizationsDelegate

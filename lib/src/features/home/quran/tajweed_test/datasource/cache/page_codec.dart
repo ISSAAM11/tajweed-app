@@ -49,6 +49,7 @@ class PageCodec {
                   'a': w.ayah,
                   'w': w.word,
                   't': w.text_,
+                  'pt': w.plainText,
                 },
               )
               .toList(),
@@ -68,6 +69,7 @@ class PageCodec {
                         'a': w.ayah,
                         'w': w.word,
                         't': w.text_,
+                        'pt': w.plainText,
                       },
                     )
                     .toList(),
@@ -85,6 +87,7 @@ class PageCodec {
                   'a': w.ayah,
                   'w': w.word,
                   't': w.text_,
+                  'pt': w.plainText,
                 },
               )
               .toList(),
@@ -159,6 +162,7 @@ class PageCodec {
                   ayah: w['a'],
                   word: w['w'],
                   text_: w['t'],
+                  plainText: w['pt'] ?? '',
                 ),
               )
               .toList();
@@ -187,6 +191,7 @@ class PageCodec {
                     ayah: w['a'],
                     word: w['w'],
                     text_: w['t'],
+                    plainText: w['pt'] ?? '',
                   ),
                 )
                 .toList();
@@ -207,6 +212,7 @@ class PageCodec {
                   ayah: w['a'],
                   word: w['w'],
                   text_: w['t'],
+                  plainText: w['pt'] ?? '',
                 ),
               )
               .toList();

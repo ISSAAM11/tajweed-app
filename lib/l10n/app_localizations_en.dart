@@ -503,4 +503,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsReciterSection => 'Reciter';
+
+  @override
+  String get homeRecitationTest => 'Recitation Test';
+
+  @override
+  String get homeStartRecitationTest => 'Start recitation';
+
+  @override
+  String get recitationTestTitle => 'Recitation Test';
+
+  @override
+  String get recitationInstruction =>
+      'Recite the surah aloud — each word turns green when correct.';
+
+  @override
+  String get recitationListening => 'Listening...';
+
+  @override
+  String get recitationStart => 'Start';
+
+  @override
+  String get recitationStop => 'Stop';
+
+  @override
+  String get recitationTryAgain => 'Try Again';
+
+  @override
+  String get recitationMicDenied =>
+      'Microphone permission denied. Enable it in settings to record.';
+
+  @override
+  String get recitationConnectionError => 'Connection lost. Please try again.';
 }

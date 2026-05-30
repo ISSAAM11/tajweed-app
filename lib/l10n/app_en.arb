@@ -158,5 +158,15 @@
   "audioDownloading": "Downloading audio...",
   "audioNoInternet": "No internet connection",
   "cheikhPickerTitle": "Choose reciter",
-  "settingsReciterSection": "Reciter"
+  "settingsReciterSection": "Reciter",
+  "homeRecitationTest": "Recitation Test",
+  "homeStartRecitationTest": "Start recitation",
+  "recitationTestTitle": "Recitation Test",
+  "recitationInstruction": "Recite the surah aloud — each word turns green when correct.",
+  "recitationListening": "Listening...",
+  "recitationStart": "Start",
+  "recitationStop": "Stop",
+  "recitationTryAgain": "Try Again",
+  "recitationMicDenied": "Microphone permission denied. Enable it in settings to record.",
+  "recitationConnectionError": "Connection lost. Please try again."
 }

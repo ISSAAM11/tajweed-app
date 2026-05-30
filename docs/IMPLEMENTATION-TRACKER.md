@@ -7,10 +7,10 @@
 
 ## Dashboard
 
-- **Total features** : 9
-- **Total User Stories** : ~35
+- **Total features** : 10
+- **Total User Stories** : ~40
 - **Set actif** : Release v1 (cible : v1.0.0) — **3 features Release v1 LIVREES, build APK pret**
-- **Progression globale** : 56% (5/9 features terminees : 3.1, 3.2, 3.3, 3.4, 1.4)
+- **Progression globale** : 50% (5/10 features terminees : 3.1, 3.2, 3.3, 3.4, 1.4)
 
 ### Status par Set
 
@@ -19,6 +19,7 @@
 | Set 1 | Finalisation MVP - Auth & Home | 5/5 | Differe post-v1 (sauf 1.4) |
 | Set 2 | Polish & Personnalisation | 2/5 | 2 features terminees |
 | **Release v1** | **3 ecrans + Coming Soon UI** | **3** | **En cours** |
+| Set 3 | AI & Recitation | 1/5 | Spec redigee (1.6 a faire) |
 
 ---
 
@@ -230,6 +231,44 @@
 
 ---
 
+## Set 3 - AI & Recitation
+
+**Objectif** : Introduire la validation de recitation par IA (temps reel) — premiere brique IA de l'app.
+
+**Status** : Spec redigee, implementation a faire
+**Features** : 1/5
+**Effort** : 2.5 jours (frontend ; backend Django + Deepgram comptes separement)
+
+### [Feature 1.6] Recitation Test
+
+- **Status** : A faire (spec complete dans `docs/specs/recitation-test/`)
+- **Module** : Home
+- **Effort** : 2.5 jours frontend (5 User Stories)
+- **Complexite** : Complexe
+- **Localisation** : `lib/src/features/home/quran/recitation_test/` (a creer)
+- **Spec** : [docs/specs/recitation-test/](./specs/recitation-test/) — README / requirements / design / tasks
+- **Note** : Lancee depuis la 4e action de la home (`home_screen.dart`, anciennement "Quran reflection", lightbulb, sans route → "Coming soon"), repurposee en "Recitation Test" vers `/recitation-test`. Architecture : Flutter ⇄ Django Channels ⇄ Deepgram (STT streaming), matching lettre par lettre, coloration verte/rouge en temps reel. Cle Deepgram cote serveur uniquement.
+- **Backend (Django)** :
+  - [ ] Phase 0 : Spike Deepgram (precision recitation arabe) avant build
+  - [ ] Django Channels (ASGI) + routing `ws/recitation/`
+  - [ ] Consumer WebSocket : message `config`, ouverture socket Deepgram (`language=ar`, `interim_results=true`, `linear16`, 16kHz, mono)
+  - [ ] Relai audio app → Deepgram
+  - [ ] Util de normalisation (lettres seules) + tests
+  - [ ] Service d'alignement en ligne (pointeur + look-ahead, commit sur `is_final`) + tests
+  - [ ] Serialisation des verdicts (`verdict` / `done` / `error`)
+  - [ ] Teardown session + tests consumer
+- **Frontend (Flutter)** :
+  - [ ] US-1.6.1 : Repurpose 4e HomeAction → `/recitation-test` + re-texte ARB (en+ar) (XS)
+  - [ ] US-1.6.2 : Ecran + rendu mot par mot (Uthmani, neutre) depuis `getWordsForSurah(1)` (S)
+  - [ ] US-1.6.3 : Controle enregistrement (`record` stream) + permission micro + `RECORD_AUDIO` (S)
+  - [ ] US-1.6.4 : `RecitationSocketClient` (`web_socket_channel`) + BLoC + verdicts temps reel (tentatif/locked) (M)
+  - [ ] US-1.6.5 : Reset session → neutre (XS)
+  - [ ] `getWordsForSurah(int)` dans `QuranPageDao` ; `wsBaseUrl` dans `environments.dart`
+  - [ ] Cles ARB ecran (en+ar) ; route dans `app_router.dart` ; binding DI
+  - [ ] Tests widget (rendu neutre, coloration via verdicts, reset)
+
+---
+
 ## Widget Transverse - ComingSoonBadge
 
 - **Status** : **Termine (Release v1)** — livre 2026-05-21
@@ -252,10 +291,27 @@
 | 2026-05-20 | 3.2 Dark Mode Palette Rollout | Settings | Set 2 | 3j | Demande utilisateur (apres creation DESIGN-DARK-MODE.md / DESIGN-LIGHT-MODE.md) |
 | 2026-05-21 | 3.3 Settings Polish | Settings | Set 2 | 1.5j | Demande utilisateur (preparation Release v1) |
 | 2026-05-21 | 3.4 My Account Screen | Account | Set 2 | 2j | Demande utilisateur (preparation Release v1) |
+| 2026-05-29 | 1.6 Recitation Test | Home | Set 3 | 2.5j | Demande utilisateur (validation recitation par IA) |
 
 ---
 
 ## Journal de bord
+
+### 2026-05-29 - Bootstrap Feature 1.6 (Recitation Test) - Spec only
+- **Action** : Redaction de la spec spec-driven pour la Feature 1.6 (Recitation Test). Documentation uniquement, aucun code source modifie.
+- **Livrables** :
+  - Dossier dedie `docs/specs/recitation-test/` : `README.md` (index), `requirements.md` (US-1.6.1 a 1.6.5 INVEST + criteres d'acceptation EARS), `design.md` (architecture complete), `tasks.md` (decoupage backend Django + frontend Flutter).
+  - `LISTE-DES-FONCTIONS.md` : ajout Feature 1.6 (Module Home, Lot Set 3) + maj statistiques (7 features, 29 US, 20.5j).
+  - `IMPLEMENTATION-TRACKER.md` : nouveau Set 3 "AI & Recitation" + entree Feature 1.6 (taches backend/frontend), ligne backlog, maj dashboard (10 features, progression 50%).
+- **Decisions d'architecture** :
+  - **Streaming temps reel** via WebSocket (pas de batch) — verdict mot par mot pendant la recitation.
+  - **Topologie : Flutter ⇄ Django Channels ⇄ Deepgram** — Django proxy l'audio vers Deepgram (STT streaming) ; la cle API Deepgram reste cote serveur ; l'alignement tourne cote serveur (source unique de verite).
+  - **Matching lettre par lettre** (pas de tashkeel, pas de scoring tajweed/phoneme) — normalisation (strip tashkeel, unification alef, tatweel, taa marbuta) appliquee aux deux cotes.
+  - **Alignement en ligne** : pointeur + look-ahead, coloration tentative sur resultats interim, lock vert/rouge sur `is_final`.
+  - **v1 statique** : Al-Fatiha uniquement, focus sur l'architecture IA.
+  - **Point d'entree** : repurpose de la 4e HomeAction (anciennement "Quran reflection") vers `/recitation-test`.
+- **Spike pre-build** : valider la precision de Deepgram sur de l'audio de recitation arabe classique avant de construire la stack (l'arabe coranique differe de l'arabe conversationnel d'entrainement de Deepgram).
+- **Source** : Demande utilisateur — "ai validation of user recitation ... a quran word by word check ... green if correct, red if wrong", puis choix Deepgram STT + WebSocket + proxy Django.
 
 ### 2026-05-21 - Release v1 LIVREE (Features 1.4 + 3.3 + 3.4)
 - **Action** : Implementation complete des 3 features de la Release v1 dans la meme session que le bootstrap. Version bumpee a 1.0.0+1 dans `pubspec.yaml`.

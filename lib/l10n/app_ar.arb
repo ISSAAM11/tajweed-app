@@ -153,5 +153,15 @@
   "audioDownloading": "جارٍ التحميل...",
   "audioNoInternet": "لا يوجد اتصال بالإنترنت",
   "cheikhPickerTitle": "اختر القارئ",
-  "settingsReciterSection": "القارئ"
+  "settingsReciterSection": "القارئ",
+  "homeRecitationTest": "اختبار التلاوة",
+  "homeStartRecitationTest": "ابدأ التلاوة",
+  "recitationTestTitle": "اختبار التلاوة",
+  "recitationInstruction": "اقرأ السورة بصوت مرتفع — يتحول كل كلمة إلى الأخضر عند نطقها صحيحًا.",
+  "recitationListening": "جارٍ الاستماع...",
+  "recitationStart": "ابدأ",
+  "recitationStop": "إيقاف",
+  "recitationTryAgain": "إعادة المحاولة",
+  "recitationMicDenied": "تم رفض إذن الميكروفون. فعّله من الإعدادات للتسجيل.",
+  "recitationConnectionError": "انقطع الاتصال. حاول مرة أخرى."
 }

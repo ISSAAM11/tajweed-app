@@ -502,4 +502,36 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get settingsReciterSection => 'القارئ';
+
+  @override
+  String get homeRecitationTest => 'اختبار التلاوة';
+
+  @override
+  String get homeStartRecitationTest => 'ابدأ التلاوة';
+
+  @override
+  String get recitationTestTitle => 'اختبار التلاوة';
+
+  @override
+  String get recitationInstruction =>
+      'اقرأ السورة بصوت مرتفع — يتحول كل كلمة إلى الأخضر عند نطقها صحيحًا.';
+
+  @override
+  String get recitationListening => 'جارٍ الاستماع...';
+
+  @override
+  String get recitationStart => 'ابدأ';
+
+  @override
+  String get recitationStop => 'إيقاف';
+
+  @override
+  String get recitationTryAgain => 'إعادة المحاولة';
+
+  @override
+  String get recitationMicDenied =>
+      'تم رفض إذن الميكروفون. فعّله من الإعدادات للتسجيل.';
+
+  @override
+  String get recitationConnectionError => 'انقطع الاتصال. حاول مرة أخرى.';
 }

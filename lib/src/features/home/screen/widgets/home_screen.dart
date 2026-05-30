@@ -182,10 +182,11 @@ List<HomeAction> _buildActions(BuildContext context) {
       targetRoute: '/tajweed-test',
     ),
     HomeAction(
-      title: l10n.homeQuranReflection,
-      actionLabel: l10n.homeStartReflection,
-      icon: Icons.lightbulb_outline_rounded,
+      title: l10n.homeRecitationTest,
+      actionLabel: l10n.homeStartRecitationTest,
+      icon: Icons.record_voice_over_rounded,
       highlighted: false,
+      targetRoute: '/recitation-test',
     ),
   ];
 }

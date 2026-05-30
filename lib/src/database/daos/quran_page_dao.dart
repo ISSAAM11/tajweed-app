@@ -15,6 +15,17 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
     with _$QuranPageDaoMixin {
   QuranPageDao(super.db);
 
+  /// All words of a surah, ordered by ayah then word position (mushaf flow).
+  Future<List<WordRow>> getWordsForSurah(int surah) {
+    return (select(words)
+          ..where((w) => w.surah.equals(surah))
+          ..orderBy([
+            (w) => OrderingTerm(expression: w.ayah),
+            (w) => OrderingTerm(expression: w.word),
+          ]))
+        .get();
+  }
+
   Future<List<WordRow>> getWordsForAyat(List<VerseKey> ayat) {
     if (ayat.isEmpty) return Future.value([]);
 

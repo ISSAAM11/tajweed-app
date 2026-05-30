@@ -88,8 +88,14 @@ class _PageViewerState extends State<PageViewer> {
     try {
       final audioState = context.watch<AudioPlayerBloc>().state;
       playingVerse = switch (audioState) {
-        AudioPlaying(:final surah, :final currentAyah) => VerseKey(surah, currentAyah),
-        AudioPaused(:final surah, :final currentAyah) => VerseKey(surah, currentAyah),
+        AudioPlaying(:final surah, :final currentAyah) => VerseKey(
+          surah,
+          currentAyah,
+        ),
+        AudioPaused(:final surah, :final currentAyah) => VerseKey(
+          surah,
+          currentAyah,
+        ),
         _ => null,
       };
     } catch (_) {
@@ -121,7 +127,8 @@ class _PageViewerState extends State<PageViewer> {
             image: DecorationImage(
               image: ResizeImage(
                 AssetImage(backgroundAsset),
-                height: AppMetrics.quranPageViewer.backgroundResizeHeight.toInt(),
+                height: AppMetrics.quranPageViewer.backgroundResizeHeight
+                    .toInt(),
               ),
               fit: BoxFit.cover,
             ),
@@ -146,15 +153,13 @@ class _PageViewerState extends State<PageViewer> {
             ],
           ),
         ),
-        if (selectedAyah != null && _popupPosition != null)
-          _buildPopup(),
+        if (selectedAyah != null && _popupPosition != null) _buildPopup(),
       ],
     );
   }
 
   Widget _buildPopup() {
-    final stackBox =
-        _stackKey.currentContext?.findRenderObject() as RenderBox?;
+    final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
     if (stackBox == null) return const SizedBox.shrink();
 
     final local = stackBox.globalToLocal(_popupPosition!);
@@ -209,11 +214,11 @@ class _PageViewerState extends State<PageViewer> {
                 iconSize: AppMetrics.quranPageViewer.popupIconSize,
                 onPressed: null, // TODO: bookmark ayah
               ),
-              IconButton(
-                icon: const Icon(Icons.translate),
-                iconSize: AppMetrics.quranPageViewer.popupIconSize,
-                onPressed: null, // TODO: show translation
-              ),
+              // IconButton(
+              //   icon: const Icon(Icons.translate),
+              //   iconSize: AppMetrics.quranPageViewer.popupIconSize,
+              //   onPressed: null, // TODO: show translation
+              // ),
               IconButton(
                 icon: const Icon(Icons.play_arrow),
                 iconSize: AppMetrics.quranPageViewer.popupIconSize,
@@ -293,10 +298,14 @@ class SurahHeader extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: AppMetrics.quranPageViewer.contentHorizontalMargin),
+      margin: EdgeInsets.symmetric(
+        horizontal: AppMetrics.quranPageViewer.contentHorizontalMargin,
+      ),
       width: double.infinity,
       height: AppMetrics.quranPageViewer.surahHeaderHeight,
-      padding: EdgeInsets.only(bottom: AppMetrics.quranPageViewer.surahHeaderBottomPadding),
+      padding: EdgeInsets.only(
+        bottom: AppMetrics.quranPageViewer.surahHeaderBottomPadding,
+      ),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
@@ -387,4 +396,3 @@ class BasmalahWidget extends StatelessWidget {
     );
   }
 }
-

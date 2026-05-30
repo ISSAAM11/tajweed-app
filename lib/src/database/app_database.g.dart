@@ -56,6 +56,17 @@ class $WordsTable extends Words with TableInfo<$WordsTable, WordRow> {
   static const VerificationMeta _text_Meta = const VerificationMeta('text_');
   @override
   late final GeneratedColumn<String> text_ = GeneratedColumn<String>(
+    'glyph_text',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _plainTextMeta = const VerificationMeta(
+    'plainText',
+  );
+  @override
+  late final GeneratedColumn<String> plainText = GeneratedColumn<String>(
     'text',
     aliasedName,
     false,
@@ -70,6 +81,7 @@ class $WordsTable extends Words with TableInfo<$WordsTable, WordRow> {
     ayah,
     word,
     text_,
+    plainText,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -110,13 +122,21 @@ class $WordsTable extends Words with TableInfo<$WordsTable, WordRow> {
     } else if (isInserting) {
       context.missing(_wordMeta);
     }
-    if (data.containsKey('text')) {
+    if (data.containsKey('glyph_text')) {
       context.handle(
         _text_Meta,
-        text_.isAcceptableOrUnknown(data['text']!, _text_Meta),
+        text_.isAcceptableOrUnknown(data['glyph_text']!, _text_Meta),
       );
     } else if (isInserting) {
       context.missing(_text_Meta);
+    }
+    if (data.containsKey('text')) {
+      context.handle(
+        _plainTextMeta,
+        plainText.isAcceptableOrUnknown(data['text']!, _plainTextMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_plainTextMeta);
     }
     return context;
   }
@@ -151,6 +171,10 @@ class $WordsTable extends Words with TableInfo<$WordsTable, WordRow> {
       )!,
       text_: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
+        data['${effectivePrefix}glyph_text'],
+      )!,
+      plainText: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
         data['${effectivePrefix}text'],
       )!,
     );
@@ -171,7 +195,14 @@ class WordRow extends DataClass implements Insertable<WordRow> {
   final int surah;
   final int ayah;
   final int word;
+
+  /// QPC V2 glyph codes (Arabic Presentation Forms), rendered with the
+  /// per-page `QPC-V2-Font-p<page>` fonts. NOT plain Arabic.
   final String text_;
+
+  /// Plain Arabic spelling of the word (with tashkeel). Used for recitation
+  /// matching against speech-to-text, which can't read the glyph codes.
+  final String plainText;
   const WordRow({
     required this.id,
     required this.location,
@@ -179,6 +210,7 @@ class WordRow extends DataClass implements Insertable<WordRow> {
     required this.ayah,
     required this.word,
     required this.text_,
+    required this.plainText,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -192,7 +224,8 @@ class WordRow extends DataClass implements Insertable<WordRow> {
     map['surah'] = Variable<int>(surah);
     map['ayah'] = Variable<int>(ayah);
     map['word'] = Variable<int>(word);
-    map['text'] = Variable<String>(text_);
+    map['glyph_text'] = Variable<String>(text_);
+    map['text'] = Variable<String>(plainText);
     return map;
   }
 
@@ -204,6 +237,7 @@ class WordRow extends DataClass implements Insertable<WordRow> {
       ayah: Value(ayah),
       word: Value(word),
       text_: Value(text_),
+      plainText: Value(plainText),
     );
   }
 
@@ -219,6 +253,7 @@ class WordRow extends DataClass implements Insertable<WordRow> {
       ayah: serializer.fromJson<int>(json['ayah']),
       word: serializer.fromJson<int>(json['word']),
       text_: serializer.fromJson<String>(json['text_']),
+      plainText: serializer.fromJson<String>(json['plainText']),
     );
   }
   @override
@@ -231,6 +266,7 @@ class WordRow extends DataClass implements Insertable<WordRow> {
       'ayah': serializer.toJson<int>(ayah),
       'word': serializer.toJson<int>(word),
       'text_': serializer.toJson<String>(text_),
+      'plainText': serializer.toJson<String>(plainText),
     };
   }
 
@@ -241,6 +277,7 @@ class WordRow extends DataClass implements Insertable<WordRow> {
     int? ayah,
     int? word,
     String? text_,
+    String? plainText,
   }) => WordRow(
     id: id ?? this.id,
     location: location ?? this.location,
@@ -248,6 +285,7 @@ class WordRow extends DataClass implements Insertable<WordRow> {
     ayah: ayah ?? this.ayah,
     word: word ?? this.word,
     text_: text_ ?? this.text_,
+    plainText: plainText ?? this.plainText,
   );
   WordRow copyWithCompanion(WordsCompanion data) {
     return WordRow(
@@ -257,6 +295,7 @@ class WordRow extends DataClass implements Insertable<WordRow> {
       ayah: data.ayah.present ? data.ayah.value : this.ayah,
       word: data.word.present ? data.word.value : this.word,
       text_: data.text_.present ? data.text_.value : this.text_,
+      plainText: data.plainText.present ? data.plainText.value : this.plainText,
     );
   }
 
@@ -268,13 +307,15 @@ class WordRow extends DataClass implements Insertable<WordRow> {
           ..write('surah: $surah, ')
           ..write('ayah: $ayah, ')
           ..write('word: $word, ')
-          ..write('text_: $text_')
+          ..write('text_: $text_, ')
+          ..write('plainText: $plainText')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, location, surah, ayah, word, text_);
+  int get hashCode =>
+      Object.hash(id, location, surah, ayah, word, text_, plainText);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -284,7 +325,8 @@ class WordRow extends DataClass implements Insertable<WordRow> {
           other.surah == this.surah &&
           other.ayah == this.ayah &&
           other.word == this.word &&
-          other.text_ == this.text_);
+          other.text_ == this.text_ &&
+          other.plainText == this.plainText);
 }
 
 class WordsCompanion extends UpdateCompanion<WordRow> {
@@ -294,6 +336,7 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
   final Value<int> ayah;
   final Value<int> word;
   final Value<String> text_;
+  final Value<String> plainText;
   const WordsCompanion({
     this.id = const Value.absent(),
     this.location = const Value.absent(),
@@ -301,6 +344,7 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
     this.ayah = const Value.absent(),
     this.word = const Value.absent(),
     this.text_ = const Value.absent(),
+    this.plainText = const Value.absent(),
   });
   WordsCompanion.insert({
     this.id = const Value.absent(),
@@ -309,11 +353,13 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
     required int ayah,
     required int word,
     required String text_,
+    required String plainText,
   }) : location = Value(location),
        surah = Value(surah),
        ayah = Value(ayah),
        word = Value(word),
-       text_ = Value(text_);
+       text_ = Value(text_),
+       plainText = Value(plainText);
   static Insertable<WordRow> custom({
     Expression<int>? id,
     Expression<String>? location,
@@ -321,6 +367,7 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
     Expression<int>? ayah,
     Expression<int>? word,
     Expression<String>? text_,
+    Expression<String>? plainText,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -328,7 +375,8 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
       if (surah != null) 'surah': surah,
       if (ayah != null) 'ayah': ayah,
       if (word != null) 'word': word,
-      if (text_ != null) 'text': text_,
+      if (text_ != null) 'glyph_text': text_,
+      if (plainText != null) 'text': plainText,
     });
   }
 
@@ -339,6 +387,7 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
     Value<int>? ayah,
     Value<int>? word,
     Value<String>? text_,
+    Value<String>? plainText,
   }) {
     return WordsCompanion(
       id: id ?? this.id,
@@ -347,6 +396,7 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
       ayah: ayah ?? this.ayah,
       word: word ?? this.word,
       text_: text_ ?? this.text_,
+      plainText: plainText ?? this.plainText,
     );
   }
 
@@ -371,7 +421,10 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
       map['word'] = Variable<int>(word.value);
     }
     if (text_.present) {
-      map['text'] = Variable<String>(text_.value);
+      map['glyph_text'] = Variable<String>(text_.value);
+    }
+    if (plainText.present) {
+      map['text'] = Variable<String>(plainText.value);
     }
     return map;
   }
@@ -384,7 +437,8 @@ class WordsCompanion extends UpdateCompanion<WordRow> {
           ..write('surah: $surah, ')
           ..write('ayah: $ayah, ')
           ..write('word: $word, ')
-          ..write('text_: $text_')
+          ..write('text_: $text_, ')
+          ..write('plainText: $plainText')
           ..write(')'))
         .toString();
   }
@@ -3466,6 +3520,7 @@ typedef $$WordsTableCreateCompanionBuilder =
       required int ayah,
       required int word,
       required String text_,
+      required String plainText,
     });
 typedef $$WordsTableUpdateCompanionBuilder =
     WordsCompanion Function({
@@ -3475,6 +3530,7 @@ typedef $$WordsTableUpdateCompanionBuilder =
       Value<int> ayah,
       Value<int> word,
       Value<String> text_,
+      Value<String> plainText,
     });
 
 class $$WordsTableFilterComposer extends Composer<_$AppDatabase, $WordsTable> {
@@ -3513,6 +3569,11 @@ class $$WordsTableFilterComposer extends Composer<_$AppDatabase, $WordsTable> {
 
   ColumnFilters<String> get text_ => $composableBuilder(
     column: $table.text_,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get plainText => $composableBuilder(
+    column: $table.plainText,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -3555,6 +3616,11 @@ class $$WordsTableOrderingComposer
     column: $table.text_,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get plainText => $composableBuilder(
+    column: $table.plainText,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$WordsTableAnnotationComposer
@@ -3583,6 +3649,9 @@ class $$WordsTableAnnotationComposer
 
   GeneratedColumn<String> get text_ =>
       $composableBuilder(column: $table.text_, builder: (column) => column);
+
+  GeneratedColumn<String> get plainText =>
+      $composableBuilder(column: $table.plainText, builder: (column) => column);
 }
 
 class $$WordsTableTableManager
@@ -3619,6 +3688,7 @@ class $$WordsTableTableManager
                 Value<int> ayah = const Value.absent(),
                 Value<int> word = const Value.absent(),
                 Value<String> text_ = const Value.absent(),
+                Value<String> plainText = const Value.absent(),
               }) => WordsCompanion(
                 id: id,
                 location: location,
@@ -3626,6 +3696,7 @@ class $$WordsTableTableManager
                 ayah: ayah,
                 word: word,
                 text_: text_,
+                plainText: plainText,
               ),
           createCompanionCallback:
               ({
@@ -3635,6 +3706,7 @@ class $$WordsTableTableManager
                 required int ayah,
                 required int word,
                 required String text_,
+                required String plainText,
               }) => WordsCompanion.insert(
                 id: id,
                 location: location,
@@ -3642,6 +3714,7 @@ class $$WordsTableTableManager
                 ayah: ayah,
                 word: word,
                 text_: text_,
+                plainText: plainText,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
