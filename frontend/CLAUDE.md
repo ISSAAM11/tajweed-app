@@ -33,6 +33,12 @@ flutter build apk --release
 flutter build appbundle --release
 ```
 
+## Git / commits
+
+- **Never add Claude as a co-author.** Do NOT append a `Co-Authored-By: Claude ...`
+  trailer (or any Claude/Anthropic attribution) to commit messages or PR bodies.
+  Commits should be authored by the user alone.
+
 ## Architecture
 
 ### Layer Structure

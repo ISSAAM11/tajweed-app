@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tajweed_ai/l10n/app_localizations.dart';
+import 'package:tajweed_ai/src/app/binding/app_bindings.dart' show get;
 import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/app/design/metrics/app_metrics.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_fonts.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_styles.dart';
 import 'package:tajweed_ai/src/app/design/styles/font_sizes.dart';
+import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/audio_player_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
@@ -50,6 +53,28 @@ class _PageViewerState extends State<PageViewer> {
     }
     return ayahs;
   }
+
+  /// Plain Arabic text of a single verse, assembled from its words' `plainText`
+  /// (the `text` column) in word order and joined with spaces.
+  ///
+  /// Loads the verse from the database rather than from `widget.page.blocks`,
+  /// so verses that span a page boundary are copied in full instead of only
+  /// the portion visible on the current page.
+  Future<String> _getAyahText(int surah, int ayah) async {
+    final words = await get<QuranPageDao>().getAyahPlainWords(surah, ayah);
+    final text = words
+        .map((w) => w.trim())
+        .where((t) => t.isNotEmpty && !_isVerseMarker(t))
+        .join(' ');
+    debugPrint('[copy] ayah $surah:$ayah -> "$text"');
+    return text;
+  }
+
+  /// Verse-end markers store their number ornament as Private-Use-Area glyph
+  /// codes (U+E000–U+F8FF) in the `text` column. Those are font glyphs, not
+  /// readable Arabic, so any word containing one is dropped from copied text.
+  bool _isVerseMarker(String word) =>
+      word.runes.any((r) => r >= 0xE000 && r <= 0xF8FF);
 
   List<Widget> _buildPageWidgets(VerseKey? playingVerse) {
     final widgets = <Widget>[];
@@ -207,7 +232,21 @@ class _PageViewerState extends State<PageViewer> {
               IconButton(
                 icon: const Icon(Icons.copy),
                 iconSize: AppMetrics.quranPageViewer.popupIconSize,
-                onPressed: null, // TODO: copy ayah text
+                onPressed: (selectedAyah == null || selectedSurah == null)
+                    ? null
+                    : () async {
+                        final surah = selectedSurah!;
+                        final ayah = selectedAyah!;
+                        final messenger = ScaffoldMessenger.of(context);
+                        final copied = AppLocalizations.of(context)!.verseCopied;
+                        _removePopup();
+                        final text = await _getAyahText(surah, ayah);
+                        if (text.isEmpty) return;
+                        await Clipboard.setData(ClipboardData(text: text));
+                        messenger.showSnackBar(
+                          SnackBar(content: Text(copied)),
+                        );
+                      },
               ),
               IconButton(
                 icon: const Icon(Icons.bookmark_border),

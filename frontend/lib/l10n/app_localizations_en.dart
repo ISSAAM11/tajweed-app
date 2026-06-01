@@ -535,4 +535,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recitationConnectionError => 'Connection lost. Please try again.';
+
+  @override
+  String get verseCopied => 'Verse copied';
 }

@@ -1075,6 +1075,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connection lost. Please try again.'**
   String get recitationConnectionError;
+
+  /// No description provided for @verseCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Verse copied'**
+  String get verseCopied;
 }
 
 class _AppLocalizationsDelegate

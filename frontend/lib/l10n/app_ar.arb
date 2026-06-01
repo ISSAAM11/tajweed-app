@@ -163,5 +163,6 @@
   "recitationStop": "إيقاف",
   "recitationTryAgain": "إعادة المحاولة",
   "recitationMicDenied": "تم رفض إذن الميكروفون. فعّله من الإعدادات للتسجيل.",
-  "recitationConnectionError": "انقطع الاتصال. حاول مرة أخرى."
+  "recitationConnectionError": "انقطع الاتصال. حاول مرة أخرى.",
+  "verseCopied": "تم نسخ الآية"
 }

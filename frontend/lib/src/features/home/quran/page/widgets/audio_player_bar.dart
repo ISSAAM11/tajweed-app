@@ -92,33 +92,27 @@ class _FloatingCard extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: AppMetrics.audioBar.blurSigma,
-          sigmaY: AppMetrics.audioBar.blurSigma,
-        ),
-        child: Container(
-          height: AppMetrics.audioBar.height,
-          decoration: BoxDecoration(
-            color: cardColor,
-            borderRadius: BorderRadius.circular(radius),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.18),
-                blurRadius: AppMetrics.audioBar.elevation,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          padding: AppMetrics.audioBar.padding,
-          child: switch (state) {
-            AudioPlaying() || AudioPaused() => _PlayerControls(state: state),
-            AudioDownloading(:final progress) => _DownloadProgress(
-              progress: progress,
+      child: Container(
+        height: AppMetrics.audioBar.height,
+        decoration: BoxDecoration(
+          color: cardColor.withValues(alpha: 0.75),
+          borderRadius: BorderRadius.circular(radius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: AppMetrics.audioBar.elevation,
+              offset: const Offset(0, 4),
             ),
-            _ => const SizedBox.shrink(),
-          },
+          ],
         ),
+        padding: AppMetrics.audioBar.padding,
+        child: switch (state) {
+          AudioPlaying() || AudioPaused() => _PlayerControls(state: state),
+          AudioDownloading(:final progress) => _DownloadProgress(
+            progress: progress,
+          ),
+          _ => const SizedBox.shrink(),
+        },
       ),
     );
   }
@@ -179,7 +173,7 @@ class _PlayerControls extends StatelessWidget {
                     style: AppFonts.lato
                         .withSize(AppMetrics.audioBar.infoFontSize)
                         .withColor(iconColor)
-                        .semiBold(),
+                        .black(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -189,7 +183,7 @@ class _PlayerControls extends StatelessWidget {
                 'Surah $surah · ${AppLocalizations.of(context)!.verseNumberLabel} $ayah'
                 ' · ${currentIndex + 1}/$total',
                 style: AppFonts.lato
-                    .withSize(AppMetrics.audioBar.infoFontSize)
+                    .withSize(AppMetrics.audioBar.verseFontSize)
                     .withColor(subColor),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

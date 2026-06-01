@@ -179,12 +179,16 @@ class _ComingSoonTile {
 class _AudioBar {
   const _AudioBar._();
 
-  final double height = 68;
+  final double height = 60;
   final double iconSize = 26;
   final double stopIconSize = 20;
   final double progressBarHeight = 2;
-  final EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
-  final double infoFontSize = 11;
+  final EdgeInsets padding = const EdgeInsets.symmetric(
+    horizontal: 12,
+    vertical: 8,
+  );
+  final double infoFontSize = 13;
+  final double verseFontSize = 11;
   final double borderRadius = 18;
   final double horizontalMargin = 12;
   final double bottomMargin = 16;

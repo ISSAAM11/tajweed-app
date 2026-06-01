@@ -26,6 +26,20 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  /// Plain Arabic words (`text` column) of a single verse, in word order.
+  ///
+  /// Selects only the `text` column instead of mapping full [WordRow]s, so a
+  /// row with a null `glyph_text`/`text` does not crash the generated mapper.
+  /// Null/blank cells are returned as empty strings for the caller to filter.
+  Future<List<String>> getAyahPlainWords(int surah, int ayah) async {
+    final rows = await customSelect(
+      'SELECT text FROM words WHERE surah = ? AND ayah = ? ORDER BY word ASC',
+      variables: [Variable.withInt(surah), Variable.withInt(ayah)],
+      readsFrom: {words},
+    ).get();
+    return rows.map((r) => r.readNullable<String>('text') ?? '').toList();
+  }
+
   Future<List<WordRow>> getWordsForAyat(List<VerseKey> ayat) {
     if (ayat.isEmpty) return Future.value([]);
 

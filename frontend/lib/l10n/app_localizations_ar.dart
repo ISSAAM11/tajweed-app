@@ -534,4 +534,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get recitationConnectionError => 'انقطع الاتصال. حاول مرة أخرى.';
+
+  @override
+  String get verseCopied => 'تم نسخ الآية';
 }

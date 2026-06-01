@@ -168,5 +168,6 @@
   "recitationStop": "Stop",
   "recitationTryAgain": "Try Again",
   "recitationMicDenied": "Microphone permission denied. Enable it in settings to record.",
-  "recitationConnectionError": "Connection lost. Please try again."
+  "recitationConnectionError": "Connection lost. Please try again.",
+  "verseCopied": "Verse copied"
 }
