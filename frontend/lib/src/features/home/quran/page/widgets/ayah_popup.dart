@@ -91,6 +91,7 @@ class AyahPopupWidget extends StatelessWidget {
                     onDismiss();
                   },
                 ),
+
                 IconButton(
                   icon: Icon(Icons.share),
                   iconSize: 22,

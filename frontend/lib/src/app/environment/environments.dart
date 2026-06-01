@@ -1,10 +1,10 @@
 enum Environment {
   mock(),
   dev(
-    baseUrl: "http://10.220.251.168:8000/api/",
     // Physical device on the same Wi-Fi → this machine's LAN IP. Run the backend
     // with `runserver 0.0.0.0:8000` and allow port 8000 through the firewall.
-    // (Android emulator instead uses ws://10.0.2.2:8000.)
+    // (Android emulator instead uses 10.0.2.2 for both URLs.)
+    baseUrl: "http://192.168.1.4:8000/api/",
     wsBaseUrl: "ws://192.168.1.4:8000",
   ),
   preprod(

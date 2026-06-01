@@ -9,9 +9,9 @@
 ## Statistiques
 
 - **Modules** : 3 (Auth, Home, Settings)
-- **Features** : 7
-- **User Stories** : 29
-- **Effort total** : 20.5 jours
+- **Features** : 8
+- **User Stories** : 37
+- **Effort total** : 25.25 jours
 
 ---
 
@@ -121,6 +121,26 @@ Page d'accueil et navigation vers les sections principales.
 
 - **Effort total** : 2.5 jours (frontend ; backend Django + integration Deepgram comptes separement)
 - **Dependances** : Backend Django + Deepgram (validation complete). Aucune dependance de navigation.
+
+### Feature 1.7 - Quran-Page Recitation
+
+- **Complexite** : Complexe
+- **Description** : NOUVEAU - Mode recitation/memorisation directement dans la page de lecture du Coran. L'utilisateur active un "mode recitation" depuis une barre en bas de page et recite la page affichee a voix haute ; les mots reellement rendus se colorent en place (vert = correct, rouge = faux) en temps reel. La barre offre : enregistrement on/off, masquage du texte (chaque mot ne se revele qu'une fois recite, pour la memorisation), recommencer (pointeur au debut de la page) et sourate suivante. L'enregistrement s'arrete automatiquement en fin de page. Un bouton flottant permet de demarrer d'une position precise (verset selectionne). Reutilise le pipeline IA de la Feature 1.6 (Flutter ⇄ Django Channels ⇄ Deepgram) sans nouveau code serveur. Spec detaillee : `docs/specs/recitation/`.
+- **Lot** : Set 3
+
+| ID | User Story | Taille | Jours |
+|----|-----------|--------|-------|
+| US-1.7.1 | En tant qu'utilisateur, je veux activer un "mode recitation" depuis une barre en bas de la page Coran afin d'entrainer ma recitation sur la page affichee | S | 0.5 |
+| US-1.7.2 | En tant qu'utilisateur, je veux demarrer / arreter l'enregistrement depuis la barre afin de controler ma session | S | 0.5 |
+| US-1.7.3 | En tant qu'utilisateur, je veux que les mots affiches sur la page deviennent verts / rouges en temps reel afin d'avoir un retour immediat sans changer d'ecran | M | 1 |
+| US-1.7.4 | En tant qu'utilisateur, je veux masquer le texte de la page (chaque mot se revele une fois recite) afin de m'auto-tester pour la memorisation | M | 1 |
+| US-1.7.5 | En tant qu'utilisateur, je veux un bouton "recommencer" qui remet le pointeur au debut de la page afin de reessayer | XS | 0.25 |
+| US-1.7.6 | En tant qu'utilisateur, je veux un bouton "suivant" qui saute a la sourate suivante afin d'enchainer les courtes sourates | S | 0.5 |
+| US-1.7.7 | En tant qu'utilisateur, je veux que l'enregistrement s'arrete automatiquement en fin de page afin de ne pas avoir a l'arreter manuellement | S | 0.5 |
+| US-1.7.8 | En tant qu'utilisateur, je veux demarrer la recitation depuis une position precise via un bouton flottant afin de reprendre ou je veux | S | 0.5 |
+
+- **Effort total** : ~4.75 jours (frontend ; backend reutilise de la Feature 1.6)
+- **Dependances** : Feature 1.6 (contrat WebSocket + backend Django/Deepgram), page Coran existante (`quran/page`).
 
 ---
 

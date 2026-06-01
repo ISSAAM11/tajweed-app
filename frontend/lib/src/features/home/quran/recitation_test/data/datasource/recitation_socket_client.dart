@@ -23,7 +23,9 @@ class RecitationSocketClient {
     final channel = WebSocketChannel.connect(uri);
     _channel = channel;
     try {
-      await channel.ready;
+      // Fail fast if the host is unreachable instead of hanging on a long TCP
+      // timeout (firewall / wrong IP / backend not bound to 0.0.0.0).
+      await channel.ready.timeout(const Duration(seconds: 8));
       Debugger.green('[Recitation] WebSocket connected');
       return true;
     } catch (error) {

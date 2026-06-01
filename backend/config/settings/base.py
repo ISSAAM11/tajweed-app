@@ -134,3 +134,21 @@ REST_FRAMEWORK = {
 # Deepgram -------------------------------------------------------------------
 
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY", "")
+
+
+# Logging --------------------------------------------------------------------
+# Surface app logs (incl. recitation consumer / Deepgram errors) on the console
+# so the live recitation session is observable from the runserver output.
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "root": {"handlers": ["console"], "level": "WARNING"},
+    "loggers": {
+        "apps": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "daphne": {"handlers": ["console"], "level": "INFO", "propagate": False},
+    },
+}

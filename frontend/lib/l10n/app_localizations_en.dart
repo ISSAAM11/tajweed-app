@@ -534,7 +534,35 @@ class AppLocalizationsEn extends AppLocalizations {
       'Microphone permission denied. Enable it in settings to record.';
 
   @override
-  String get recitationConnectionError => 'Connection lost. Please try again.';
+  String get recitationConnectionError =>
+      'Could not reach the recitation server. Make sure the backend is running and on the same Wi-Fi.';
+
+  @override
+  String get recitationConnecting => 'Connecting…';
+
+  @override
+  String get recitationNoWords => 'No words to recite on this page.';
+
+  @override
+  String get recitationStartTooltip => 'Recite from this verse';
+
+  @override
+  String get recitationModeTooltip => 'Recitation mode';
+
+  @override
+  String get recitationExit => 'Exit recitation';
+
+  @override
+  String get recitationHideText => 'Hide text';
+
+  @override
+  String get recitationShowText => 'Show text';
+
+  @override
+  String get recitationRestart => 'Restart from page start';
+
+  @override
+  String get recitationNextSurah => 'Next surah';
 
   @override
   String get verseCopied => 'Verse copied';

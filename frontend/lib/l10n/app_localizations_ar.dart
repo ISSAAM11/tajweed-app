@@ -533,7 +533,35 @@ class AppLocalizationsAr extends AppLocalizations {
       'تم رفض إذن الميكروفون. فعّله من الإعدادات للتسجيل.';
 
   @override
-  String get recitationConnectionError => 'انقطع الاتصال. حاول مرة أخرى.';
+  String get recitationConnectionError =>
+      'تعذّر الوصول إلى خادم التلاوة. تأكد من تشغيل الخادم ومن أنك على نفس شبكة الواي فاي.';
+
+  @override
+  String get recitationConnecting => 'جارٍ الاتصال…';
+
+  @override
+  String get recitationNoWords => 'لا توجد كلمات للتلاوة في هذه الصفحة.';
+
+  @override
+  String get recitationStartTooltip => 'اقرأ من هذه الآية';
+
+  @override
+  String get recitationModeTooltip => 'وضع التلاوة';
+
+  @override
+  String get recitationExit => 'إنهاء التلاوة';
+
+  @override
+  String get recitationHideText => 'إخفاء النص';
+
+  @override
+  String get recitationShowText => 'إظهار النص';
+
+  @override
+  String get recitationRestart => 'إعادة من بداية الصفحة';
+
+  @override
+  String get recitationNextSurah => 'السورة التالية';
 
   @override
   String get verseCopied => 'تم نسخ الآية';

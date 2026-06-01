@@ -163,6 +163,15 @@
   "recitationStop": "إيقاف",
   "recitationTryAgain": "إعادة المحاولة",
   "recitationMicDenied": "تم رفض إذن الميكروفون. فعّله من الإعدادات للتسجيل.",
-  "recitationConnectionError": "انقطع الاتصال. حاول مرة أخرى.",
+  "recitationConnectionError": "تعذّر الوصول إلى خادم التلاوة. تأكد من تشغيل الخادم ومن أنك على نفس شبكة الواي فاي.",
+  "recitationConnecting": "جارٍ الاتصال…",
+  "recitationNoWords": "لا توجد كلمات للتلاوة في هذه الصفحة.",
+  "recitationStartTooltip": "اقرأ من هذه الآية",
+  "recitationModeTooltip": "وضع التلاوة",
+  "recitationExit": "إنهاء التلاوة",
+  "recitationHideText": "إخفاء النص",
+  "recitationShowText": "إظهار النص",
+  "recitationRestart": "إعادة من بداية الصفحة",
+  "recitationNextSurah": "السورة التالية",
   "verseCopied": "تم نسخ الآية"
 }

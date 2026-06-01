@@ -27,8 +27,11 @@ class RecitationConsumer(AsyncWebsocketConsumer):
         self._reader: asyncio.Task | None = None
         self._audio_chunks = 0
         await self.accept()
+        client = self.scope.get("client")
+        print(f"[recitation] CONNECTED from {client} -> /ws/recitation/")
 
     async def disconnect(self, code: int) -> None:
+        print(f"[recitation] DISCONNECTED (code={code}, audio chunks={self._audio_chunks})")
         await self._teardown()
 
     async def receive(self, text_data: str | None = None, bytes_data: bytes | None = None) -> None:
@@ -63,18 +66,22 @@ class RecitationConsumer(AsyncWebsocketConsumer):
             return
 
         self._aligner = OnlineAligner(expected_words)
+        print(f"[recitation] CONFIG: {len(expected_words)} expected words")
 
         api_key = getattr(settings, "DEEPGRAM_API_KEY", "")
         if not api_key:
+            print("[recitation] ERROR: DEEPGRAM_API_KEY is not set (check backend/.env)")
             await self._send_error("deepgram_unavailable")
             return
         try:
             self._deepgram = await DeepgramStream.connect(api_key=api_key)
         except Exception:  # noqa: BLE001 — any connect failure is reported uniformly
             logger.exception("Failed to open Deepgram stream")
+            print("[recitation] ERROR: failed to open Deepgram stream")
             await self._send_error("deepgram_unavailable")
             return
 
+        print("[recitation] Deepgram stream opened; streaming audio...")
         self._reader = asyncio.create_task(self._read_deepgram())
 
     # -- audio frames -----------------------------------------------------------
@@ -119,6 +126,7 @@ class RecitationConsumer(AsyncWebsocketConsumer):
 
     async def _stop(self) -> None:
         """Finalize the session: drain Deepgram's finals, then flush + signal done."""
+        print("[recitation] STOP requested; finalizing session")
         # Tell Deepgram no more audio is coming; it replies with any pending final
         # results and then closes, which ends the reader loop. Drain it first so
         # those last words commit before we mark anything as unrecited.
@@ -154,6 +162,7 @@ class RecitationConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({"type": "done"}))
 
     async def _send_error(self, reason: str) -> None:
+        print(f"[recitation] -> error: {reason}")
         await self.send(text_data=json.dumps({"type": "error", "reason": reason}))
 
     # -- teardown ---------------------------------------------------------------

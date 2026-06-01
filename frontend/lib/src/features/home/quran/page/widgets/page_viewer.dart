@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/app/binding/app_bindings.dart' show get;
 import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
@@ -12,6 +11,8 @@ import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/audio_player_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/quran_recitation_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/recitation_words.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/play_options_sheet.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/tajweed_text.dart';
 
@@ -179,8 +180,40 @@ class _PageViewerState extends State<PageViewer> {
           ),
         ),
         if (selectedAyah != null && _popupPosition != null) _buildPopup(),
+        if (selectedAyah != null && selectedSurah != null)
+          Positioned(
+            left: AppMetrics.spacing.md,
+            bottom: AppMetrics.spacing.md,
+            child: FloatingActionButton.small(
+              heroTag: 'recite-from-${widget.page.pageNo}',
+              tooltip: AppLocalizations.of(context)!.recitationStartTooltip,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.scaffold,
+              onPressed: () => _startFromSelection(context),
+              child: const Icon(Icons.mic),
+            ),
+          ),
       ],
     );
+  }
+
+  /// Page-scoped recitation starting at the selected verse (the FAB). Stops any
+  /// playback, enters recitation mode, and streams from that position onward.
+  void _startFromSelection(BuildContext context) {
+    final surah = selectedSurah;
+    final ayah = selectedAyah;
+    if (surah == null || ayah == null) return;
+    final words = recitableWordsFromPage(
+      widget.page,
+      fromSurah: surah,
+      fromAyah: ayah,
+    );
+    if (words.isEmpty) return;
+    _removePopup();
+    context.read<AudioPlayerBloc>().add(const StopAudio());
+    final rec = context.read<QuranRecitationBloc>();
+    rec.enterMode();
+    rec.startPage(widget.page.pageNo, words);
   }
 
   Widget _buildPopup() {
@@ -238,20 +271,38 @@ class _PageViewerState extends State<PageViewer> {
                         final surah = selectedSurah!;
                         final ayah = selectedAyah!;
                         final messenger = ScaffoldMessenger.of(context);
-                        final copied = AppLocalizations.of(context)!.verseCopied;
+                        final copied = AppLocalizations.of(
+                          context,
+                        )!.verseCopied;
                         _removePopup();
                         final text = await _getAyahText(surah, ayah);
                         if (text.isEmpty) return;
                         await Clipboard.setData(ClipboardData(text: text));
-                        messenger.showSnackBar(
-                          SnackBar(content: Text(copied)),
-                        );
+                        messenger.showSnackBar(SnackBar(content: Text(copied)));
                       },
               ),
               IconButton(
                 icon: const Icon(Icons.bookmark_border),
                 iconSize: AppMetrics.quranPageViewer.popupIconSize,
                 onPressed: null, // TODO: bookmark ayah
+              ),
+              IconButton(
+                icon: const Icon(Icons.mic),
+                iconSize: AppMetrics.quranPageViewer.popupIconSize,
+                tooltip: AppLocalizations.of(context)!.recitationStartTooltip,
+                onPressed: (selectedAyah == null || selectedSurah == null)
+                    ? null
+                    : () {
+                        final surah = selectedSurah!;
+                        final ayah = selectedAyah!;
+                        _removePopup();
+                        // Mic and playback can't share the audio route — stop
+                        // any active recitation audio before recording.
+                        context.read<AudioPlayerBloc>().add(const StopAudio());
+                        context.read<QuranRecitationBloc>().add(
+                          StartRecitation(surah, ayah),
+                        );
+                      },
               ),
               // IconButton(
               //   icon: const Icon(Icons.translate),

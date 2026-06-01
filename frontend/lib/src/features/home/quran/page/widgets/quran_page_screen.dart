@@ -5,9 +5,11 @@ import 'package:tajweed_ai/src/features/home/quran/page/binding/quran_page_deps.
 import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_state.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/quran_recitation_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/audio_player_bar.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/download_confirm_dialog.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/quran_page_body.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/widgets/recitation_bar.dart';
 
 String _displaySurahName(BuildContext context, QuranPageState state) {
   final isArabic = Localizations.localeOf(context).languageCode == 'ar';
@@ -33,24 +35,63 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
   @override
   Widget build(BuildContext context, QuranPageState state) {
     final l10n = AppLocalizations.of(context)!;
-    return BlocProvider<AudioPlayerBloc>(
-      create: (_) => get<AudioPlayerBloc>(),
-      child: BlocListener<AudioPlayerBloc, AudioPlayerState>(
-        listener: (context, audioState) {
-          if (audioState is AudioAwaitingDownload) {
-            showDownloadConfirmDialog(context);
-          } else if (audioState is AudioError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(_resolveAudioError(l10n, audioState.messageKey)),
-                action: SnackBarAction(
-                  label: l10n.snackbarOk,
-                  onPressed: () {},
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AudioPlayerBloc>(create: (_) => get<AudioPlayerBloc>()),
+        BlocProvider<QuranRecitationBloc>(
+          create: (_) => get<QuranRecitationBloc>(),
+        ),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<AudioPlayerBloc, AudioPlayerState>(
+            listener: (context, audioState) {
+              if (audioState is AudioAwaitingDownload) {
+                showDownloadConfirmDialog(context);
+              } else if (audioState is AudioError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      _resolveAudioError(l10n, audioState.messageKey),
+                    ),
+                    action: SnackBarAction(
+                      label: l10n.snackbarOk,
+                      onPressed: () {},
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<QuranRecitationBloc, QuranRecitationState>(
+            listenWhen: (prev, curr) =>
+                curr.errorKey != null && curr.errorKey != prev.errorKey,
+            listener: (context, recState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    _resolveRecitationError(l10n, recState.errorKey!),
+                  ),
+                  action: SnackBarAction(
+                    label: l10n.snackbarOk,
+                    onPressed: () {},
+                  ),
                 ),
-              ),
-            );
-          }
-        },
+              );
+            },
+          ),
+          // While in recitation mode, a page change (swipe / next-surah) resets
+          // the session so the word map tracks the visible page.
+          BlocListener<QuranPageBloc, QuranPageState>(
+            listenWhen: (prev, curr) => prev.currentPage != curr.currentPage,
+            listener: (context, pageState) {
+              final rec = context.read<QuranRecitationBloc>();
+              if (rec.state.modeActive) {
+                rec.notifyPageChanged(pageState.currentPage);
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
@@ -111,6 +152,7 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
               ),
             ],
           ),
+          bottomNavigationBar: const RecitationBottomBar(),
         ),
       ),
     );
@@ -121,5 +163,13 @@ String _resolveAudioError(AppLocalizations l10n, String key) {
   return switch (key) {
     'audioNoInternet' => l10n.audioNoInternet,
     _ => '${l10n.errorPrefix}: $key',
+  };
+}
+
+String _resolveRecitationError(AppLocalizations l10n, String key) {
+  return switch (key) {
+    'recitationMicDenied' => l10n.recitationMicDenied,
+    'recitationNoWords' => l10n.recitationNoWords,
+    _ => l10n.recitationConnectionError,
   };
 }

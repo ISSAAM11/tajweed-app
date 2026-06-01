@@ -40,6 +40,33 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
     return rows.map((r) => r.readNullable<String>('text') ?? '').toList();
   }
 
+  /// Recitable words of a surah from [startAyah] to its end, in mushaf order.
+  ///
+  /// Returns each word's `id` (matches the rendered `WordRow.id`, used to paint
+  /// verdicts) and plain `text`. Uses a raw select with a nullable read so rows
+  /// whose `glyph_text`/`text` is null do not crash the generated [WordRow]
+  /// mapper (same reason as [getAyahPlainWords]); null/blank `text` is returned
+  /// as an empty string for the caller to filter.
+  Future<List<({int id, String text})>> getSurahWordsFromAyah(
+    int surah,
+    int startAyah,
+  ) async {
+    final rows = await customSelect(
+      'SELECT id, text FROM words WHERE surah = ? AND ayah >= ? '
+      'ORDER BY ayah ASC, word ASC',
+      variables: [Variable.withInt(surah), Variable.withInt(startAyah)],
+      readsFrom: {words},
+    ).get();
+    return rows
+        .map(
+          (r) => (
+            id: r.read<int>('id'),
+            text: r.readNullable<String>('text') ?? '',
+          ),
+        )
+        .toList();
+  }
+
   Future<List<WordRow>> getWordsForAyat(List<VerseKey> ayat) {
     if (ayat.isEmpty) return Future.value([]);
 

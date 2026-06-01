@@ -168,6 +168,15 @@
   "recitationStop": "Stop",
   "recitationTryAgain": "Try Again",
   "recitationMicDenied": "Microphone permission denied. Enable it in settings to record.",
-  "recitationConnectionError": "Connection lost. Please try again.",
+  "recitationConnectionError": "Could not reach the recitation server. Make sure the backend is running and on the same Wi-Fi.",
+  "recitationConnecting": "Connecting…",
+  "recitationNoWords": "No words to recite on this page.",
+  "recitationStartTooltip": "Recite from this verse",
+  "recitationModeTooltip": "Recitation mode",
+  "recitationExit": "Exit recitation",
+  "recitationHideText": "Hide text",
+  "recitationShowText": "Show text",
+  "recitationRestart": "Restart from page start",
+  "recitationNextSurah": "Next surah",
   "verseCopied": "Verse copied"
 }

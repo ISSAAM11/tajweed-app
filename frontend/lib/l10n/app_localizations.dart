@@ -1073,8 +1073,62 @@ abstract class AppLocalizations {
   /// No description provided for @recitationConnectionError.
   ///
   /// In en, this message translates to:
-  /// **'Connection lost. Please try again.'**
+  /// **'Could not reach the recitation server. Make sure the backend is running and on the same Wi-Fi.'**
   String get recitationConnectionError;
+
+  /// No description provided for @recitationConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get recitationConnecting;
+
+  /// No description provided for @recitationNoWords.
+  ///
+  /// In en, this message translates to:
+  /// **'No words to recite on this page.'**
+  String get recitationNoWords;
+
+  /// No description provided for @recitationStartTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Recite from this verse'**
+  String get recitationStartTooltip;
+
+  /// No description provided for @recitationModeTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Recitation mode'**
+  String get recitationModeTooltip;
+
+  /// No description provided for @recitationExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit recitation'**
+  String get recitationExit;
+
+  /// No description provided for @recitationHideText.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide text'**
+  String get recitationHideText;
+
+  /// No description provided for @recitationShowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Show text'**
+  String get recitationShowText;
+
+  /// No description provided for @recitationRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart from page start'**
+  String get recitationRestart;
+
+  /// No description provided for @recitationNextSurah.
+  ///
+  /// In en, this message translates to:
+  /// **'Next surah'**
+  String get recitationNextSurah;
 
   /// No description provided for @verseCopied.
   ///
