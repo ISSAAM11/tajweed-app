@@ -29,3 +29,17 @@ frontend/package-lock.json
 
 # Auxiliary reference material (saved web pages); not part of the app.
 tajweed rules/
+
+# ── Stray Flutter artefacts at the repo ROOT ─────────────────────────────
+# The Flutter app lives in frontend/; these root-level entries are leftovers
+# from before the monorepo restructure (there is no root pubspec.yaml, so
+# they are orphaned and regenerable). Each is anchored with a leading "/" so
+# it matches ONLY the repo root — the tracked frontend/android, frontend/ios,
+# frontend/build, etc. are unaffected.
+/.dart_tool/
+/.flutter-plugins-dependencies
+/android/
+/ios/
+/build/
+/pubspec.lock
+/.vscode/

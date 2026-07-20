@@ -1,0 +1,19 @@
+name: tajweed-backend
+
+services:
+  backend:
+    build: .
+    image: tajweed-backend
+    # Dev: mount the source and use runserver (autoreload + ASGI via daphne).
+    # The Dockerfile CMD (plain daphne) remains the production entrypoint.
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    # Reads DEEPGRAM_API_KEY (and any production vars) from backend/.env
+    env_file:
+      - .env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+    restart: unless-stopped

@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+venv/
+.venv/
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+static/
+media/
+
+# Environment — secrets are passed at runtime, never baked into the image
+.env
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Scratch audio for the Deepgram spike
+.spike_audio/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

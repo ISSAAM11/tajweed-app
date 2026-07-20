@@ -1,11 +1,11 @@
 enum Environment {
   mock(),
   dev(
-    // Physical device on the same Wi-Fi → this machine's LAN IP. Run the backend
-    // with `runserver 0.0.0.0:8000` and allow port 8000 through the firewall.
-    // (Android emulator instead uses 10.0.2.2 for both URLs.)
-    baseUrl: "http://192.168.1.4:8000/api/",
-    wsBaseUrl: "ws://192.168.1.4:8000",
+    // Android emulator → 10.0.2.2 reaches the host machine (Docker backend on
+    // port 8000). For a physical device on the same Wi-Fi, use this machine's
+    // LAN IP instead (e.g. 192.168.1.4) and allow port 8000 through the firewall.
+    baseUrl: "http://10.0.2.2:8000/api/",
+    wsBaseUrl: "ws://10.0.2.2:8000",
   ),
   preprod(
     baseUrl: "https://tajeewd-ai.preprod.com/api/",

@@ -7,7 +7,8 @@
     {
       "name": "Debug Mode",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "toolArgs": ["--no-enable-impeller"]
     },
     {
       "name": "Profile Mode",
