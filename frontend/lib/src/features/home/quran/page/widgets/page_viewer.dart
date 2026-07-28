@@ -15,6 +15,7 @@ import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/quran_reci
 import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/recitation_words.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/play_options_sheet.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/tajweed_text.dart';
+import 'package:tajweed_ai/src/helpers/quran_text_parser.dart';
 
 class PageViewer extends StatefulWidget {
   final PageContentDto page;
@@ -63,19 +64,11 @@ class _PageViewerState extends State<PageViewer> {
   /// the portion visible on the current page.
   Future<String> _getAyahText(int surah, int ayah) async {
     final words = await get<QuranPageDao>().getAyahPlainWords(surah, ayah);
-    final text = words
-        .map((w) => w.trim())
-        .where((t) => t.isNotEmpty && !_isVerseMarker(t))
+    return words
+        .map(QuranTextParser.stripGlyphSigns)
+        .where(arabicLetter.hasMatch)
         .join(' ');
-    debugPrint('[copy] ayah $surah:$ayah -> "$text"');
-    return text;
   }
-
-  /// Verse-end markers store their number ornament as Private-Use-Area glyph
-  /// codes (U+E000–U+F8FF) in the `text` column. Those are font glyphs, not
-  /// readable Arabic, so any word containing one is dropped from copied text.
-  bool _isVerseMarker(String word) =>
-      word.runes.any((r) => r >= 0xE000 && r <= 0xF8FF);
 
   List<Widget> _buildPageWidgets(VerseKey? playingVerse) {
     final widgets = <Widget>[];

@@ -16,6 +16,8 @@ class PageCache {
     this.capacity = 10, // keep 10 pages in-memory
   });
 
+  // Keep in sync with `_purgeDbDerivedCaches` in database/app_database.dart,
+  // which drops these entries when the prebuilt DB is refreshed.
   String _kPageKey(int pageNo) => 'page:$pageNo';
 
   /// Get a page (tries memory → cacheManager → returns null if not found).

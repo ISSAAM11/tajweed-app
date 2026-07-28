@@ -3,7 +3,10 @@ import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.d
 /// Arabic base-letter ranges — same set the recitation use cases filter by, so
 /// marker-only words (waqf / ayah-end ornaments) are excluded and the indices
 /// line up with the backend verdicts.
-final _arabicLetter = RegExp('[ء-غف-يٮ-ۓ]');
+///
+/// Also used to tell real words from ornament-only ones when copying an ayah
+/// (see `_PageViewerState._getAyahText`).
+final arabicLetter = RegExp('[ء-غف-يٮ-ۓ]');
 
 /// The ordered recitable words actually rendered on [page] (each `WordRow.id`
 /// with its plain `text`), filtered to real Arabic words.
@@ -25,7 +28,7 @@ List<({int id, String text})> recitableWordsFromPage(
         started = true;
       }
       if (!started) continue;
-      if (!_arabicLetter.hasMatch(word.plainText)) continue;
+      if (!arabicLetter.hasMatch(word.plainText)) continue;
       words.add((id: word.id, text: word.plainText));
     }
   }

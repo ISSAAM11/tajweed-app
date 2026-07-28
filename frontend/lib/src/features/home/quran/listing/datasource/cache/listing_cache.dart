@@ -5,6 +5,9 @@ import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_mode
 
 final class ListingCache {
   final CacheManager _cache;
+
+  // Keep in sync with `_purgeDbDerivedCaches` in database/app_database.dart,
+  // which drops this entry when the prebuilt DB is refreshed.
   static const _kKey = 'listing_data_v3';
 
   ListingDataDto? _memory;
