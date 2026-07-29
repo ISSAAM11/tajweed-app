@@ -178,5 +178,7 @@
   "recitationShowText": "Show text",
   "recitationRestart": "Restart from page start",
   "recitationNextSurah": "Next surah",
-  "verseCopied": "Verse copied"
+  "verseCopied": "Verse copied",
+  "ayahMarkTooltip": "Mark verse",
+  "ayahUnmarkTooltip": "Remove mark"
 }

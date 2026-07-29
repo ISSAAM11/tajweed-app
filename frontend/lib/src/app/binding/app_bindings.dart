@@ -24,6 +24,7 @@ import 'package:tajweed_ai/src/features/home/quran/audio/services/cheikh_prefere
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/cheikh_cubit.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/listing_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/datasource/quran_listing_datasource.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/datasource/cache/marked_ayah_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/services/partition_snapshot_service.dart';
 
 import '../../core/dependency/get_it_container.dart';
@@ -93,6 +94,9 @@ final class AppBinding extends AppBindings {
     );
     di.registerLazySingleton<LastSelectedSurahService>(
       () => LastSelectedSurahService(get<CacheManager<SharedPreferences>>()),
+    );
+    di.registerLazySingleton<MarkedAyahService>(
+      () => MarkedAyahService(get<CacheManager<SharedPreferences>>()),
     );
 
     // 📦 Locale

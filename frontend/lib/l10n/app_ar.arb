@@ -173,5 +173,7 @@
   "recitationShowText": "إظهار النص",
   "recitationRestart": "إعادة من بداية الصفحة",
   "recitationNextSurah": "السورة التالية",
-  "verseCopied": "تم نسخ الآية"
+  "verseCopied": "تم نسخ الآية",
+  "ayahMarkTooltip": "تعليم الآية",
+  "ayahUnmarkTooltip": "إزالة التعليم"
 }

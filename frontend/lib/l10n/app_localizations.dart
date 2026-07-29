@@ -1135,6 +1135,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Verse copied'**
   String get verseCopied;
+
+  /// No description provided for @ayahMarkTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark verse'**
+  String get ayahMarkTooltip;
+
+  /// No description provided for @ayahUnmarkTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove mark'**
+  String get ayahUnmarkTooltip;
 }
 
 class _AppLocalizationsDelegate

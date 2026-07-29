@@ -48,10 +48,19 @@ class PageCache {
     );
   }
 
-  /// Evict everything (memory + persistent).
+  /// Evict everything this cache owns (memory + its own `page:` entries).
+  ///
+  /// Only `page:` keys are removed — the same store holds user data (marked
+  /// ayahs, theme, locale, cheikh) that must survive a page-cache eviction.
   Future<void> clear() async {
     _memoryCache.clear();
-    await cacheManager.clear();
+    final pageKeys = cacheManager
+        .getKeys()
+        .where((k) => k.startsWith('page:'))
+        .toList();
+    for (final key in pageKeys) {
+      await cacheManager.remove(key);
+    }
   }
 
   /// Dispose only clears memory cache.

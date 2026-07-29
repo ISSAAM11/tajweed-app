@@ -14,6 +14,9 @@ class QuranLineText extends StatelessWidget {
   final int? selectedSurah;
   final VerseKey? playingVerse;
 
+  /// Ayahs the user marked, as `"surah:ayah"` keys (see `MarkedAyahService`).
+  final Set<String> markedAyahs;
+
   const QuranLineText({
     super.key,
     required this.lineWords,
@@ -23,6 +26,7 @@ class QuranLineText extends StatelessWidget {
     this.selectedAyah,
     this.selectedSurah,
     this.playingVerse,
+    this.markedAyahs = const {},
   });
 
   @override
@@ -167,8 +171,8 @@ class QuranLineText extends StatelessWidget {
       a.surah == b.surah && a.ayah == b.ayah;
 
   /// Highlight (box) color for [word]: hide-mode grey > playing > selected >
-  /// transparent. Shared by word boxes and the gap spacers so a selected /
-  /// playing / hidden ayah paints as one continuous bar.
+  /// marked > transparent. Shared by word boxes and the gap spacers so a
+  /// selected / playing / hidden / marked ayah paints as one continuous bar.
   Color _highlightColorFor(
     WordRow word,
     QuranRecitationState? recitation,
@@ -181,6 +185,7 @@ class QuranLineText extends StatelessWidget {
         playingVerse!.surah == word.surah &&
         playingVerse!.ayah == word.ayah;
     final hidden = hideActive && recitation?.verdictForWordId(word.id) == null;
+    final isMarked = markedAyahs.contains('${word.surah}:${word.ayah}');
 
     return hidden
         ? (isDark ? AppColors.darkSurface : AppColors.greyLight)
@@ -188,6 +193,8 @@ class QuranLineText extends StatelessWidget {
         ? AppColors.primary.withValues(alpha: 0.18)
         : isSelected
         ? AppColors.ayahHighlight
+        : isMarked
+        ? (isDark ? AppColors.ayahMarkedDark : AppColors.ayahMarked)
         : AppColors.transparent;
   }
 

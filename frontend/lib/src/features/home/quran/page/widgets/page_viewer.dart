@@ -10,6 +10,7 @@ import 'package:tajweed_ai/src/app/design/styles/font_sizes.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/audio_player_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/datasource/cache/marked_ayah_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/quran_recitation_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/recitation_words.dart';
@@ -30,6 +31,15 @@ class _PageViewerState extends State<PageViewer> {
   int? selectedSurah;
   Offset? _popupPosition;
   final GlobalKey _stackKey = GlobalKey();
+  final MarkedAyahService _marks = get<MarkedAyahService>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Touch the service so the stored marks are loaded into its notifier
+    // before the first paint.
+    _marks.current;
+  }
 
   void _removePopup() {
     setState(() {
@@ -70,7 +80,7 @@ class _PageViewerState extends State<PageViewer> {
         .join(' ');
   }
 
-  List<Widget> _buildPageWidgets(VerseKey? playingVerse) {
+  List<Widget> _buildPageWidgets(VerseKey? playingVerse, Set<String> marks) {
     final widgets = <Widget>[];
     for (final block in widget.page.blocks) {
       final builtWidget = switch (block) {
@@ -90,6 +100,7 @@ class _PageViewerState extends State<PageViewer> {
           selectedSurah: selectedSurah,
           onAyahTap: _handleAyahTap,
           playingVerse: playingVerse,
+          markedAyahs: marks,
         ),
         BasmalahBlockDto() => BasmalahWidget(),
         _ => SizedBox.shrink(),
@@ -102,6 +113,15 @@ class _PageViewerState extends State<PageViewer> {
 
   @override
   Widget build(BuildContext context) {
+    // Rebuild on every mark toggle — neighbouring pages stay alive in the
+    // PageView and an ayah can straddle a page boundary.
+    return ValueListenableBuilder<Set<String>>(
+      valueListenable: _marks.marks,
+      builder: (context, marks, _) => _buildPage(context, marks),
+    );
+  }
+
+  Widget _buildPage(BuildContext context, Set<String> marks) {
     // Derive currently playing verse for highlighting (null-safe if bloc absent)
     VerseKey? playingVerse;
     try {
@@ -121,7 +141,7 @@ class _PageViewerState extends State<PageViewer> {
       playingVerse = null;
     }
 
-    final allWidgets = _buildPageWidgets(playingVerse);
+    final allWidgets = _buildPageWidgets(playingVerse, marks);
     final pageMetaBar = allWidgets.firstWhere(
       (w) => w is PageMetaBar,
       orElse: () => SizedBox.shrink(),
@@ -172,44 +192,12 @@ class _PageViewerState extends State<PageViewer> {
             ],
           ),
         ),
-        if (selectedAyah != null && _popupPosition != null) _buildPopup(),
-        if (selectedAyah != null && selectedSurah != null)
-          Positioned(
-            left: AppMetrics.spacing.md,
-            bottom: AppMetrics.spacing.md,
-            child: FloatingActionButton.small(
-              heroTag: 'recite-from-${widget.page.pageNo}',
-              tooltip: AppLocalizations.of(context)!.recitationStartTooltip,
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.scaffold,
-              onPressed: () => _startFromSelection(context),
-              child: const Icon(Icons.mic),
-            ),
-          ),
+        if (selectedAyah != null && _popupPosition != null) _buildPopup(marks),
       ],
     );
   }
 
-  /// Page-scoped recitation starting at the selected verse (the FAB). Stops any
-  /// playback, enters recitation mode, and streams from that position onward.
-  void _startFromSelection(BuildContext context) {
-    final surah = selectedSurah;
-    final ayah = selectedAyah;
-    if (surah == null || ayah == null) return;
-    final words = recitableWordsFromPage(
-      widget.page,
-      fromSurah: surah,
-      fromAyah: ayah,
-    );
-    if (words.isEmpty) return;
-    _removePopup();
-    context.read<AudioPlayerBloc>().add(const StopAudio());
-    final rec = context.read<QuranRecitationBloc>();
-    rec.enterMode();
-    rec.startPage(widget.page.pageNo, words);
-  }
-
-  Widget _buildPopup() {
+  Widget _buildPopup(Set<String> marks) {
     final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
     if (stackBox == null) return const SizedBox.shrink();
 
@@ -236,6 +224,11 @@ class _PageViewerState extends State<PageViewer> {
     if (top + popupHeight > stackSize.height - margin) {
       top = stackSize.height - popupHeight - margin;
     }
+
+    final isMarked =
+        selectedSurah != null &&
+        selectedAyah != null &&
+        marks.contains(MarkedAyahService.keyOf(selectedSurah!, selectedAyah!));
 
     return Positioned(
       left: left,
@@ -275,9 +268,21 @@ class _PageViewerState extends State<PageViewer> {
                       },
               ),
               IconButton(
-                icon: const Icon(Icons.bookmark_border),
+                icon: Icon(isMarked ? Icons.bookmark : Icons.bookmark_border),
                 iconSize: AppMetrics.quranPageViewer.popupIconSize,
-                onPressed: null, // TODO: bookmark ayah
+                tooltip: isMarked
+                    ? AppLocalizations.of(context)!.ayahUnmarkTooltip
+                    : AppLocalizations.of(context)!.ayahMarkTooltip,
+                onPressed: (selectedAyah == null || selectedSurah == null)
+                    ? null
+                    : () {
+                        final surah = selectedSurah!;
+                        final ayah = selectedAyah!;
+                        // Close first: the amber selection highlight would
+                        // otherwise mask the mark the user just added.
+                        _removePopup();
+                        _marks.toggle(surah, ayah);
+                      },
               ),
               IconButton(
                 icon: const Icon(Icons.mic),

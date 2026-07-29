@@ -566,4 +566,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verseCopied => 'Verse copied';
+
+  @override
+  String get ayahMarkTooltip => 'Mark verse';
+
+  @override
+  String get ayahUnmarkTooltip => 'Remove mark';
 }

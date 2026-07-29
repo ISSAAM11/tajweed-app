@@ -565,4 +565,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get verseCopied => 'تم نسخ الآية';
+
+  @override
+  String get ayahMarkTooltip => 'تعليم الآية';
+
+  @override
+  String get ayahUnmarkTooltip => 'إزالة التعليم';
 }

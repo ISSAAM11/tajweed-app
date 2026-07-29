@@ -99,6 +99,8 @@ abstract final class AppColors {
 
   // Quran page colors
   static const Color ayahHighlight = Color(0x4DFFC107);   // amber 30% opacity
+  static const Color ayahMarked = Color(0x4D6D7475);      // greyRegular 30% — marked ayah, light theme
+  static const Color ayahMarkedDark = Color(0x38FFFFFF);  // white 22% — marked ayah, dark theme
   static const Color surahGlyphColor = Color(0xB7000000); // black 72% opacity
 
   // Interactive Colors
