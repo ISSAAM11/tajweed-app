@@ -18,8 +18,6 @@ void _application() async {
 
   AppEnvironment.setupEnvironment(Environment.dev);
 
-  await AppBinding().all();
-
   ConnectivityPlus.init();
 
   RequesterConfig.configure();

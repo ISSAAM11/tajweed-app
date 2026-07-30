@@ -1,11 +1,22 @@
+/// Host the `dev` environment talks to. For the Android emulator, this must be
+/// 10.0.2.2 (the emulator-accessible alias for the host machine). For a physical
+/// device, override per-run with `flutter run --dart-define=DEV_HOST=<lan-ip>`.
+const String _devHost = String.fromEnvironment(
+  'DEV_HOST',
+  defaultValue: '10.0.2.2',
+);
+
 enum Environment {
   mock(),
   dev(
-    // Android emulator → 10.0.2.2 reaches the host machine (Docker backend on
-    // port 8000). For a physical device on the same Wi-Fi, use this machine's
-    // LAN IP instead (e.g. 192.168.1.4) and allow port 8000 through the firewall.
-    baseUrl: "http://10.0.2.2:8000/api/",
-    wsBaseUrl: "ws://10.0.2.2:8000",
+    // This machine's LAN IP — reachable from BOTH a physical device on the same
+    // Wi-Fi and the Android emulator. The backend must be bound to 0.0.0.0
+    // (`runserver 0.0.0.0:8000`, as docker-compose does); the default
+    // `runserver` binds 127.0.0.1 only, which no physical device can reach.
+    // Override without editing this file:
+    //   flutter run --dart-define=DEV_HOST=192.168.1.42
+    baseUrl: "http://$_devHost:8000/api/",
+    wsBaseUrl: "ws://$_devHost:8000",
   ),
   preprod(
     baseUrl: "https://tajeewd-ai.preprod.com/api/",
