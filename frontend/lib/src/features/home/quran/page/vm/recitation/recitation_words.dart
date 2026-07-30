@@ -1,3 +1,4 @@
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
 
 /// Arabic base-letter ranges — same set the recitation use cases filter by, so
@@ -33,6 +34,22 @@ List<({int id, String text})> recitableWordsFromPage(
     }
   }
   return words;
+}
+
+/// The ayahs rendered on [page], in reading order and de-duplicated — the
+/// playback queue for "play this page".
+List<VerseKey> ayahsOnPage(PageContentDto page) {
+  final seen = <String>{};
+  final ayahs = <VerseKey>[];
+  for (final block in page.blocks) {
+    if (block is! LineWordsBlockDto) continue;
+    for (final word in block.lineWords) {
+      if (seen.add('${word.surah}:${word.ayah}')) {
+        ayahs.add(VerseKey(word.surah, word.ayah));
+      }
+    }
+  }
+  return ayahs;
 }
 
 /// The largest surah number appearing on [page] (used to compute "next surah").

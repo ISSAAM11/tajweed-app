@@ -131,7 +131,7 @@ extension AudioPlayerUc on AudioPlayerBloc {
   Future<void> _onResume(ResumeAudio _, Emitter<AudioPlayerState> emit) async {
     final s = state;
     if (s is! AudioPaused) return;
-    _player.resume();
+    await _player.resume();
     emit(AudioPlaying(
       surah: s.surah,
       currentAyah: s.currentAyah,
@@ -175,6 +175,7 @@ extension AudioPlayerUc on AudioPlayerBloc {
   ) async {
     await _indexSub?.cancel();
     _indexSub = null;
+    await _player.stop();
     emit(const AudioIdle());
   }
 

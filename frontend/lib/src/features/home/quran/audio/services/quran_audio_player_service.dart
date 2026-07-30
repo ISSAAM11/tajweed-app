@@ -41,8 +41,8 @@ class QuranAudioPlayerService {
 
   Future<void> pause() => _player.pause();
 
-  void resume() {
-    _player.play().catchError((e) => _errorController.add(e));
+  Future<void> resume() async {
+    return _player.play().catchError((e) => _errorController.add(e));
   }
 
   Future<void> stop() => _player.stop();

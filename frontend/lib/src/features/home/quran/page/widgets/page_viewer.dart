@@ -50,21 +50,7 @@ class _PageViewerState extends State<PageViewer> {
   }
 
   /// Returns distinct (surah, ayah) pairs from the current page in order.
-  List<VerseKey> _getPageAyahs() {
-    final seen = <String>{};
-    final ayahs = <VerseKey>[];
-    for (final block in widget.page.blocks) {
-      if (block is LineWordsBlockDto) {
-        for (final word in block.lineWords) {
-          final key = '${word.surah}:${word.ayah}';
-          if (seen.add(key)) {
-            ayahs.add(VerseKey(word.surah, word.ayah));
-          }
-        }
-      }
-    }
-    return ayahs;
-  }
+  List<VerseKey> _getPageAyahs() => ayahsOnPage(widget.page);
 
   /// Plain Arabic text of a single verse, assembled from its words' `plainText`
   /// (the `text` column) in word order and joined with spaces.
