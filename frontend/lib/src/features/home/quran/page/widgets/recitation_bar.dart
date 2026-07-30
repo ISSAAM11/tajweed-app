@@ -277,7 +277,7 @@ class _Transport extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _CheikhDropdown(compact: true),
+              Flexible(child: _CheikhDropdown(compact: true)),
               Text(
                 l10n.audioTrackInfo(surah, ayah, currentIndex + 1, total),
                 style: AppFonts.lato

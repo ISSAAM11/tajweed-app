@@ -49,6 +49,12 @@ class StopAudio extends AudioPlayerEvent {
   const StopAudio();
 }
 
+/// The selected reciter changed. Re-cuts the current queue in the new voice,
+/// resuming at the ayah being played; a no-op when nothing is queued.
+class ReciterChanged extends AudioPlayerEvent {
+  const ReciterChanged();
+}
+
 class SkipNext extends AudioPlayerEvent {
   const SkipNext();
 }

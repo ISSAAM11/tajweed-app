@@ -28,6 +28,16 @@ extension AudioPlayerUc on AudioPlayerBloc {
     };
     if (pending == null) return;
 
+    _lastRequest = pending;
+    await _resolveAndPlay(pending, emit);
+  }
+
+  /// Plays [pending] if the reciter's audio is on disk, otherwise hands it to
+  /// the download-confirm flow. Shared by a fresh request and a reciter switch.
+  Future<void> _resolveAndPlay(
+    PendingRequest pending,
+    Emitter<AudioPlayerState> emit,
+  ) async {
     final cheikh = _cheikh.state;
 
     final surahs = <int>{pending.surah};
@@ -45,6 +55,36 @@ extension AudioPlayerUc on AudioPlayerBloc {
     } else {
       emit(AudioAwaitingDownload(pending));
     }
+  }
+
+  /// Switching reciter mid-playback re-cuts the queue in the new voice from the
+  /// ayah being played, rather than dropping playback. Nothing queued means
+  /// there is nothing to re-cut — the next play picks the new reciter up on its
+  /// own.
+  Future<void> _onReciterChanged(
+    ReciterChanged _,
+    Emitter<AudioPlayerState> emit,
+  ) async {
+    final last = _lastRequest;
+    final (int? surah, int? ayah) = switch (state) {
+      AudioPlaying(:final surah, :final currentAyah) => (surah, currentAyah),
+      AudioPaused(:final surah, :final currentAyah) => (surah, currentAyah),
+      _ => (null, null),
+    };
+    if (last == null || surah == null || ayah == null) return;
+
+    await _indexSub?.cancel();
+    _indexSub = null;
+    await _player.stop().catchError((_) {});
+
+    final pending = PendingRequest(
+      surah: surah,
+      ayah: ayah,
+      mode: last.mode,
+      pageAyahs: last.pageAyahs,
+    );
+    _lastRequest = pending;
+    await _resolveAndPlay(pending, emit);
   }
 
   Future<void> _onConfirmDownload(
@@ -217,6 +257,13 @@ extension AudioPlayerUc on AudioPlayerBloc {
             emit(const AudioError('audioSegmentNotFound'));
             return;
           }
+          // Normally the first ayah of the page, but a reciter switch pins the
+          // start to whichever ayah was playing. A page can span two surahs, so
+          // match on both.
+          startIndex = queue.indexWhere(
+            (s) => s.surah == pending.surah && s.ayah == pending.ayah,
+          );
+          if (startIndex < 0) startIndex = 0;
 
         case PlaybackMode.surah:
           queue = await _dao.getSurahSegments(cheikh, pending.surah);

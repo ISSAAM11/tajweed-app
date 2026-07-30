@@ -25,6 +25,10 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   StreamSubscription<PlayerState>? _playerStateSub;
   StreamSubscription<Object>? _playerErrorSub;
 
+  /// What is currently queued, so a reciter switch can re-cut the same request
+  /// in the new voice instead of dropping playback.
+  PendingRequest? _lastRequest;
+
   AudioPlayerBloc({
     required AudioDao dao,
     required AudioDownloadService downloader,
@@ -43,6 +47,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     on<PauseAudio>(_onPause);
     on<ResumeAudio>(_onResume);
     on<StopAudio>(_onStop);
+    on<ReciterChanged>(_onReciterChanged);
     on<SkipNext>(_onSkipNext);
     on<SkipPrevious>(_onSkipPrevious);
     on<_IndexAdvanced>(_onIndexAdvanced);

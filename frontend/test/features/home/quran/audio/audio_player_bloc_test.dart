@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/database/audio_dao.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/models/ayah_segment.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/models/cheikh_reciter.dart';
@@ -319,6 +320,65 @@ void main() {
 
         bloc.add(const StopAudio());
         await future;
+      });
+    });
+
+    group('ReciterChanged', () {
+      test('is a no-op when nothing is queued', () async {
+        bloc.add(const ReciterChanged());
+        await pumpEventQueue();
+        expect(bloc.state, isA<AudioIdle>());
+      });
+
+      test('re-cuts the queue and keeps playing at the same position', () async {
+        await reachPlayingState();
+
+        when(() => player.stop()).thenAnswer((_) async {});
+
+        bloc.add(const ReciterChanged());
+        await pumpEventQueue();
+
+        // The position is unchanged, so the state is Equatable-identical and no
+        // new state is emitted — only the voice behind it differs.
+        expect(bloc.state, isA<AudioPlaying>());
+        expect((bloc.state as AudioPlaying).currentAyah, 1);
+
+        // The old queue is torn down before the new voice is queued.
+        verify(() => player.stop()).called(1);
+        verify(
+          () => player.playQueue(
+            any(),
+            any(),
+            startIndex: any(named: 'startIndex'),
+          ),
+        ).called(2);
+      });
+
+      test('resumes a page at the ayah that was playing', () async {
+        final pageAyahs = [VerseKey(1, 1), VerseKey(1, 2), VerseKey(1, 3)];
+        stubDownloaded(1);
+        when(() => dao.getAyahsSegments(any(), any()))
+            .thenAnswer((_) async => [_seg1, _seg2, _seg3]);
+        when(() => downloader.getLocalFile(any(), 1))
+            .thenAnswer((_) async => _fakeFile);
+        when(() => player.stop()).thenAnswer((_) async {});
+        stubPlayQueue();
+
+        bloc.add(RequestPlayPage(pageAyahs));
+        await pumpEventQueue();
+        expect(bloc.state, isA<AudioPlaying>());
+
+        // Advance to the second ayah of the page.
+        indexCtrl.add(1);
+        await pumpEventQueue();
+        expect((bloc.state as AudioPlaying).currentAyah, 2);
+
+        bloc.add(const ReciterChanged());
+        await pumpEventQueue();
+
+        expect(bloc.state, isA<AudioPlaying>());
+        expect((bloc.state as AudioPlaying).currentAyah, 2);
+        verify(() => player.playQueue(any(), any(), startIndex: 1)).called(1);
       });
     });
   });

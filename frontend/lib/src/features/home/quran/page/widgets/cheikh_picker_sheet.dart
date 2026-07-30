@@ -44,12 +44,15 @@ class CheikhPickerSheet extends StatelessWidget {
                 cheikh: cheikh,
                 isSelected: cheikh == selected,
                 isDark: isDark,
-                onTap: () {
-                  if (di.isRegistered<AudioPlayerBloc>()) {
-                    get<AudioPlayerBloc>().add(const StopAudio());
-                  }
-                  cubit.select(cheikh);
+                onTap: () async {
                   Navigator.pop(context);
+                  // Await the selection: the player reads the cubit's state
+                  // when it re-cuts the queue, and select() only emits after
+                  // the preference write.
+                  await cubit.select(cheikh);
+                  if (di.isRegistered<AudioPlayerBloc>()) {
+                    get<AudioPlayerBloc>().add(const ReciterChanged());
+                  }
                 },
               ),
             ),
