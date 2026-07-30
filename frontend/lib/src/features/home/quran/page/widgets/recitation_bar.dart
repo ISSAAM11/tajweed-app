@@ -88,13 +88,22 @@ class _CheikhDropdown extends StatelessWidget {
         message: l10n.cheikhPickerTitle,
         child: InkWell(
           borderRadius: BorderRadius.circular(AppMetrics.audioBar.borderRadius),
-          onTap: () => showModalBottomSheet(
-            context: context,
-            builder: (_) => BlocProvider.value(
-              value: context.read<CheikhCubit>(),
-              child: const CheikhPickerSheet(),
-            ),
-          ),
+          onTap: () {
+            // Captured here, not resolved inside the sheet: the sheet is a
+            // separate route with no access to this screen's providers, and
+            // AudioPlayerBloc is a GetIt factory, so looking it up there would
+            // yield a second, idle bloc.
+            final audio = context.read<AudioPlayerBloc>();
+            showModalBottomSheet(
+              context: context,
+              builder: (_) => BlocProvider.value(
+                value: context.read<CheikhCubit>(),
+                child: CheikhPickerSheet(
+                  onReciterChanged: () => audio.add(const ReciterChanged()),
+                ),
+              ),
+            );
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(

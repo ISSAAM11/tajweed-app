@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tajweed_ai/l10n/app_localizations.dart';
-import 'package:tajweed_ai/src/app/binding/app_bindings.dart' show di, get;
 import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_fonts.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_styles.dart';
@@ -11,7 +10,15 @@ import 'package:tajweed_ai/src/features/home/quran/audio/vm/audio_player_bloc.da
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/cheikh_cubit.dart';
 
 class CheikhPickerSheet extends StatelessWidget {
-  const CheikhPickerSheet({super.key});
+  /// Fired once the new reciter is persisted. The Quran page uses it to re-cut
+  /// live playback in the new voice; callers with no player (settings) omit it.
+  ///
+  /// It is a callback rather than a lookup because [AudioPlayerBloc] is a GetIt
+  /// *factory* — resolving it here would build a second, idle bloc and the
+  /// event would never reach the one that is playing.
+  final VoidCallback? onReciterChanged;
+
+  const CheikhPickerSheet({super.key, this.onReciterChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +57,7 @@ class CheikhPickerSheet extends StatelessWidget {
                   // when it re-cuts the queue, and select() only emits after
                   // the preference write.
                   await cubit.select(cheikh);
-                  if (di.isRegistered<AudioPlayerBloc>()) {
-                    get<AudioPlayerBloc>().add(const ReciterChanged());
-                  }
+                  onReciterChanged?.call();
                 },
               ),
             ),
