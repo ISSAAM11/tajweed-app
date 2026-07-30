@@ -498,6 +498,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get audioNoInternet => 'لا يوجد اتصال بالإنترنت';
 
   @override
+  String get audioPause => 'إيقاف مؤقت';
+
+  @override
+  String get audioResume => 'تشغيل';
+
+  @override
+  String get audioStop => 'إيقاف التشغيل';
+
+  @override
+  String get audioSkipNext => 'الآية التالية';
+
+  @override
+  String get audioSkipPrevious => 'الآية السابقة';
+
+  @override
+  String audioTrackInfo(int surah, int ayah, int index, int total) {
+    return 'سورة $surah · آية $ayah · $index/$total';
+  }
+
+  @override
   String get cheikhPickerTitle => 'اختر القارئ';
 
   @override

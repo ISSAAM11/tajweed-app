@@ -1004,6 +1004,42 @@ abstract class AppLocalizations {
   /// **'No internet connection'**
   String get audioNoInternet;
 
+  /// No description provided for @audioPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get audioPause;
+
+  /// No description provided for @audioResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get audioResume;
+
+  /// No description provided for @audioStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop playback'**
+  String get audioStop;
+
+  /// No description provided for @audioSkipNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next verse'**
+  String get audioSkipNext;
+
+  /// No description provided for @audioSkipPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous verse'**
+  String get audioSkipPrevious;
+
+  /// No description provided for @audioTrackInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Surah {surah} · verse {ayah} · {index}/{total}'**
+  String audioTrackInfo(int surah, int ayah, int index, int total);
+
   /// No description provided for @cheikhPickerTitle.
   ///
   /// In en, this message translates to:

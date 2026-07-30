@@ -6,7 +6,6 @@ import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_state.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/quran_recitation_bloc.dart';
-import 'package:tajweed_ai/src/features/home/quran/page/widgets/audio_player_bar.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/download_confirm_dialog.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/quran_page_body.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/recitation_bar.dart';
@@ -134,23 +133,11 @@ final class QuranPageScreen extends Feature<QuranPageBloc, QuranPageState> {
             ),
           ),
           backgroundColor: Theme.of(context).colorScheme.surface,
-          body: Stack(
-            children: [
-              Positioned.fill(
-                child: SafeArea(
-                  top: false,
-                  bottom: false,
-                  child: QuranPageBody(state),
-                ),
-              ),
-              const Positioned.fill(child: AudioPageOverlay()),
-              const Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: AudioPlayerBar(),
-              ),
-            ],
+          // The player lives in the bottom bar; the page needs no overlay.
+          body: SafeArea(
+            top: false,
+            bottom: false,
+            child: QuranPageBody(state),
           ),
           bottomNavigationBar: const RecitationBottomBar(),
         ),

@@ -499,6 +499,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get audioNoInternet => 'No internet connection';
 
   @override
+  String get audioPause => 'Pause';
+
+  @override
+  String get audioResume => 'Play';
+
+  @override
+  String get audioStop => 'Stop playback';
+
+  @override
+  String get audioSkipNext => 'Next verse';
+
+  @override
+  String get audioSkipPrevious => 'Previous verse';
+
+  @override
+  String audioTrackInfo(int surah, int ayah, int index, int total) {
+    return 'Surah $surah · verse $ayah · $index/$total';
+  }
+
+  @override
   String get cheikhPickerTitle => 'Choose reciter';
 
   @override

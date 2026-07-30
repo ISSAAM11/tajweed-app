@@ -157,6 +157,20 @@
   "audioDownloadCancel": "Cancel",
   "audioDownloading": "Downloading audio...",
   "audioNoInternet": "No internet connection",
+  "audioPause": "Pause",
+  "audioResume": "Play",
+  "audioStop": "Stop playback",
+  "audioSkipNext": "Next verse",
+  "audioSkipPrevious": "Previous verse",
+  "audioTrackInfo": "Surah {surah} · verse {ayah} · {index}/{total}",
+  "@audioTrackInfo": {
+    "placeholders": {
+      "surah": { "type": "int" },
+      "ayah": { "type": "int" },
+      "index": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
   "cheikhPickerTitle": "Choose reciter",
   "settingsReciterSection": "Reciter",
   "homeRecitationTest": "Recitation Test",

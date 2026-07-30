@@ -190,12 +190,9 @@ class _AudioBar {
   final double infoFontSize = 13;
   final double verseFontSize = 11;
   final double borderRadius = 18;
-  final double horizontalMargin = 12;
-  final double bottomMargin = 16;
-  final double backgroundOpacity = 0.90;
-  final double overlayOpacity = 0.18;
-  final double blurSigma = 12.0;
-  final double elevation = 12;
+  final double controlGap = 4;
+  final double progressSpacing = 6;
+  final double progressBarRadius = 4;
 }
 
 class _SurahNameCard {

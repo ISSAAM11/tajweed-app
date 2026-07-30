@@ -290,7 +290,7 @@ void main() {
         await reachPlayingState();
 
         when(() => player.pause()).thenAnswer((_) async {});
-        when(() => player.resume()).thenReturn(null);
+        when(() => player.resume()).thenAnswer((_) async {});
 
         bloc.add(const PauseAudio());
         await pumpEventQueue();

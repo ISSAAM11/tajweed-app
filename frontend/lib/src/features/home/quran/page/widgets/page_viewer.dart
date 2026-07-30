@@ -310,15 +310,18 @@ class _PageViewerState extends State<PageViewer> {
                             ayahNumber: ayah,
                             pageNo: widget.page.pageNo,
                             surahName: surahName,
-                            onPlayAyah: () => context
-                                .read<AudioPlayerBloc>()
-                                .add(RequestPlayAyah(surah, ayah)),
-                            onPlayPage: () => context
-                                .read<AudioPlayerBloc>()
-                                .add(RequestPlayPage(pageAyahs)),
-                            onPlaySurah: () => context
-                                .read<AudioPlayerBloc>()
-                                .add(RequestPlaySurah(surah, ayah)),
+                            onPlayAyah: () => _startPlayback(
+                              context,
+                              RequestPlayAyah(surah, ayah),
+                            ),
+                            onPlayPage: () => _startPlayback(
+                              context,
+                              RequestPlayPage(pageAyahs),
+                            ),
+                            onPlaySurah: () => _startPlayback(
+                              context,
+                              RequestPlaySurah(surah, ayah),
+                            ),
                           ),
                         );
                       },
@@ -328,6 +331,15 @@ class _PageViewerState extends State<PageViewer> {
         ),
       ),
     );
+  }
+
+  /// Queues [request], dropping any recitation session first — the mic and the
+  /// player can't share the audio route, and the bottom bar shows one or the
+  /// other, never both.
+  void _startPlayback(BuildContext context, AudioPlayerEvent request) {
+    final rec = context.read<QuranRecitationBloc>();
+    if (rec.state.modeActive) rec.exitMode();
+    context.read<AudioPlayerBloc>().add(request);
   }
 
   String _resolveSurahName(BuildContext context, int surahNumber) {
