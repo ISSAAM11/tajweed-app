@@ -7,10 +7,10 @@
 
 ## Dashboard
 
-- **Total features** : 10
-- **Total User Stories** : ~40
-- **Set actif** : Release v1 (cible : v1.0.0) — **3 features Release v1 LIVREES, build APK pret**
-- **Progression globale** : 50% (5/10 features terminees : 3.1, 3.2, 3.3, 3.4, 1.4)
+- **Total features** : 11
+- **Total User Stories** : ~48
+- **Set actif** : Set 3 - AI & Recitation (1.7 frontend livre)
+- **Progression globale** : 45% (5/11 features terminees : 3.1, 3.2, 3.3, 3.4, 1.4)
 
 ### Status par Set
 
@@ -19,7 +19,7 @@
 | Set 1 | Finalisation MVP - Auth & Home | 5/5 | Differe post-v1 (sauf 1.4) |
 | Set 2 | Polish & Personnalisation | 2/5 | 2 features terminees |
 | **Release v1** | **3 ecrans + Coming Soon UI** | **3** | **En cours** |
-| Set 3 | AI & Recitation | 1/5 | Spec redigee (1.6 a faire) |
+| Set 3 | AI & Recitation | 2/5 | 1.6 spec ; 1.7 frontend livre |
 
 ---
 
@@ -236,8 +236,8 @@
 **Objectif** : Introduire la validation de recitation par IA (temps reel) — premiere brique IA de l'app.
 
 **Status** : Spec redigee, implementation a faire
-**Features** : 1/5
-**Effort** : 2.5 jours (frontend ; backend Django + Deepgram comptes separement)
+**Features** : 2/5
+**Effort** : 2.5 jours (1.6) + ~4.75 jours (1.7) frontend ; backend Django + Deepgram comptes separement
 
 ### [Feature 1.6] Recitation Test
 
@@ -267,6 +267,29 @@
   - [ ] Cles ARB ecran (en+ar) ; route dans `app_router.dart` ; binding DI
   - [ ] Tests widget (rendu neutre, coloration via verdicts, reset)
 
+### [Feature 1.7] Quran-Page Recitation
+
+- **Status** : En cours — frontend livre ; validation device + backend live a faire
+- **Module** : Home
+- **Effort** : ~4.75 jours frontend (8 User Stories) ; backend reutilise de la 1.6
+- **Complexite** : Complexe
+- **Localisation** : `lib/src/features/home/quran/page/` (vm/recitation/ + widgets/)
+- **Spec** : [docs/specs/recitation/](./specs/recitation/) — README / requirements / design / tasks
+- **Note** : Porte la recitation IA (pipeline de la 1.6) dans la vraie page de lecture : les mots du mushaf se colorent sur place (vert/rouge), barre en bas (record / masquer texte / recommencer / sourate suivante), mode memorisation "hide text", arret auto en fin de page. Contrat WebSocket reutilise tel quel (cf. 1.6). Garde aussi le mic du popup verset (1.6) + un bouton flottant pour demarrer d'une position precise.
+- **Backend** :
+  - [ ] Aucun nouveau — reutilise le consumer/alignement de la Feature 1.6
+- **Frontend (Flutter)** :
+  - [x] US-1.7.1 : Mode recitation + bottom app bar (`RecitationBottomBar`)
+  - [x] US-1.7.2 : Toggle enregistrement (record/stop) + permission micro
+  - [x] US-1.7.3 : Coloration des mots rendus en place (`tajweed_text.dart`, map `WordRow.id`)
+  - [x] US-1.7.4 : Mode "hide text" (mot revele dans sa couleur de verdict une fois recite)
+  - [x] US-1.7.5 : Recommencer → pointeur au debut de la page
+  - [x] US-1.7.6 : Suivant → sourate suivante (`initToVerse`)
+  - [x] US-1.7.7 : Arret auto quand la page est terminee (`isComplete`)
+  - [x] US-1.7.8 : Bouton flottant → demarrer du verset selectionne
+  - [x] Cles ARB (en+ar) ; bridge page-change ; DI (`QuranRecitationBloc`)
+  - [ ] Tests widget + validation device avec backend live
+
 ---
 
 ## Widget Transverse - ComingSoonBadge
@@ -292,10 +315,28 @@
 | 2026-05-21 | 3.3 Settings Polish | Settings | Set 2 | 1.5j | Demande utilisateur (preparation Release v1) |
 | 2026-05-21 | 3.4 My Account Screen | Account | Set 2 | 2j | Demande utilisateur (preparation Release v1) |
 | 2026-05-29 | 1.6 Recitation Test | Home | Set 3 | 2.5j | Demande utilisateur (validation recitation par IA) |
+| 2026-06-01 | 1.7 Quran-Page Recitation | Home | Set 3 | 4.75j | Demande utilisateur (recitation + memorisation dans la page Coran) |
 
 ---
 
 ## Journal de bord
+
+### 2026-06-01 - Feature 1.7 (Quran-Page Recitation) - Frontend livre
+- **Action** : Portage de la recitation IA dans la page de lecture Coran + redaction de la spec `docs/specs/recitation/`. Pipeline backend (1.6) reutilise tel quel.
+- **Livrables (frontend)** :
+  - Bloc page-scoped `lib/src/features/home/quran/page/vm/recitation/` (state unique : modeActive / recording / hideText / pageNo / wordIndexById / verdicts / errorKey ; `verdictForWordId` + `isComplete`) + helper `recitation_words.dart`.
+  - `RecitationBottomBar` (bottom app bar : record / hide-text / restart / next-surah / exit) ; `tajweed_text.dart` colore les glyphes + mode "hide text" ; bouton flottant dans `page_viewer.dart` pour demarrer du verset selectionne ; mic du popup verset conserve (1.6).
+  - `quran_page_screen.dart` : provider `QuranRecitationBloc`, snackbar d'erreur, bridge `currentPage` → reset session ; DI dans `QuranPageDependencies` (instance propre de `RecitationSocketClient`).
+  - DAO `getSurahWordsFromAyah` (select brut null-safe) pour le flux verset→fin de sourate.
+  - 6 nouvelles cles ARB (en+ar) ; `flutter gen-l10n`.
+  - Specs : `docs/specs/recitation/` (README / requirements US-1.7.1→1.7.8 INVEST + EARS / design / tasks).
+- **Decisions** :
+  - **Scope page** : on recite les mots reellement rendus (`PageContentDto` blocks), arret auto quand tous les verdicts sont `final`.
+  - **Trois points d'entree** (demande utilisateur "keep both") : bottom app bar (page), bouton flottant (position selectionnee), mic du popup verset (sourate, 1.6).
+  - **Next = sourate suivante** ; **restart = debut de page** ; **hide-text** revele chaque mot dans sa couleur de verdict.
+  - State unique (copyWith) plutot que sealed : la barre persiste hors enregistrement et porte plusieurs flags.
+- **Verification** : `flutter analyze` page feature → 0 issue nouvelle (1 lint pre-existant `dart:ui` dans audio_player_bar). Validation device + backend live a faire.
+- **Source** : Demande utilisateur — recitation dans la page Coran avec barre (record, masquer texte pour memorisation, recommencer, sourate suivante) + arret auto en fin de page.
 
 ### 2026-05-29 - Bootstrap Feature 1.6 (Recitation Test) - Spec only
 - **Action** : Redaction de la spec spec-driven pour la Feature 1.6 (Recitation Test). Documentation uniquement, aucun code source modifie.
