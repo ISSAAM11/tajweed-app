@@ -182,11 +182,11 @@ List<HomeAction> _buildActions(BuildContext context) {
       targetRoute: '/tajweed-test',
     ),
     HomeAction(
-      title: l10n.homeRecitationTest,
-      actionLabel: l10n.homeStartRecitationTest,
+      title: l10n.homeQuranHifth,
+      actionLabel: l10n.homeStartHifth,
       icon: Icons.record_voice_over_rounded,
       highlighted: false,
-      targetRoute: '/recitation-test',
+      targetRoute: '/quran-listing?dest=hifth',
     ),
   ];
 }

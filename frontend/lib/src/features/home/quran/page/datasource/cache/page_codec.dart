@@ -25,6 +25,7 @@ class PageCodec {
             'nameGlyph': b.chapter.nameGlyph,
             'bismillahPre': b.chapter.bismillahPre,
             'revelationPlace': b.chapter.revelationPlace.name,
+            'versesCount': b.chapter.versesCount,
           },
         };
       } else if (b is BasmalahBlockDto) {
@@ -135,6 +136,8 @@ class PageCodec {
                 revelationPlace: c['revelationPlace'] == 'makkah'
                     ? RevelationPlace.makkah
                     : RevelationPlace.madinah,
+                // Pages cached before this field existed default to 0.
+                versesCount: c['versesCount'] ?? 0,
               ),
             ),
           );

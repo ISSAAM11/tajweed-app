@@ -1052,23 +1052,29 @@ abstract class AppLocalizations {
   /// **'Reciter'**
   String get settingsReciterSection;
 
-  /// No description provided for @homeRecitationTest.
+  /// No description provided for @homeQuranHifth.
   ///
   /// In en, this message translates to:
-  /// **'Recitation Test'**
-  String get homeRecitationTest;
+  /// **'Quran Hifth'**
+  String get homeQuranHifth;
 
-  /// No description provided for @homeStartRecitationTest.
+  /// No description provided for @homeStartHifth.
   ///
   /// In en, this message translates to:
-  /// **'Start recitation'**
-  String get homeStartRecitationTest;
+  /// **'Start memorizing'**
+  String get homeStartHifth;
 
-  /// No description provided for @recitationTestTitle.
+  /// No description provided for @hifthTitle.
   ///
   /// In en, this message translates to:
-  /// **'Recitation Test'**
-  String get recitationTestTitle;
+  /// **'Quran Hifth'**
+  String get hifthTitle;
+
+  /// No description provided for @hifthLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the surah'**
+  String get hifthLoadError;
 
   /// No description provided for @recitationInstruction.
   ///

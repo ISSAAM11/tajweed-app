@@ -79,7 +79,9 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     await _indexSub?.cancel();
     await _playerStateSub?.cancel();
     await _playerErrorSub?.cancel();
-    await _player.dispose();
+    // The player service is a shared lazySingleton that outlives this bloc —
+    // disposing it here would leave a dead player for the next screen.
+    await _player.stop();
     return super.close();
   }
 }

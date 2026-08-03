@@ -24,10 +24,13 @@ class QuranAudioPlayerService {
   Stream<Object> get playerErrorStream => _errorController.stream;
 
   /// [filePaths] has one entry per segment in the same order.
+  /// [loop] repeats the current item (a clipped segment for surah-level
+  /// reciters, the whole file for ayah-level ones) until the next request.
   Future<void> playQueue(
     List<AyahSegment> segments,
     List<String> filePaths, {
     int startIndex = 0,
+    bool loop = false,
   }) async {
     final sources = ConcatenatingAudioSource(
       children: [
@@ -36,6 +39,7 @@ class QuranAudioPlayerService {
       ],
     );
     await _player.setAudioSource(sources, initialIndex: startIndex);
+    await _player.setLoopMode(loop ? LoopMode.one : LoopMode.off);
     _player.play().catchError((e) => _errorController.add(e));
   }
 

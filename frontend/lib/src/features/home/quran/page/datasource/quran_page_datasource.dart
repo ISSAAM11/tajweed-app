@@ -103,6 +103,7 @@ final class QuranPageDatasourceImpl implements QuranPageDatasource {
               nameGlyph: chap.nameGlyph,
               bismillahPre: chap.bismillahPre,
               revelationPlace: chap.revelationPlace,
+              versesCount: chap.versesCount,
             );
             chapterCacheMap[line.surahNumber!] = header;
           }

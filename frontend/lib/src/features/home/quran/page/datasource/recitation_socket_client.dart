@@ -4,7 +4,7 @@ import 'package:cg_core_defs/helpers/debugging_printer.dart';
 import 'package:tajweed_ai/src/app/environment/app_environment.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../models/word_verdict_model.dart';
+import 'word_verdict_model.dart';
 
 /// Thin wrapper around the recitation WebSocket (design.md §3, §6b).
 ///

@@ -525,13 +525,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsReciterSection => 'Reciter';
 
   @override
-  String get homeRecitationTest => 'Recitation Test';
+  String get homeQuranHifth => 'Quran Hifth';
 
   @override
-  String get homeStartRecitationTest => 'Start recitation';
+  String get homeStartHifth => 'Start memorizing';
 
   @override
-  String get recitationTestTitle => 'Recitation Test';
+  String get hifthTitle => 'Quran Hifth';
+
+  @override
+  String get hifthLoadError => 'Couldn\'t load the surah';
 
   @override
   String get recitationInstruction =>

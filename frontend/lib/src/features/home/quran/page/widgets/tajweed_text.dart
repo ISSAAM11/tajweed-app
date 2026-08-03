@@ -3,7 +3,7 @@ import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/quran_recitation_bloc.dart';
-import 'package:tajweed_ai/src/features/home/quran/recitation_test/data/models/word_verdict_model.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/datasource/word_verdict_model.dart';
 
 class QuranLineText extends StatelessWidget {
   final int pageNo;

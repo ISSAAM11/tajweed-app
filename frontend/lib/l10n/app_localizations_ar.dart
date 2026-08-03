@@ -524,13 +524,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsReciterSection => 'القارئ';
 
   @override
-  String get homeRecitationTest => 'اختبار التلاوة';
+  String get homeQuranHifth => 'حفظ القرآن';
 
   @override
-  String get homeStartRecitationTest => 'ابدأ التلاوة';
+  String get homeStartHifth => 'ابدأ الحفظ';
 
   @override
-  String get recitationTestTitle => 'اختبار التلاوة';
+  String get hifthTitle => 'حفظ القرآن';
+
+  @override
+  String get hifthLoadError => 'تعذّر تحميل السورة';
 
   @override
   String get recitationInstruction =>

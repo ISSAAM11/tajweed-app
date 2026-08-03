@@ -14,7 +14,7 @@ import 'package:tajweed_ai/src/features/home/quran/page/datasource/quran_page_re
 import 'package:tajweed_ai/src/features/home/quran/page/services/partition_snapshot_service.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/quran_page_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/vm/recitation/quran_recitation_bloc.dart';
-import 'package:tajweed_ai/src/features/home/quran/recitation_test/data/datasource/recitation_socket_client.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/datasource/recitation_socket_client.dart';
 
 class QuranPageDependencies implements Dependencies {
   @override
@@ -66,9 +66,7 @@ class QuranPageDependencies implements Dependencies {
       ),
     );
 
-    // In-page recitation. The socket client is instantiated directly (not via
-    // GetIt) so it never clashes with the recitation_test feature, which
-    // registers the same type when its screen is open.
+    // In-page recitation.
     di.registerFactory<QuranRecitationBloc>(
       () => QuranRecitationBloc(
         dao: get<QuranPageDao>(),

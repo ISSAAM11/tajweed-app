@@ -6,13 +6,16 @@ import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/list
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_state.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/router/listing_destination.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router.dart';
 
 import 'quran_listing_body.dart';
 
 final class SurahListingScreen
     extends Feature<QuranListingBloc, QuranListingState> {
-  SurahListingScreen({super.key})
+  final ListingDestination dest;
+
+  SurahListingScreen({this.dest = ListingDestination.quranPage, super.key})
     : super(
         dependencies: QuranListingDependencies().inject,
         onUpdate: (context, state) => switch (state) {
@@ -38,7 +41,9 @@ final class SurahListingScreen
               icon: const Icon(Icons.arrow_back, color: AppColors.scaffold),
             ),
             title: Text(
-              AppLocalizations.of(context)!.homeQuranRecitation,
+              dest == ListingDestination.hifth
+                  ? AppLocalizations.of(context)!.hifthTitle
+                  : AppLocalizations.of(context)!.homeQuranRecitation,
               style: AppFonts.nunito
                   .withSize(FontSizes.headline3)
                   .withColor(AppColors.scaffold)
@@ -63,7 +68,7 @@ final class SurahListingScreen
             lastSelected: lastSelectedPage,
             onContinue: () => _openLastSelected(context, lastSelectedPage),
           ),
-          Expanded(child: SurahListingBody(state)),
+          Expanded(child: SurahListingBody(state, dest: dest)),
         ],
       ),
     );

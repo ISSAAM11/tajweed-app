@@ -10,6 +10,7 @@ class ChapterHeaderDto {
   final String nameGlyph;
   final bool bismillahPre;
   final RevelationPlace revelationPlace;
+  final int versesCount;
   ChapterHeaderDto({
     required this.id,
     required this.nameArabic,
@@ -17,6 +18,7 @@ class ChapterHeaderDto {
     required this.nameGlyph,
     required this.bismillahPre,
     required this.revelationPlace,
+    required this.versesCount,
   });
   ChapterHeaderDto.fromChapterRow(ChapterRow row)
     : id = row.id,
@@ -24,7 +26,8 @@ class ChapterHeaderDto {
       nameSimple = row.nameSimple,
       nameGlyph = row.nameGlyph,
       bismillahPre = row.bismillahPre,
-      revelationPlace = row.revelationPlace;
+      revelationPlace = row.revelationPlace,
+      versesCount = row.versesCount;
 }
 
 class PageLinesDto {

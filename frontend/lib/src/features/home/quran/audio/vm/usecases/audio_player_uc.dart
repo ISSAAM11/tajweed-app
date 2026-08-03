@@ -8,10 +8,12 @@ extension AudioPlayerUc on AudioPlayerBloc {
     Emitter<AudioPlayerState> emit,
   ) async {
     final pending = switch (event) {
-      RequestPlayAyah(:final surah, :final ayah) => PendingRequest(
+      RequestPlayAyah(:final surah, :final ayah, :final loop) =>
+        PendingRequest(
           surah: surah,
           ayah: ayah,
           mode: PlaybackMode.single,
+          loop: loop,
         ),
       RequestPlayPage(:final ayahs) => PendingRequest(
           surah: ayahs.first.surah,
@@ -82,6 +84,7 @@ extension AudioPlayerUc on AudioPlayerBloc {
       ayah: ayah,
       mode: last.mode,
       pageAyahs: last.pageAyahs,
+      loop: last.loop,
     );
     _lastRequest = pending;
     await _resolveAndPlay(pending, emit);
@@ -165,6 +168,7 @@ extension AudioPlayerUc on AudioPlayerBloc {
       mode: s.mode,
       currentIndex: s.currentIndex,
       totalInQueue: s.totalInQueue,
+      looping: s.looping,
     ));
   }
 
@@ -178,6 +182,7 @@ extension AudioPlayerUc on AudioPlayerBloc {
       mode: s.mode,
       currentIndex: s.currentIndex,
       totalInQueue: s.totalInQueue,
+      looping: s.looping,
     ));
   }
 
@@ -295,7 +300,12 @@ extension AudioPlayerUc on AudioPlayerBloc {
       }
 
       _subscribeToIndex(queue);
-      await _player.playQueue(queue, filePaths, startIndex: startIndex);
+      await _player.playQueue(
+        queue,
+        filePaths,
+        startIndex: startIndex,
+        loop: pending.loop,
+      );
 
       final first = queue[startIndex];
       emit(AudioPlaying(
@@ -304,6 +314,7 @@ extension AudioPlayerUc on AudioPlayerBloc {
         mode: pending.mode,
         currentIndex: startIndex,
         totalInQueue: queue.length,
+        looping: pending.loop,
       ));
     } catch (e) {
       emit(const AudioError('audioPlaybackError'));

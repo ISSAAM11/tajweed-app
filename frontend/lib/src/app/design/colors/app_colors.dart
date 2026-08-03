@@ -97,6 +97,16 @@ abstract final class AppColors {
   static const Color darkError = Color(0xFFFFB4AB); // spec: error in dark — softer red that reads on obsidian
   static const Color darkOnError = Color(0xFF690005); // spec: on-error
 
+  // Hifth (memorization) screen colors
+  static const Color hifthTileBackground = Color(0x0D121931); // ink 5%
+  static const Color hifthGold = Color(0xFFAE8625); // deep gold accents
+  static const LinearGradient hifthHeaderGradient = LinearGradient(
+    colors: [Color(0xFFD4A849), hifthGold],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const Color hifthHeaderDivider = Color(0x59FFFFFF); // white 35%
+
   // Quran page colors
   static const Color ayahHighlight = Color(0x4DFFC107);   // amber 30% opacity
   static const Color ayahMarked = Color(0x4D6D7475);      // greyRegular 30% — marked ayah, light theme

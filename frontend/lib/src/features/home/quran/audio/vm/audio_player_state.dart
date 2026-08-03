@@ -32,6 +32,7 @@ class AudioPlaying extends AudioPlayerState {
   final PlaybackMode mode;
   final int currentIndex;
   final int totalInQueue;
+  final bool looping;
 
   const AudioPlaying({
     required this.surah,
@@ -39,6 +40,7 @@ class AudioPlaying extends AudioPlayerState {
     required this.mode,
     required this.currentIndex,
     required this.totalInQueue,
+    this.looping = false,
   });
 
   AudioPlaying copyWithIndex(int newIndex, List<AyahSegment> queue) {
@@ -49,11 +51,13 @@ class AudioPlaying extends AudioPlayerState {
       mode: mode,
       currentIndex: newIndex,
       totalInQueue: totalInQueue,
+      looping: looping,
     );
   }
 
   @override
-  List<Object?> get props => [surah, currentAyah, mode, currentIndex, totalInQueue];
+  List<Object?> get props =>
+      [surah, currentAyah, mode, currentIndex, totalInQueue, looping];
 }
 
 class AudioPaused extends AudioPlayerState {
@@ -62,6 +66,7 @@ class AudioPaused extends AudioPlayerState {
   final PlaybackMode mode;
   final int currentIndex;
   final int totalInQueue;
+  final bool looping;
 
   const AudioPaused({
     required this.surah,
@@ -69,10 +74,12 @@ class AudioPaused extends AudioPlayerState {
     required this.mode,
     required this.currentIndex,
     required this.totalInQueue,
+    this.looping = false,
   });
 
   @override
-  List<Object?> get props => [surah, currentAyah, mode, currentIndex, totalInQueue];
+  List<Object?> get props =>
+      [surah, currentAyah, mode, currentIndex, totalInQueue, looping];
 }
 
 class AudioError extends AudioPlayerState {
@@ -88,14 +95,16 @@ class PendingRequest extends Equatable {
   final int ayah;
   final PlaybackMode mode;
   final List<VerseKey>? pageAyahs;
+  final bool loop;
 
   const PendingRequest({
     required this.surah,
     required this.ayah,
     required this.mode,
     this.pageAyahs,
+    this.loop = false,
   });
 
   @override
-  List<Object?> get props => [surah, ayah, mode, pageAyahs];
+  List<Object?> get props => [surah, ayah, mode, pageAyahs, loop];
 }

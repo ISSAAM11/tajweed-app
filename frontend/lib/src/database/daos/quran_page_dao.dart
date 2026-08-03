@@ -67,6 +67,28 @@ class QuranPageDao extends DatabaseAccessor<AppDatabase>
         .toList();
   }
 
+  /// Plain Arabic words of a whole surah as (ayah, text) pairs, in mushaf
+  /// order. One query for the surah (Al-Baqarah ≈ 6k rows). Uses a raw select
+  /// with nullable reads for the same reason as [getAyahPlainWords]; null or
+  /// blank `text` (the ayah-end marker word) comes back as an empty string
+  /// for the caller to filter.
+  Future<List<({int ayah, String text})>> getSurahPlainWords(int surah) async {
+    final rows = await customSelect(
+      'SELECT ayah, text FROM words WHERE surah = ? '
+      'ORDER BY ayah ASC, word ASC',
+      variables: [Variable.withInt(surah)],
+      readsFrom: {words},
+    ).get();
+    return rows
+        .map(
+          (r) => (
+            ayah: r.read<int>('ayah'),
+            text: r.readNullable<String>('text') ?? '',
+          ),
+        )
+        .toList();
+  }
+
   Future<List<WordRow>> getWordsForAyat(List<VerseKey> ayat) {
     if (ayat.isEmpty) return Future.value([]);
 

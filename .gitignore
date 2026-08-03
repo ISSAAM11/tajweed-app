@@ -41,5 +41,9 @@ tajweed rules/
 /android/
 /ios/
 /build/
+/packages/
+/test/
+/windows/
 /pubspec.lock
+/tajweed_ai.iml
 /.vscode/

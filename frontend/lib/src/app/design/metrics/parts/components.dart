@@ -195,6 +195,42 @@ class _AudioBar {
   final double progressBarRadius = 4;
 }
 
+class _HifthScreen {
+  const _HifthScreen._();
+
+  // List
+  final EdgeInsets listPadding = const EdgeInsets.symmetric(
+    horizontal: 24,
+    vertical: 16,
+  );
+
+  // Surah header card
+  final double headerRadius = 20;
+  final EdgeInsets headerPadding = const EdgeInsets.symmetric(
+    horizontal: 24,
+    vertical: 24,
+  );
+  final EdgeInsets headerMargin = const EdgeInsets.only(bottom: 24);
+  final double headerNameSpacing = 4;
+  final double headerDividerSpacing = 16;
+  final double headerMetaDotSize = 4;
+  final double headerMetaGap = 5;
+
+  // Ayah tile
+  final double tileHeaderRadius = 10;
+  final double tileHeaderHeight = 47;
+  final EdgeInsets tileHeaderPadding = const EdgeInsets.symmetric(
+    horizontal: 13,
+  );
+  final double badgeSize = 27;
+  final double actionIconSize = 24;
+  final double actionIconGap = 8;
+  final double textTopSpacing = 16;
+  final double textBottomSpacing = 16;
+  final double ayahTextHeight = 1.8;
+  final double tileBottomSpacing = 24;
+}
+
 class _SurahNameCard {
   const _SurahNameCard._();
 

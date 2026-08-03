@@ -5,8 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:record/record.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
-import 'package:tajweed_ai/src/features/home/quran/recitation_test/data/datasource/recitation_socket_client.dart';
-import 'package:tajweed_ai/src/features/home/quran/recitation_test/data/models/word_verdict_model.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/datasource/recitation_socket_client.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/datasource/word_verdict_model.dart';
 
 export 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,8 +18,8 @@ part 'usecases/quran_recitation_uc.dart';
 /// verse), audio streams to the backend, and per-word verdicts come back and
 /// are painted directly onto the rendered Quran words ([QuranLineText]).
 ///
-/// Reuses the surah-agnostic [RecitationSocketClient] + [WordVerdictModel] from
-/// the recitation_test prototype. Extends plain [Bloc] (not BaseBloc) because
+/// Uses the surah-agnostic [RecitationSocketClient] + [WordVerdictModel].
+/// Extends plain [Bloc] (not BaseBloc) because
 /// it is owned by a `BlocProvider`, whose dispose calls [close] directly.
 class QuranRecitationBloc
     extends Bloc<QuranRecitationEvent, QuranRecitationState> {

@@ -9,9 +9,12 @@ sealed class AudioPlayerEvent extends Equatable {
 class RequestPlayAyah extends AudioPlayerEvent {
   final int surah;
   final int ayah;
-  const RequestPlayAyah(this.surah, this.ayah);
+
+  /// Loops the ayah until Stop/Pause or another play request.
+  final bool loop;
+  const RequestPlayAyah(this.surah, this.ayah, {this.loop = false});
   @override
-  List<Object?> get props => [surah, ayah];
+  List<Object?> get props => [surah, ayah, loop];
 }
 
 class RequestPlayPage extends AudioPlayerEvent {

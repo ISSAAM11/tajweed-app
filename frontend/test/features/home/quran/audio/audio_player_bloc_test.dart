@@ -60,7 +60,8 @@ void main() {
     when(() => player.playerStateStream).thenAnswer((_) => playerStateCtrl.stream);
     when(() => player.currentIndexStream).thenAnswer((_) => indexCtrl.stream);
     when(() => player.playerErrorStream).thenAnswer((_) => const Stream.empty());
-    when(() => player.dispose()).thenAnswer((_) async {});
+    // close() stops (not disposes) the shared player.
+    when(() => player.stop()).thenAnswer((_) async {});
 
     // Real CheikhCubit with the test cheikh — no platform calls needed
     cheikhCubit = CheikhCubit(
@@ -90,9 +91,12 @@ void main() {
       when(() => downloader.isSurahDownloaded(any(), surah))
           .thenAnswer((_) async => downloaded);
 
-  void stubPlayQueue() =>
-      when(() => player.playQueue(any(), any(), startIndex: any(named: 'startIndex')))
-          .thenAnswer((_) async {});
+  void stubPlayQueue() => when(() => player.playQueue(
+        any(),
+        any(),
+        startIndex: any(named: 'startIndex'),
+        loop: any(named: 'loop'),
+      )).thenAnswer((_) async {});
 
   Future<void> reachPlayingState({int surah = 1, int ayah = 1}) async {
     stubDownloaded(surah);
@@ -190,7 +194,8 @@ void main() {
         bloc.add(const RequestPlaySurah(1, 2));
         await future;
 
-        verify(() => player.playQueue(any(), any(), startIndex: 1)).called(1);
+        verify(() => player.playQueue(any(), any(),
+            startIndex: 1, loop: any(named: 'loop'))).called(1);
       });
     });
 
@@ -350,6 +355,7 @@ void main() {
             any(),
             any(),
             startIndex: any(named: 'startIndex'),
+            loop: any(named: 'loop'),
           ),
         ).called(2);
       });
@@ -378,7 +384,8 @@ void main() {
 
         expect(bloc.state, isA<AudioPlaying>());
         expect((bloc.state as AudioPlaying).currentAyah, 2);
-        verify(() => player.playQueue(any(), any(), startIndex: 1)).called(1);
+        verify(() => player.playQueue(any(), any(),
+            startIndex: 1, loop: any(named: 'loop'))).called(1);
       });
     });
   });
