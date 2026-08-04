@@ -48,6 +48,12 @@ class TajweedRuleDetailScreen
                   .withColor(AppColors.scaffold)
                   .semiBold(),
             ),
+            actions: [
+              IconButton(
+                onPressed: () => context.push('/settings'),
+                icon: const Icon(Icons.settings, color: AppColors.scaffold),
+              ),
+            ],
           ),
         ),
       ),
