@@ -20,6 +20,17 @@ class QuranAudioPlayerService {
   Stream<int?> get currentIndexStream => _player.currentIndexStream;
   Stream<PlayerState> get playerStateStream => _player.playerStateStream;
 
+  /// Position and length of the item playing right now. For a surah-level
+  /// reciter the item is a [ClippingAudioSource], so both are already relative
+  /// to the ayah's clip rather than to the whole-surah file.
+  ///
+  /// Deliberately not routed through [AudioPlayerBloc]: position ticks several
+  /// times a second, and emitting a state that often would rebuild the whole
+  /// ayah list. Widgets that want a progress indicator subscribe directly and
+  /// keep the rebuild scoped to themselves.
+  Stream<Duration> get positionStream => _player.positionStream;
+  Stream<Duration?> get durationStream => _player.durationStream;
+
   /// Emits whenever `play()` throws — lets the bloc reset to idle.
   Stream<Object> get playerErrorStream => _errorController.stream;
 

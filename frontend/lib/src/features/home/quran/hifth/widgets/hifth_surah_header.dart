@@ -26,8 +26,15 @@ class HifthSurahHeader extends StatelessWidget {
       margin: metrics.headerMargin,
       padding: metrics.headerPadding,
       decoration: BoxDecoration(
+        // The artwork carries its own gold gradient; the gradient underneath
+        // stays as the fallback so the white text keeps its contrast if the
+        // image ever fails to resolve.
         gradient: AppColors.hifthHeaderGradient,
         borderRadius: BorderRadius.circular(metrics.headerRadius),
+        image: const DecorationImage(
+          image: AssetImage(AppImages.hifthTitleBackground),
+          fit: BoxFit.cover,
+        ),
       ),
       child: Column(
         children: [
@@ -78,6 +85,17 @@ class HifthSurahHeader extends StatelessWidget {
               ),
             ],
           ),
+          // Every surah opens with the basmalah except At-Tawbah (9), and in
+          // Al-Fatihah it is verse 1 already — printing it here too would
+          // duplicate it.
+          if (header.bismillahPre) ...[
+            SizedBox(height: metrics.headerBismillahSpacing),
+            Image.asset(
+              AppImages.hifthBismillah,
+              height: metrics.headerBismillahHeight,
+              fit: BoxFit.contain,
+            ),
+          ],
         ],
       ),
     );

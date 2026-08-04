@@ -1,6 +1,7 @@
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/audio_player_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/hifth/vm/hifth_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/hifth/widgets/hifth_waveform.dart';
 
 /// One ayah of the hifth list: a rounded header row (number badge + play and
 /// repeat buttons) above the Arabic text, closed by a divider.
@@ -62,7 +63,12 @@ class HifthAyahTile extends StatelessWidget {
                           .medium(),
                     ),
                   ),
-                  const Spacer(),
+                  Expanded(
+                    child: Padding(
+                      padding: metrics.waveformMargin,
+                      child: HifthWaveform(active: isThisAyah),
+                    ),
+                  ),
                   IconButton(
                     onPressed: () => _onPlayTap(context, isPlaying, isThisAyah),
                     iconSize: metrics.actionIconSize,

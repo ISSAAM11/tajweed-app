@@ -220,6 +220,8 @@ class _HifthScreen {
   final double headerDividerSpacing = 16;
   final double headerMetaDotSize = 4;
   final double headerMetaGap = 5;
+  final double headerBismillahSpacing = 20;
+  final double headerBismillahHeight = 34;
 
   // Ayah tile
   final double tileHeaderRadius = 10;
@@ -230,6 +232,10 @@ class _HifthScreen {
   final double badgeSize = 27;
   final double actionIconSize = 24;
   final double actionIconGap = 8;
+
+  // Playback waveform inside the tile header
+  final double waveformHeight = 22;
+  final EdgeInsets waveformMargin = const EdgeInsets.symmetric(horizontal: 12);
   final double textTopSpacing = 16;
   final double textBottomSpacing = 16;
   final double ayahTextHeight = 1.8;

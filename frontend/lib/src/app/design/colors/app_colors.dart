@@ -107,6 +107,11 @@ abstract final class AppColors {
   );
   static const Color hifthHeaderDivider = Color(0x59FFFFFF); // white 35%
 
+  /// Waveform bars in an ayah tile: [hifthWavePlayed] covers the elapsed part
+  /// of the clip, [hifthWaveRemaining] the rest.
+  static const Color hifthWavePlayed = hifthGold;
+  static const Color hifthWaveRemaining = Color(0xFF8A8A8A);
+
   // Quran page colors
   static const Color ayahHighlight = Color(0x4DFFC107);   // amber 30% opacity
   static const Color ayahMarked = Color(0x4D6D7475);      // greyRegular 30% — marked ayah, light theme

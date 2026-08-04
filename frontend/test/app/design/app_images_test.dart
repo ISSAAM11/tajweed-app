@@ -18,6 +18,9 @@ void main() {
       'surahNumberBackground': AppImages.surahNumberBackground,
       'lastReadIcon': AppImages.lastReadIcon,
       'quranImage': AppImages.quranImage,
+      'hifthTitleBackground': AppImages.hifthTitleBackground,
+      'hifthBismillah': AppImages.hifthBismillah,
+      'hifthWaveform': AppImages.hifthWaveform,
     };
 
     paths.forEach((name, path) {
