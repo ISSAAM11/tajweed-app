@@ -24,6 +24,10 @@ class HomeActionCard extends StatelessWidget {
     return Material(
       color: backgroundColor,
       borderRadius: BorderRadius.circular(metrics.radius),
+      // On the Material itself, not the inner Container: clipBehavior below
+      // would clip a BoxDecoration shadow away.
+      elevation: metrics.elevation,
+      shadowColor: AppColors.shadow,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
@@ -43,7 +47,18 @@ class HomeActionCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(action.icon, size: metrics.iconSize, color: foregroundColor),
+              // Untinted: these are full-colour illustrations, not glyphs.
+              // Flexible so a narrow screen (or a title that wraps to two
+              // lines) shrinks the illustration instead of overflowing the
+              // fixed-ratio grid tile.
+              Flexible(
+                child: Image.asset(
+                  action.iconAsset,
+                  height: metrics.iconSize,
+                  width: metrics.iconSize,
+                  fit: BoxFit.contain,
+                ),
+              ),
               SizedBox(height: metrics.titleSpacing),
               Text(
                 action.title,

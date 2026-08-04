@@ -107,7 +107,9 @@ class _HomeScreen {
   // Grid
   final double gridCrossSpacing = 14;
   final double gridMainSpacing = 14;
-  final double gridChildAspectRatio = 0.95;
+  // Taller than wide: the action cards stack a large illustration over a title
+  // and a badge, and the illustration needs the vertical room.
+  final double gridChildAspectRatio = 0.85;
 }
 
 class _HomeActionCard {
@@ -116,9 +118,12 @@ class _HomeActionCard {
   final double radius = 24;
   final EdgeInsets contentPadding = const EdgeInsets.all(16);
 
-  final double iconSize = 64;
+  final double iconSize = 96;
   final double titleSpacing = 8;
   final double badgeSpacing = 10;
+
+  /// Small lift so the cards read as raised against the scaffold.
+  final double elevation = 4;
 
   final EdgeInsets badgePadding = const EdgeInsets.symmetric(
     horizontal: 12,

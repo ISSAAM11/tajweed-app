@@ -95,6 +95,7 @@ flutter:
     - assets/images/background/surah-header-background-dark.png
     - assets/images/background/tajweed-rules.png
     - assets/images/background/basmalah.png
+    - assets/images/home/
     - assets/images/home/listing/background-last-read.png
     - assets/images/home/listing/quran-image.png
     - assets/images/home/listing/last-read-icon.png
