@@ -1076,6 +1076,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t load the surah'**
   String get hifthLoadError;
 
+  /// No description provided for @hifthRepeatTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat verse'**
+  String get hifthRepeatTooltip;
+
   /// No description provided for @recitationInstruction.
   ///
   /// In en, this message translates to:

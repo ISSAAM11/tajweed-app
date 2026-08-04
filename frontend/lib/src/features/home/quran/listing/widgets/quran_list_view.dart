@@ -27,7 +27,7 @@ class QuranListView extends StatelessWidget {
     final dividerColor = Theme.of(context).colorScheme.outlineVariant;
     return Column(
       children: [
-        if (header != null) header!,
+        ?header,
 
         Expanded(
           child: ListView.separated(

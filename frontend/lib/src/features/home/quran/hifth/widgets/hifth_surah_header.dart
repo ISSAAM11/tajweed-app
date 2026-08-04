@@ -35,6 +35,14 @@ class HifthSurahHeader extends StatelessWidget {
           image: AssetImage(AppImages.hifthTitleBackground),
           fit: BoxFit.cover,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.hifthHeaderGlow,
+            blurRadius: metrics.headerGlowBlur,
+            spreadRadius: metrics.headerGlowSpread,
+            offset: metrics.headerGlowOffset,
+          ),
+        ],
       ),
       child: Column(
         children: [

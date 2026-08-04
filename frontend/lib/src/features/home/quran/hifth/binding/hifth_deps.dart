@@ -8,6 +8,7 @@ import 'package:tajweed_ai/src/features/home/quran/audio/services/quran_audio_pl
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/audio_player_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/cheikh_cubit.dart';
 import 'package:tajweed_ai/src/features/home/quran/hifth/vm/hifth_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/listing_cache.dart';
 
 class HifthDependencies implements Dependencies {
   @override
@@ -29,6 +30,8 @@ class HifthDependencies implements Dependencies {
       ),
     );
 
-    di.registerFactory<HifthBloc>(() => HifthBloc(get<QuranPageDao>()));
+    di.registerFactory<HifthBloc>(
+      () => HifthBloc(get<QuranPageDao>(), get<LastSelectedSurahService>()),
+    );
   }
 }

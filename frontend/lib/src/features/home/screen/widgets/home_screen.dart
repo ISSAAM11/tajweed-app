@@ -1,8 +1,8 @@
 import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/listing_cache.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/router/last_read_navigation.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
-import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router.dart';
 import 'package:tajweed_ai/src/features/home/screen/binding/home_screen_deps.dart';
 import 'package:tajweed_ai/src/features/home/screen/data/models/home_action.dart';
 import 'package:tajweed_ai/src/features/home/screen/vm/home_screen_bloc.dart';
@@ -17,7 +17,7 @@ final class HomeScreen extends Feature<HomeScreenBloc, HomeScreenState> {
 
   @override
   Widget build(BuildContext context, HomeScreenState state) {
-    final lastSelected = state is HomeReady ? state.lastSelected : null;
+    final lastReadService = get<LastSelectedSurahService>();
     final metrics = AppMetrics.homeScreen;
 
     return Scaffold(
@@ -31,16 +31,26 @@ final class HomeScreen extends Feature<HomeScreenBloc, HomeScreenState> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _DarkShelfWithCard(
-              lastSelected: lastSelected,
-              onContinue: () => _openLastSelected(context, lastSelected),
+            // The home card follows whichever flow the user touched last, and
+            // rebuilds on every save so it is right after popping back from a
+            // surah — this screen stays alive underneath, so its bloc state
+            // alone would go stale.
+            ValueListenableBuilder<int>(
+              valueListenable: lastReadService.revision,
+              builder: (context, _, __) {
+                final lastSelected = lastReadService.mostRecent();
+                return _DarkShelfWithCard(
+                  lastSelected: lastSelected,
+                  onContinue: () => openLastRead(context, lastSelected),
+                );
+              },
             ),
             Padding(
               padding: metrics.bodyPaddingSubtitle,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _SectionTitle(),
+                  Center(child: _SectionTitle()),
                   SizedBox(height: metrics.sectionBottomSpacing),
                   HomeActionGrid(
                     actions: _buildActions(context),
@@ -53,17 +63,6 @@ final class HomeScreen extends Feature<HomeScreenBloc, HomeScreenState> {
           ],
         ),
       ),
-    );
-  }
-
-  void _openLastSelected(BuildContext context, LastSelectedPage? lastSelected) {
-    if (lastSelected == null) return;
-    final args = QuranPageArgs(
-      verseKey: lastSelected.verseKey,
-      mode: PartitionMode.page,
-    );
-    context.push(
-      Uri(path: '/quran-page', queryParameters: args.toQuery()).toString(),
     );
   }
 
@@ -144,7 +143,7 @@ class _DarkShelfWithCard extends StatelessWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: LastReadingCard(
+            child: LastReadingCard.forSource(
               lastSelected: lastSelected!,
               onContinue: onContinue,
             ),

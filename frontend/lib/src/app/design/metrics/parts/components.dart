@@ -222,6 +222,9 @@ class _HifthScreen {
   final double headerMetaGap = 5;
   final double headerBismillahSpacing = 20;
   final double headerBismillahHeight = 34;
+  final double headerGlowBlur = 24;
+  final double headerGlowSpread = 1;
+  final Offset headerGlowOffset = const Offset(0, 8);
 
   // Ayah tile
   final double tileHeaderRadius = 10;
@@ -232,6 +235,18 @@ class _HifthScreen {
   final double badgeSize = 27;
   final double actionIconSize = 24;
   final double actionIconGap = 8;
+
+  /// Tap target for the tile's action icons. Smaller than the 48dp default so
+  /// three of them plus the waveform still fit on a narrow phone, but kept
+  /// above the raw icon size so they stay comfortably tappable.
+  final double actionTapSize = 34;
+
+  // Marked-ayah highlight behind the Arabic text
+  final double markedTextRadius = 8;
+  final EdgeInsets markedTextPadding = const EdgeInsets.symmetric(
+    horizontal: 8,
+    vertical: 4,
+  );
 
   // Playback waveform inside the tile header
   final double waveformHeight = 22;

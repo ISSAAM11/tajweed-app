@@ -536,6 +536,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hifthLoadError => 'تعذّر تحميل السورة';
 
   @override
+  String get hifthRepeatTooltip => 'تكرار الآية';
+
+  @override
   String get recitationInstruction =>
       'اقرأ السورة بصوت مرتفع — يتحول كل كلمة إلى الأخضر عند نطقها صحيحًا.';
 

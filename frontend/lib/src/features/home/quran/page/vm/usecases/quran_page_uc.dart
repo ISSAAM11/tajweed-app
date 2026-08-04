@@ -124,6 +124,8 @@ extension QuranPageUc on QuranPageBloc {
       nameArabic: chapter.nameArabic,
       pageNumber: newPage,
       verseKey: verseKey,
+      source: LastReadSource.quranPage,
+      savedAt: DateTime.now().millisecondsSinceEpoch,
     );
 
     await lastSurahService.set(lastSelectedPage);

@@ -154,7 +154,7 @@ class OutlinedLoadingButton extends StatelessWidget {
                       color: prefixIconColor ?? textColor,
                       size: prefixIconSize,
                     ).customPadding(right: 8, top: 1),
-                  if (prefixWidget != null) prefixWidget!,
+                  ?prefixWidget,
                   Stack(
                     alignment: Alignment.center,
                     children: [

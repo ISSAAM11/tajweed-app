@@ -7,11 +7,38 @@ class LastReadingCard extends StatelessWidget {
   final LastSelectedPage lastSelected;
   final VoidCallback onContinue;
 
+  /// Artwork overrides so each flow's card is recognisable at a glance. They
+  /// default to the mushaf look, which is what every existing caller wants.
+  final String backgroundAsset;
+  final String illustrationAsset;
+
   const LastReadingCard({
     super.key,
     required this.lastSelected,
     required this.onContinue,
+    this.backgroundAsset = AppImages.backgroundLastRead,
+    this.illustrationAsset = AppImages.quranImage,
   });
+
+  /// The card styled for whichever flow saved [lastSelected].
+  factory LastReadingCard.forSource({
+    Key? key,
+    required LastSelectedPage lastSelected,
+    required VoidCallback onContinue,
+  }) => switch (lastSelected.source) {
+    LastReadSource.hifth => LastReadingCard(
+      key: key,
+      lastSelected: lastSelected,
+      onContinue: onContinue,
+      backgroundAsset: AppImages.hifthLastReadBackground,
+      illustrationAsset: AppImages.quranHifthIcon,
+    ),
+    LastReadSource.quranPage => LastReadingCard(
+      key: key,
+      lastSelected: lastSelected,
+      onContinue: onContinue,
+    ),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +54,7 @@ class LastReadingCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.secondary,
         image: DecorationImage(
-          image: AssetImage(AppImages.backgroundLastRead),
+          image: AssetImage(backgroundAsset),
           fit: BoxFit.cover,
         ),
         borderRadius: BorderRadius.circular(metrics.borderRadius),
@@ -121,7 +148,7 @@ class LastReadingCard extends StatelessWidget {
             SizedBox(width: metrics.iconTextSpacing),
             SizedBox(
               width: metrics.quranImageSize,
-              child: Image.asset(AppImages.quranImage, fit: BoxFit.contain),
+              child: Image.asset(illustrationAsset, fit: BoxFit.contain),
             ),
           ],
         ),

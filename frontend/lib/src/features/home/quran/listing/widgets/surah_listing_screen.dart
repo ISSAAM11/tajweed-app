@@ -1,13 +1,12 @@
 import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
-import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/binding/quran_listing_deps.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/listing_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_state.dart';
+import 'package:tajweed_ai/src/features/home/quran/listing/router/last_read_navigation.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/router/listing_destination.dart';
-import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router.dart';
 
 import 'quran_listing_body.dart';
 
@@ -25,7 +24,13 @@ final class SurahListingScreen
 
   @override
   Widget build(BuildContext context, QuranListingState state) {
-    final lastSelectedPage = get<LastSelectedSurahService>().get();
+    final lastReadService = get<LastSelectedSurahService>();
+    // Each destination shows its own bookmark: the hifth listing must not
+    // offer to resume where the mushaf was left, or vice versa.
+    final source = switch (dest) {
+      ListingDestination.hifth => LastReadSource.hifth,
+      ListingDestination.quranPage => LastReadSource.quranPage,
+    };
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -64,24 +69,21 @@ final class SurahListingScreen
       ),
       body: Column(
         children: [
-          _DarkShelfWithCard(
-            lastSelected: lastSelectedPage,
-            onContinue: () => _openLastSelected(context, lastSelectedPage),
+          // Rebuilds on every save, so popping back from a surah shows the
+          // position just reached rather than the one captured on first build.
+          ValueListenableBuilder<int>(
+            valueListenable: lastReadService.revision,
+            builder: (context, _, __) {
+              final lastSelected = lastReadService.get(source);
+              return _DarkShelfWithCard(
+                lastSelected: lastSelected,
+                onContinue: () => openLastRead(context, lastSelected),
+              );
+            },
           ),
           Expanded(child: SurahListingBody(state, dest: dest)),
         ],
       ),
-    );
-  }
-
-  void _openLastSelected(BuildContext context, LastSelectedPage? lastSelected) {
-    if (lastSelected == null) return;
-    final args = QuranPageArgs(
-      verseKey: lastSelected.verseKey,
-      mode: PartitionMode.page,
-    );
-    context.push(
-      Uri(path: '/quran-page', queryParameters: args.toQuery()).toString(),
     );
   }
 }
@@ -135,7 +137,7 @@ class _DarkShelfWithCard extends StatelessWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: LastReadingCard(
+            child: LastReadingCard.forSource(
               lastSelected: lastSelected!,
               onContinue: onContinue,
             ),

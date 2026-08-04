@@ -151,18 +151,40 @@ class RukuItem extends PartitionItem {
   );
 }
 
+/// Which flow produced a [LastSelectedPage]. The two are tracked separately:
+/// reading the mushaf and memorising a surah are different activities, and
+/// resuming one should not move the other's bookmark.
+enum LastReadSource {
+  quranPage,
+  hifth;
+
+  static LastReadSource parse(String? raw) => LastReadSource.values.firstWhere(
+    (s) => s.name == raw,
+    // Entries written before the hifth flow existed carry no source, and all
+    // of them came from the mushaf.
+    orElse: () => LastReadSource.quranPage,
+  );
+}
+
 /// Last Selected Page item
 class LastSelectedPage extends PartitionItem {
   String name;
   String nameArabic;
   int pageNumber;
   final VerseKey _verseKey;
+  final LastReadSource source;
+
+  /// Milliseconds since epoch, used to pick the more recent of the two sources
+  /// on the home screen. Legacy entries have no timestamp and sort oldest.
+  final int savedAt;
 
   LastSelectedPage({
     required this.name,
     required this.nameArabic,
     required this.pageNumber,
     required VerseKey verseKey,
+    this.source = LastReadSource.quranPage,
+    this.savedAt = 0,
   }) : _verseKey = verseKey;
 
   @override
@@ -176,6 +198,8 @@ class LastSelectedPage extends PartitionItem {
     'nameArabic': nameArabic,
     'pageNumber': pageNumber,
     'verseKey': _verseKey.toString(),
+    'source': source.name,
+    'savedAt': savedAt,
   };
 
   factory LastSelectedPage.fromMap(Map<String, dynamic> map) =>
@@ -184,6 +208,8 @@ class LastSelectedPage extends PartitionItem {
         nameArabic: map['nameArabic'] as String,
         pageNumber: map['pageNumber'] as int,
         verseKey: VerseKey.parse(map['verseKey'] as String),
+        source: LastReadSource.parse(map['source'] as String?),
+        savedAt: map['savedAt'] as int? ?? 0,
       );
 }
 

@@ -164,6 +164,7 @@
   "homeStartHifth": "ابدأ الحفظ",
   "hifthTitle": "حفظ القرآن",
   "hifthLoadError": "تعذّر تحميل السورة",
+  "hifthRepeatTooltip": "تكرار الآية",
   "recitationInstruction": "اقرأ السورة بصوت مرتفع — يتحول كل كلمة إلى الأخضر عند نطقها صحيحًا.",
   "recitationListening": "جارٍ الاستماع...",
   "recitationStart": "ابدأ",

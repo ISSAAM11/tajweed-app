@@ -32,8 +32,42 @@ extension HifthUc on HifthBloc {
       ];
 
       emit(HifthLoaded(header: header, ayahs: ayahs));
+
+      // Opening a surah only moves the bookmark when it is a different surah.
+      // Coming back to the one you were memorising must not reset you to its
+      // first ayah.
+      final stored = _lastRead.get(LastReadSource.hifth);
+      if (stored?.verseKey.surah != event.surah) {
+        await _saveLastRead(header, ayahs.isEmpty ? 1 : ayahs.first.number);
+      }
     } catch (_) {
       emit(const HifthError('hifthLoadError'));
+    }
+  }
+
+  Future<void> _onAyahRead(AyahRead event, Emitter<HifthState> emit) async {
+    final current = state;
+    if (current is! HifthLoaded) return;
+    await _saveLastRead(current.header, event.ayah);
+  }
+
+  /// Records where the user is in the hifth flow. Failures are swallowed: a
+  /// bookmark that did not persist must not break the screen the user is on.
+  Future<void> _saveLastRead(ChapterHeaderDto header, int ayah) async {
+    try {
+      final verseKey = VerseKey(header.id, ayah);
+      await _lastRead.set(
+        LastSelectedPage(
+          name: header.nameSimple,
+          nameArabic: header.nameArabic,
+          pageNumber: await _dao.getPageForVerse(verseKey),
+          verseKey: verseKey,
+          source: LastReadSource.hifth,
+          savedAt: DateTime.now().millisecondsSinceEpoch,
+        ),
+      );
+    } catch (_) {
+      // Ignored on purpose — see doc comment.
     }
   }
 }

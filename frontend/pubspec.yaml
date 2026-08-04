@@ -98,6 +98,7 @@ flutter:
     - assets/images/home/
     - assets/images/home/hifth/
     - assets/images/home/listing/background-last-read.png
+    - assets/images/home/listing/surah-listing-background.png
     - assets/images/home/listing/quran-image.png
     - assets/images/home/listing/last-read-icon.png
     - assets/images/home/listing/surah-number-bg.png

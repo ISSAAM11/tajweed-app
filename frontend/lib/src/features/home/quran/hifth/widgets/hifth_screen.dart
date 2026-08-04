@@ -7,6 +7,7 @@ import 'package:tajweed_ai/src/features/home/quran/hifth/vm/hifth_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/hifth/widgets/hifth_ayah_tile.dart';
 import 'package:tajweed_ai/src/features/home/quran/hifth/widgets/hifth_bottom_bar.dart';
 import 'package:tajweed_ai/src/features/home/quran/hifth/widgets/hifth_surah_header.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/datasource/cache/marked_ayah_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/download_confirm_dialog.dart';
 
 /// Memorization screen: the surah ayah-by-ayah, each with its own play and
@@ -17,7 +18,12 @@ final class HifthScreen extends Feature<HifthBloc, HifthState> {
   HifthScreen({super.key, required this.args})
     : super(
         dependencies: HifthDependencies().inject,
-        onInit: (context, bloc) => bloc.add(LoadSurah(args.surah)),
+        onInit: (context, bloc) {
+          // Marks are read from storage on first touch. Do it before the first
+          // paint, otherwise every tile renders unmarked and then flips.
+          get<MarkedAyahService>().current;
+          bloc.add(LoadSurah(args.surah));
+        },
       );
 
   @override

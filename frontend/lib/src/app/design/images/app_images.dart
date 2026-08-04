@@ -11,6 +11,11 @@ abstract final class AppImages {
   static const lastReadIcon = "$imagesFolder/home/listing/last-read-icon.png";
   static const quranImage = "$imagesFolder/home/listing/quran-image.png";
 
+  /// Backs the hifth "last read" card. A lighter gold than the hifth surah
+  /// header, so the card's dark text keeps its contrast.
+  static const hifthLastReadBackground =
+      "$imagesFolder/home/listing/surah-listing-background.png";
+
   // Hifth screen. The bismillah is white calligraphy on transparency, so it
   // only reads over the gold header; the waveform is a translucent grey strip
   // meant to be tinted per playback state.

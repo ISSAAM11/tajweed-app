@@ -19,6 +19,7 @@ void main() {
       'lastReadIcon': AppImages.lastReadIcon,
       'quranImage': AppImages.quranImage,
       'hifthTitleBackground': AppImages.hifthTitleBackground,
+      'hifthLastReadBackground': AppImages.hifthLastReadBackground,
       'hifthBismillah': AppImages.hifthBismillah,
       'hifthWaveform': AppImages.hifthWaveform,
     };

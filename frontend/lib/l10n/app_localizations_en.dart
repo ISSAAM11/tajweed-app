@@ -537,6 +537,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hifthLoadError => 'Couldn\'t load the surah';
 
   @override
+  String get hifthRepeatTooltip => 'Repeat verse';
+
+  @override
   String get recitationInstruction =>
       'Recite the surah aloud — each word turns green when correct.';
 

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:tajweed_ai/src/features/home/quran/listing/vm/quran_listing_model_helper.dart';
 
 sealed class HomeScreenState extends Equatable {
   const HomeScreenState();
@@ -8,12 +7,15 @@ sealed class HomeScreenState extends Equatable {
   List<Object?> get props => [];
 }
 
+/// The last-read position deliberately does not live here. It is owned by
+/// [LastSelectedSurahService] and watched directly by the card, so the two
+/// flows' bookmarks cannot go stale behind a screen that stays alive while the
+/// user reads.
 final class HomeReady extends HomeScreenState {
-  final LastSelectedPage? lastSelected;
   final int refreshTick;
 
-  const HomeReady({this.lastSelected, this.refreshTick = 0});
+  const HomeReady({this.refreshTick = 0});
 
   @override
-  List<Object?> get props => [lastSelected, refreshTick];
+  List<Object?> get props => [refreshTick];
 }

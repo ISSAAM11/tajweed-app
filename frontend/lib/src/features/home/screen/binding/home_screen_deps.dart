@@ -4,6 +4,6 @@ import 'package:tajweed_ai/src/features/home/screen/vm/home_screen_bloc.dart';
 class HomeScreenDependencies implements Dependencies {
   @override
   void inject() {
-    di.registerLazySingleton<HomeScreenBloc>(() => HomeScreenBloc(get()));
+    di.registerLazySingleton<HomeScreenBloc>(() => HomeScreenBloc());
   }
 }

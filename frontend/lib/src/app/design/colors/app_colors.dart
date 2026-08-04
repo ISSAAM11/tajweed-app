@@ -107,6 +107,9 @@ abstract final class AppColors {
   );
   static const Color hifthHeaderDivider = Color(0x59FFFFFF); // white 35%
 
+  /// Soft gold glow cast by the hifth surah card, lifting it off the scaffold.
+  static const Color hifthHeaderGlow = Color(0x99D4A849); // gold 60%
+
   /// Waveform bars in an ayah tile: [hifthWavePlayed] covers the elapsed part
   /// of the clip, [hifthWaveRemaining] the rest.
   static const Color hifthWavePlayed = hifthGold;

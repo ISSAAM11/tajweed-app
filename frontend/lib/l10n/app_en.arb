@@ -177,6 +177,7 @@
   "homeStartHifth": "Start memorizing",
   "hifthTitle": "Quran Hifth",
   "hifthLoadError": "Couldn't load the surah",
+  "hifthRepeatTooltip": "Repeat verse",
   "recitationInstruction": "Recite the surah aloud — each word turns green when correct.",
   "recitationListening": "Listening...",
   "recitationStart": "Start",
