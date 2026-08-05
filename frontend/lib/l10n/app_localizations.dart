@@ -1195,6 +1195,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove mark'**
   String get ayahUnmarkTooltip;
+
+  /// No description provided for @tajweedTestInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Recite the verse below applying the rule, then stop to get your score.'**
+  String get tajweedTestInstruction;
+
+  /// No description provided for @tajweedTestRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to record'**
+  String get tajweedTestRecord;
+
+  /// No description provided for @tajweedTestStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to stop and evaluate'**
+  String get tajweedTestStop;
+
+  /// No description provided for @tajweedTestEvaluating.
+  ///
+  /// In en, this message translates to:
+  /// **'Evaluating your recitation…'**
+  String get tajweedTestEvaluating;
+
+  /// No description provided for @tajweedTestScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Score: {score}%'**
+  String tajweedTestScore(int score);
+
+  /// No description provided for @tajweedTestAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted — well done!'**
+  String get tajweedTestAccepted;
+
+  /// No description provided for @tajweedTestRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not accepted — try again'**
+  String get tajweedTestRejected;
+
+  /// No description provided for @tajweedTestNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get tajweedTestNext;
+
+  /// No description provided for @tajweedTestYouSaid.
+  ///
+  /// In en, this message translates to:
+  /// **'We heard:'**
+  String get tajweedTestYouSaid;
+
+  /// No description provided for @tajweedTestModelLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'The evaluation model is warming up. Try again in a few seconds.'**
+  String get tajweedTestModelLoading;
+
+  /// No description provided for @tajweedTestEvalError.
+  ///
+  /// In en, this message translates to:
+  /// **'Evaluation failed. Check your internet connection and try again.'**
+  String get tajweedTestEvalError;
 }
 
 class _AppLocalizationsDelegate

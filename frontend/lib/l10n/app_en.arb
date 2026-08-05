@@ -196,5 +196,23 @@
   "recitationNextSurah": "Next surah",
   "verseCopied": "Verse copied",
   "ayahMarkTooltip": "Mark verse",
-  "ayahUnmarkTooltip": "Remove mark"
+  "ayahUnmarkTooltip": "Remove mark",
+  "tajweedTestInstruction": "Recite the verse below applying the rule, then stop to get your score.",
+  "tajweedTestRecord": "Tap to record",
+  "tajweedTestStop": "Tap to stop and evaluate",
+  "tajweedTestEvaluating": "Evaluating your recitation…",
+  "tajweedTestScore": "Score: {score}%",
+  "@tajweedTestScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "tajweedTestAccepted": "Accepted — well done!",
+  "tajweedTestRejected": "Not accepted — try again",
+  "tajweedTestNext": "Next",
+  "tajweedTestYouSaid": "We heard:",
+  "tajweedTestModelLoading": "The evaluation model is warming up. Try again in a few seconds.",
+  "tajweedTestEvalError": "Evaluation failed. Check your internet connection and try again."
 }

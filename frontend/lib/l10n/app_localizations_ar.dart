@@ -597,4 +597,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ayahUnmarkTooltip => 'إزالة التعليم';
+
+  @override
+  String get tajweedTestInstruction =>
+      'اقرأ الآية أدناه مع تطبيق القاعدة، ثم أوقف التسجيل لمعرفة نتيجتك.';
+
+  @override
+  String get tajweedTestRecord => 'اضغط للتسجيل';
+
+  @override
+  String get tajweedTestStop => 'اضغط للإيقاف والتقييم';
+
+  @override
+  String get tajweedTestEvaluating => 'جارٍ تقييم تلاوتك…';
+
+  @override
+  String tajweedTestScore(int score) {
+    return 'النتيجة: $score٪';
+  }
+
+  @override
+  String get tajweedTestAccepted => 'مقبول — أحسنت!';
+
+  @override
+  String get tajweedTestRejected => 'غير مقبول — حاول مرة أخرى';
+
+  @override
+  String get tajweedTestNext => 'التالي';
+
+  @override
+  String get tajweedTestYouSaid => 'ما سمعناه:';
+
+  @override
+  String get tajweedTestModelLoading =>
+      'نموذج التقييم قيد التشغيل. حاول مجددًا بعد ثوانٍ.';
+
+  @override
+  String get tajweedTestEvalError =>
+      'فشل التقييم. تحقق من اتصالك بالإنترنت وحاول مجددًا.';
 }

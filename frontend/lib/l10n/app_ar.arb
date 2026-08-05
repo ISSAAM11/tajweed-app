@@ -183,5 +183,23 @@
   "recitationNextSurah": "السورة التالية",
   "verseCopied": "تم نسخ الآية",
   "ayahMarkTooltip": "تعليم الآية",
-  "ayahUnmarkTooltip": "إزالة التعليم"
+  "ayahUnmarkTooltip": "إزالة التعليم",
+  "tajweedTestInstruction": "اقرأ الآية أدناه مع تطبيق القاعدة، ثم أوقف التسجيل لمعرفة نتيجتك.",
+  "tajweedTestRecord": "اضغط للتسجيل",
+  "tajweedTestStop": "اضغط للإيقاف والتقييم",
+  "tajweedTestEvaluating": "جارٍ تقييم تلاوتك…",
+  "tajweedTestScore": "النتيجة: {score}٪",
+  "@tajweedTestScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "tajweedTestAccepted": "مقبول — أحسنت!",
+  "tajweedTestRejected": "غير مقبول — حاول مرة أخرى",
+  "tajweedTestNext": "التالي",
+  "tajweedTestYouSaid": "ما سمعناه:",
+  "tajweedTestModelLoading": "نموذج التقييم قيد التشغيل. حاول مجددًا بعد ثوانٍ.",
+  "tajweedTestEvalError": "فشل التقييم. تحقق من اتصالك بالإنترنت وحاول مجددًا."
 }

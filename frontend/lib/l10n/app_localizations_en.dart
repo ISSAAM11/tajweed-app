@@ -598,4 +598,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ayahUnmarkTooltip => 'Remove mark';
+
+  @override
+  String get tajweedTestInstruction =>
+      'Recite the verse below applying the rule, then stop to get your score.';
+
+  @override
+  String get tajweedTestRecord => 'Tap to record';
+
+  @override
+  String get tajweedTestStop => 'Tap to stop and evaluate';
+
+  @override
+  String get tajweedTestEvaluating => 'Evaluating your recitation…';
+
+  @override
+  String tajweedTestScore(int score) {
+    return 'Score: $score%';
+  }
+
+  @override
+  String get tajweedTestAccepted => 'Accepted — well done!';
+
+  @override
+  String get tajweedTestRejected => 'Not accepted — try again';
+
+  @override
+  String get tajweedTestNext => 'Next';
+
+  @override
+  String get tajweedTestYouSaid => 'We heard:';
+
+  @override
+  String get tajweedTestModelLoading =>
+      'The evaluation model is warming up. Try again in a few seconds.';
+
+  @override
+  String get tajweedTestEvalError =>
+      'Evaluation failed. Check your internet connection and try again.';
 }

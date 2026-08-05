@@ -28,6 +28,7 @@ final class HomeScreen extends Feature<HomeScreenBloc, HomeScreenState> {
         onNotifications: () => context.push('/settings'),
       ),
       body: SingleChildScrollView(
+        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
