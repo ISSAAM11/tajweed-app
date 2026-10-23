@@ -25,9 +25,6 @@ class AyahPopupWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-      "Building AyahPopupWidget for ayah $ayahNumber at position $tapPosition",
-    );
     final renderBox =
         parentKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return SizedBox.shrink();

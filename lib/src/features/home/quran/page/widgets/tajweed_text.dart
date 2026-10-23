@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
 
 class QuranLineText extends StatelessWidget {
   final int pageNo;
   final List<WordRow> lineWords;
   final bool isCentered;
-  final Function(int ayahNumber, Offset position)? onAyahTap;
+  final Function(int surah, int ayahNumber, Offset position)? onAyahTap;
   final int? selectedAyah;
+  final int? selectedSurah;
+  final VerseKey? playingVerse;
 
   const QuranLineText({
     super.key,
@@ -16,6 +19,8 @@ class QuranLineText extends StatelessWidget {
     this.isCentered = false,
     this.onAyahTap,
     this.selectedAyah,
+    this.selectedSurah,
+    this.playingVerse,
   });
 
   @override
@@ -29,7 +34,6 @@ class QuranLineText extends StatelessWidget {
       fontSize: responsivefontSize,
       fontFamily: 'QPC-V2-Font-p$pageNo',
       color: isDark ? AppColors.darkTextPrimary : AppColors.black,
-      height: isCentered ? 2 : 1,
     );
 
     if (lineWords.isEmpty) {
@@ -48,8 +52,15 @@ class QuranLineText extends StatelessWidget {
 
     for (int i = 0; i < words.length; i++) {
       final word = words[i];
-      final isSelected = selectedAyah == word.ayah;
-      final highlightColor = isSelected
+      final isSelected =
+          selectedAyah == word.ayah && selectedSurah == word.surah;
+      final isPlaying =
+          playingVerse != null &&
+          playingVerse!.surah == word.surah &&
+          playingVerse!.ayah == word.ayah;
+      final highlightColor = isPlaying
+          ? AppColors.primary.withValues(alpha: 0.18)
+          : isSelected
           ? AppColors.ayahHighlight
           : AppColors.transparent;
 
@@ -57,7 +68,7 @@ class QuranLineText extends StatelessWidget {
         GestureDetector(
           onTapDown: (details) {
             if (onAyahTap != null) {
-              onAyahTap!(word.ayah, details.globalPosition);
+              onAyahTap!(word.surah, word.ayah, details.globalPosition);
             }
           },
           child: Container(
@@ -78,7 +89,6 @@ class QuranLineText extends StatelessWidget {
     }
 
     return Row(
-      spacing: isCentered ? 4.0 : 0.0,
       mainAxisAlignment: isCentered
           ? MainAxisAlignment.center
           : MainAxisAlignment.spaceBetween,

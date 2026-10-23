@@ -165,6 +165,7 @@ List<HomeAction> _buildActions(BuildContext context) {
       progressTotal: 10,
       icon: Icons.school_rounded,
       highlighted: true,
+      targetRoute: '/tajweed-courses',
     ),
     HomeAction(
       title: l10n.homeQuranRecitation,

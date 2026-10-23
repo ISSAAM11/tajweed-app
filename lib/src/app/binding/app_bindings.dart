@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cg_core_defs/cg_core_defs.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart' show WidgetsFlutterBinding;
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:generic_requester/generic_requester.dart' show Dio;
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tajweed_ai/src/app/locale/locale_bloc.dart';
 import 'package:tajweed_ai/src/app/theme/theme_bloc.dart';
@@ -11,6 +16,12 @@ import 'package:tajweed_ai/src/core/services/theme_preference_service.dart';
 import 'package:tajweed_ai/src/database/app_database.dart';
 import 'package:tajweed_ai/src/database/daos/quran_listing_dao.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/database/audio_dao.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/database/audio_database_registry.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/database/cheikh_registry/cheikh_registry_dao.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/database/cheikh_registry/cheikh_registry_database.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/services/cheikh_preference_service.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/vm/cheikh_cubit.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/listing_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/datasource/quran_listing_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/services/partition_snapshot_service.dart';
@@ -35,6 +46,29 @@ final class AppBinding extends AppBindings {
 
     // 📦 Database
     di.registerLazySingleton<AppDatabase>(() => AppDatabase());
+
+    // 📦 Cheikh registry (read-only asset DB)
+    di.registerSingletonAsync<CheikhRegistryDatabase>(() async {
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File(p.join(dir.path, 'cheikh_registry.db'));
+      if (!await file.exists()) {
+        final data = await rootBundle.load('assets/db/cheikh_registry.db');
+        await file.writeAsBytes(data.buffer.asUint8List());
+      }
+      return CheikhRegistryDatabase(file);
+    });
+    di.registerSingletonAsync<CheikhCubit>(() async {
+      final dao = CheikhRegistryDao(get<CheikhRegistryDatabase>());
+      final cheikhList = await dao.getAllCheikhs();
+      final prefs = CheikhPreferenceService(
+        get<CacheManager<SharedPreferences>>(),
+      );
+      return CheikhCubit(prefs, cheikhList, prefs.get());
+    }, dependsOn: [CheikhRegistryDatabase]);
+
+    // 📦 Audio DB registry + DAO
+    di.registerLazySingleton<AudioDatabaseRegistry>(() => AudioDatabaseRegistry());
+    di.registerLazySingleton<AudioDao>(() => AudioDao(get<AudioDatabaseRegistry>()));
 
     // 📦 DAOs
     di.registerLazySingleton<QuranListingDao>(

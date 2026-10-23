@@ -3,6 +3,11 @@ import 'package:tajweed_ai/src/base/dependencies/dependencies.dart';
 import 'package:tajweed_ai/src/base/datasource/exports.dart';
 import 'package:tajweed_ai/src/base/screens/exports.dart';
 import 'package:tajweed_ai/src/database/daos/quran_page_dao.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/database/audio_dao.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/services/audio_download_service.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/services/quran_audio_player_service.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/vm/audio_player_bloc.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/vm/cheikh_cubit.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/cache/page_cache.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/quran_page_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/quran_page_remote_datasource.dart';
@@ -35,11 +40,27 @@ class QuranPageDependencies implements Dependencies {
       ),
     );
 
+    // Audio services
+    di.registerLazySingleton<AudioDownloadService>(
+      () => AudioDownloadService(get<Dio>(), get<ConnectivityMonitor>()),
+    );
+    di.registerLazySingleton<QuranAudioPlayerService>(
+      () => QuranAudioPlayerService(),
+    );
+
     // each screen gets a fresh Bloc
     di.registerFactory<QuranPageBloc>(
       () => QuranPageBloc(
         get<QuranPageDatasource>(),
         get<PartitionSnapshotService>(),
+      ),
+    );
+    di.registerFactory<AudioPlayerBloc>(
+      () => AudioPlayerBloc(
+        dao: get<AudioDao>(),
+        downloader: get<AudioDownloadService>(),
+        player: get<QuranAudioPlayerService>(),
+        cheikh: get<CheikhCubit>(),
       ),
     );
   }

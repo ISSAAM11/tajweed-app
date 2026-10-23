@@ -158,6 +158,42 @@ class _SettingsScreen {
   final double optionGap = 12;
 }
 
+class _ComingSoonTile {
+  const _ComingSoonTile._();
+
+  final double rowHeight = 64;
+  final double rowRadius = 16;
+  final EdgeInsets rowPadding = const EdgeInsets.symmetric(horizontal: 16);
+  final double rowBorderWidth = 1.5;
+
+  final double iconSize = 22;
+  final double iconTextSpacing = 12;
+
+  final EdgeInsets badgePadding = const EdgeInsets.symmetric(
+    horizontal: 10,
+    vertical: 4,
+  );
+  final double badgeRadius = 12;
+}
+
+class _AudioBar {
+  const _AudioBar._();
+
+  final double height = 68;
+  final double iconSize = 26;
+  final double stopIconSize = 20;
+  final double progressBarHeight = 2;
+  final EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+  final double infoFontSize = 11;
+  final double borderRadius = 18;
+  final double horizontalMargin = 12;
+  final double bottomMargin = 16;
+  final double backgroundOpacity = 0.90;
+  final double overlayOpacity = 0.18;
+  final double blurSigma = 12.0;
+  final double elevation = 12;
+}
+
 class _SurahNameCard {
   const _SurahNameCard._();
 

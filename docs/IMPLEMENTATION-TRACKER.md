@@ -7,18 +7,38 @@
 
 ## Dashboard
 
-- **Total features** : 7
-- **Total User Stories** : 29
-- **Effort total** : 21 jours
-- **Set actif** : Set 2 (2 features terminees)
-- **Progression globale** : 31% (2/7 features terminees, 9/29 US terminees)
+- **Total features** : 9
+- **Total User Stories** : ~35
+- **Set actif** : Release v1 (cible : v1.0.0) — **3 features Release v1 LIVREES, build APK pret**
+- **Progression globale** : 56% (5/9 features terminees : 3.1, 3.2, 3.3, 3.4, 1.4)
 
 ### Status par Set
 
 | Set | Objectif | Features | Status |
 |-----|----------|----------|--------|
-| Set 1 | Finalisation MVP - Auth & Home | 5/5 | En cours (cap atteint) |
+| Set 1 | Finalisation MVP - Auth & Home | 5/5 | Differe post-v1 (sauf 1.4) |
 | Set 2 | Polish & Personnalisation | 2/5 | 2 features terminees |
+| **Release v1** | **3 ecrans + Coming Soon UI** | **3** | **En cours** |
+
+---
+
+## Release v1 - Scope
+
+**Objectif** : Livrer une v1.0.0 installable. Seuls 3 ecrans sont implementes ; le reste du backlog est gate derriere un widget "Coming Soon" pour preserver le roadmap visible sans bloquer la release.
+
+**Inclus dans v1** :
+- **Feature 1.4** Tajweed Courses Screen (contenu statique des regles Tajweed pour la release)
+- **Feature 3.3** Settings Polish (extension de l'ecran Settings : navigation My Account, version app, Terms/Privacy/About, tuiles Coming Soon)
+- **Feature 3.4** My Account Screen (profil, email, sign out)
+- **Widget transverse** `ComingSoonBadge` + ARB keys (`comingSoonLabel`, `comingSoonMessage`)
+
+**Differe post-v1 (visible via tuile Coming Soon)** :
+- Feature 1.1 Sign In OAuth (Google/Apple), Forgot Password
+- Feature 1.2 Sign Up backend integration
+- Feature 1.3 Home Screen Chooser
+- Feature 1.5 Quran Listing finitions
+
+**Branche** : `feat/release-v1-screens`
 
 ---
 
@@ -32,7 +52,7 @@
 
 ### [Feature 1.1] Sign In (Login)
 
-- **Status** : A faire (partiellement implemente)
+- **Status** : Differe post-v1 (UI existante conservee ; Coming Soon pour OAuth/Forgot Password)
 - **Module** : Auth
 - **Effort** : 4.25 jours (5 User Stories)
 - **Complexite** : Moyenne
@@ -52,7 +72,7 @@
 
 ### [Feature 1.2] Sign Up
 
-- **Status** : A faire (partiellement implemente)
+- **Status** : Differe post-v1 (UI existante conservee ; Coming Soon pour activation backend)
 - **Module** : Auth
 - **Effort** : 4.25 jours (4 User Stories)
 - **Complexite** : Complexe
@@ -70,7 +90,7 @@
 
 ### [Feature 1.3] Home Screen (Chooser)
 
-- **Status** : A faire (nouvelle feature)
+- **Status** : Differe post-v1 (la home reste `/quran-listing` pour la v1)
 - **Module** : Home
 - **Effort** : 1.5 jours (4 User Stories)
 - **Complexite** : Simple
@@ -89,7 +109,7 @@
 
 ### [Feature 1.4] Tajweed Courses Screen
 
-- **Status** : A faire (nouvelle feature)
+- **Status** : **Termine (Release v1)** — contenu statique livre 2026-05-21
 - **Module** : Home
 - **Effort** : 3 jours (4 User Stories)
 - **Complexite** : Moyenne
@@ -107,7 +127,7 @@
 
 ### [Feature 1.5] Quran Listing
 
-- **Status** : A faire (partiellement implemente)
+- **Status** : Differe post-v1 (UI existante shippee telle quelle dans la v1)
 - **Module** : Home
 - **Effort** : 2 jours (3 User Stories)
 - **Complexite** : Moyenne
@@ -127,9 +147,9 @@
 
 **Objectif** : Ajouter les ecrans de personnalisation et de polish UX qui ameliorent l'experience utilisateur sans bloquer le MVP (themes, preferences, etc.).
 
-**Status** : A faire
-**Features** : 1/5
-**Effort** : 3 jours
+**Status** : 2 terminees + 2 actives (Release v1)
+**Features** : 4/5
+**Effort** : ~8 jours
 
 ### [Feature 3.1] Settings Theme Toggle
 
@@ -173,6 +193,50 @@
   - [x] US-3.2.5 : Sync docs (S) — `DESIGN_SYSTEM.md` mis a jour : nouvelle table de tokens dark (16 entrees, mapping spec inclus), nouvelle section "How to consume colors in a widget" avec la regle two-bucket (brand-locked vs theme-reactive) et table de mapping AppColors.* → colorScheme.*.
   - [x] Tests frontend — 18/18 OK (4 ThemePreferenceService + 5 ThemeBloc + 7 AppThemes + 2 SettingsAppearanceSection). 3 nouveaux tests dans `app_themes_test.dart` couvrant les obsidian surface tiers + outline tokens + AppBar brand-signature.
 
+### [Feature 3.3] Settings Polish (Release v1 extension)
+
+- **Status** : **Termine (Release v1)** — livre 2026-05-21
+- **Module** : Settings
+- **Effort** : 1.5 jours (5 User Stories)
+- **Complexite** : Simple
+- **Localisation** : `lib/src/features/settings/widgets/settings_screen.dart` (extension de l'existant)
+- **Note** : Etend l'ecran Settings existant avec des entrees de navigation et des tuiles Coming Soon pour les features differees. N'ajoute pas de nouveau Bloc — utilise les preferences globales existantes (LocaleBloc, ThemeBloc) et le widget `ComingSoonBadge` transverse.
+- **Backend** :
+  - [ ] Aucun
+- **Frontend** :
+  - [ ] US-3.3.1 : Section "Compte" avec entree "My Account" (navigation vers `/my-account`) (XS)
+  - [ ] US-3.3.2 : Section "A propos" : version de l'app (lue depuis `package_info_plus`), Terms of Use, Privacy Policy, About (S)
+  - [ ] US-3.3.3 : Section "Bientot disponible" listant les features differees avec `ComingSoonBadge` (Notifications, Reminders, Cloud Sync, etc.) (S)
+  - [ ] US-3.3.4 : Cles ARB pour toutes les nouvelles entrees dans `app_en.arb` + `app_ar.arb` (XS)
+  - [ ] US-3.3.5 : Tests widget pour la nouvelle structure (XS)
+
+### [Feature 3.4] My Account Screen (Release v1)
+
+- **Status** : **Termine (Release v1)** — livre 2026-05-21
+- **Module** : Account (nouveau)
+- **Effort** : 2 jours (4 User Stories)
+- **Complexite** : Moyenne
+- **Localisation** : `lib/src/features/my_account/` (a creer)
+- **Note** : Ecran statique en v1 — affiche les infos du compte stockees localement (email du token JWT decodelocalement ou placeholder si invite) + sign out. Le profil editable (avatar, change password) est differe post-v1.
+- **Backend** :
+  - [ ] Aucun pour v1 (sign out = effacement local des tokens via `AppConfig` / `CacheManager`)
+- **Frontend** :
+  - [ ] US-3.4.1 : Structure feature (binding/data/router/vm) selon le module pattern (S)
+  - [ ] US-3.4.2 : Affichage email + nom (depuis tokens ou placeholder) (S)
+  - [ ] US-3.4.3 : Section "Bientot disponible" avec `ComingSoonBadge` (Change password, Avatar, Linked accounts) (S)
+  - [ ] US-3.4.4 : Bouton "Sign Out" avec dialog de confirmation, clear tokens, redirect vers `/sign-in` (M)
+  - [ ] US-3.4.5 : Cles ARB dans `app_en.arb` + `app_ar.arb` (XS)
+  - [ ] Tests widget de base
+
+---
+
+## Widget Transverse - ComingSoonBadge
+
+- **Status** : **Termine (Release v1)** — livre 2026-05-21
+- **Localisation** : `lib/src/features/common/widgets/coming_soon_badge.dart` (a creer)
+- **Description** : Tuile / chip reutilisable, visuellement attenuee, qui declenche un snackbar (ou dialog) localise au tap. Utilisee partout ou une feature differee est affichee.
+- **Cles ARB requises** : `comingSoonLabel` ("Coming soon" / "Bientot disponible"), `comingSoonMessage` (message du snackbar) — ajoutees dans `app_en.arb` + `app_ar.arb`.
+
 ---
 
 ## Backlog - Features Ajoutees
@@ -186,10 +250,34 @@
 | 2026-05-18 | 1.5 Quran Listing | Home | Set 1 | 2j | Extrait de l'ancien 1.3 - n'est plus la home |
 | 2026-05-19 | 3.1 Settings Theme Toggle | Settings | Set 2 | 3j | Demande utilisateur (exercice VibeCoding guide) |
 | 2026-05-20 | 3.2 Dark Mode Palette Rollout | Settings | Set 2 | 3j | Demande utilisateur (apres creation DESIGN-DARK-MODE.md / DESIGN-LIGHT-MODE.md) |
+| 2026-05-21 | 3.3 Settings Polish | Settings | Set 2 | 1.5j | Demande utilisateur (preparation Release v1) |
+| 2026-05-21 | 3.4 My Account Screen | Account | Set 2 | 2j | Demande utilisateur (preparation Release v1) |
 
 ---
 
 ## Journal de bord
+
+### 2026-05-21 - Release v1 LIVREE (Features 1.4 + 3.3 + 3.4)
+- **Action** : Implementation complete des 3 features de la Release v1 dans la meme session que le bootstrap. Version bumpee a 1.0.0+1 dans `pubspec.yaml`.
+- **Feature 3.3 (Settings Polish)** : `SettingsScreen` etendu avec 4 nouvelles sections — Account card (chevron vers /my-account), Coming Soon (Notifications + Daily reminders via `ComingSoonTile`), About (version via `package_info_plus` + Terms of Use). Nouvelle route `/terms-of-use` avec un `TermsOfUseScreen` statique. 11 nouvelles cles ARB.
+- **Feature 3.4 (My Account)** : Nouveau module `lib/src/features/my_account/`. Ecran StatelessWidget — profile header "Guest" placeholder, 3 tuiles Coming Soon (Change password, Avatar, Linked accounts), bouton Sign Out avec dialog de confirmation. Sign out clear `FlutterSecureStorage` et redirige vers `/sign-in`. 10 nouvelles cles ARB.
+- **Feature 1.4 (Tajweed Courses)** : Nouveau module `lib/src/features/tajweed_courses/`. Ecran statique avec intro + 6 cartes de regles (Madd, Ghunnah, Idgham, Ikhfa, Iqlab, Qalqala) + tuile Coming Soon "Interactive lessons". Wirage du tile "Tajweed Lessons" du home vers `/tajweed-courses`. 14 nouvelles cles ARB.
+- **Widget transverse `ComingSoonTile`** : Cree dans `lib/src/features/common/widgets/`. Theme-reactive (lit `Theme.of(context).colorScheme.*`), tap declenche un info snackbar localise. Metrics block dedie `AppMetrics.comingSoonTile`. ARB key `comingSoonMessage` ajoutee (reutilise `comingSoon` existant pour le badge).
+- **Cleanup** : Suppression de l'import non utilise dans `app_config.dart` et de la note "dev mode" obsolete dans `CLAUDE.md`. main.dart n'avait deja plus de devRoute, donc rien a retirer la.
+- **Verification** : `flutter test` complet → 18/18 OK. `flutter analyze` → 5 issues pre-existantes uniquement (tajweed_test mock + ayah_popup print). EN/AR + Light/Dark verification visuelle a faire par l'utilisateur via `flutter run`.
+- **Progression** : 5/9 features terminees. Release v1 prete pour `flutter build apk --release`.
+
+### 2026-05-21 - Bootstrap Release v1 (Features 3.3 + 3.4 + ComingSoonBadge)
+- **Action** : Definition du scope Release v1.0.0 — la v1 ne porte que 3 ecrans (Tajweed Courses, Settings polish, My Account). Le reste du backlog est gate derriere un widget `ComingSoonBadge` reutilisable.
+- **Decisions** :
+  - **Feature 1.4 (Tajweed Courses)** promue en active dans Set 1 — scope reduit a du contenu statique pour ne pas dependre du backend.
+  - **Features 1.1, 1.2, 1.3, 1.5** marquees "Differe post-v1". Leur UI partiellement implementee reste shippee telle quelle ; les fonctionnalites manquantes (OAuth, activation email, Home Chooser) sont gatees Coming Soon.
+  - **Feature 3.3 (Settings Polish)** ajoutee a Set 2 — extension de l'ecran Settings existant : navigation My Account, version app, Terms/Privacy/About, tuiles Coming Soon.
+  - **Feature 3.4 (My Account Screen)** ajoutee a Set 2 — nouveau module `account`, affichage email + sign out, le reste differe.
+  - **`ComingSoonBadge`** widget transverse + ARB keys `comingSoonLabel` / `comingSoonMessage` — pre-requis pour 3.3 et 3.4.
+- **Branche** : `feat/release-v1-screens` (cree depuis `origin/main` = f3b5cde).
+- **Outil ajoute** : `.claude/settings.json` (allowlist large + denylist destructive) + `.claude/README.md` pour la prochaine session.
+- **Source** : Demande utilisateur — "i want to make this application for a release version, and i want to add few features (setting screen, quran rules screen, my account screen)".
 
 ### 2026-05-20 - Feature 3.2 TERMINEE (US-3.2.1 a US-3.2.5)
 - **Action** : Implementation complete de la Feature 3.2 dans la meme session que son bootstrap.

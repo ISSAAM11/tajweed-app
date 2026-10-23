@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tajweed_ai/l10n/app_localizations.dart';
 import 'package:tajweed_ai/src/app/design/colors/app_colors.dart';
 import 'package:tajweed_ai/src/app/design/metrics/app_metrics.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_fonts.dart';
 import 'package:tajweed_ai/src/app/design/styles/app_styles.dart';
 import 'package:tajweed_ai/src/app/design/styles/font_sizes.dart';
+import 'package:tajweed_ai/src/database/tables/quran/converters.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/vm/audio_player_bloc.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/datasource/page_models.dart';
+import 'package:tajweed_ai/src/features/home/quran/page/widgets/play_options_sheet.dart';
 import 'package:tajweed_ai/src/features/home/quran/page/widgets/tajweed_text.dart';
 
 class PageViewer extends StatefulWidget {
@@ -18,17 +22,36 @@ class PageViewer extends StatefulWidget {
 
 class _PageViewerState extends State<PageViewer> {
   int? selectedAyah;
+  int? selectedSurah;
   Offset? _popupPosition;
   final GlobalKey _stackKey = GlobalKey();
 
   void _removePopup() {
     setState(() {
       selectedAyah = null;
+      selectedSurah = null;
       _popupPosition = null;
     });
   }
 
-  List<Widget> _buildPageWidgets() {
+  /// Returns distinct (surah, ayah) pairs from the current page in order.
+  List<VerseKey> _getPageAyahs() {
+    final seen = <String>{};
+    final ayahs = <VerseKey>[];
+    for (final block in widget.page.blocks) {
+      if (block is LineWordsBlockDto) {
+        for (final word in block.lineWords) {
+          final key = '${word.surah}:${word.ayah}';
+          if (seen.add(key)) {
+            ayahs.add(VerseKey(word.surah, word.ayah));
+          }
+        }
+      }
+    }
+    return ayahs;
+  }
+
+  List<Widget> _buildPageWidgets(VerseKey? playingVerse) {
     final widgets = <Widget>[];
     for (final block in widget.page.blocks) {
       final builtWidget = switch (block) {
@@ -45,7 +68,9 @@ class _PageViewerState extends State<PageViewer> {
           lineWords: block.lineWords,
           isCentered: block.isCentered,
           selectedAyah: selectedAyah,
+          selectedSurah: selectedSurah,
           onAyahTap: _handleAyahTap,
+          playingVerse: playingVerse,
         ),
         BasmalahBlockDto() => BasmalahWidget(),
         _ => SizedBox.shrink(),
@@ -58,9 +83,20 @@ class _PageViewerState extends State<PageViewer> {
 
   @override
   Widget build(BuildContext context) {
-    // Debugger.blue('should render Page ${widget.page.pageNo}');
+    // Derive currently playing verse for highlighting (null-safe if bloc absent)
+    VerseKey? playingVerse;
+    try {
+      final audioState = context.watch<AudioPlayerBloc>().state;
+      playingVerse = switch (audioState) {
+        AudioPlaying(:final surah, :final currentAyah) => VerseKey(surah, currentAyah),
+        AudioPaused(:final surah, :final currentAyah) => VerseKey(surah, currentAyah),
+        _ => null,
+      };
+    } catch (_) {
+      playingVerse = null;
+    }
 
-    final allWidgets = _buildPageWidgets();
+    final allWidgets = _buildPageWidgets(playingVerse);
     final pageMetaBar = allWidgets.firstWhere(
       (w) => w is PageMetaBar,
       orElse: () => SizedBox.shrink(),
@@ -181,7 +217,32 @@ class _PageViewerState extends State<PageViewer> {
               IconButton(
                 icon: const Icon(Icons.play_arrow),
                 iconSize: AppMetrics.quranPageViewer.popupIconSize,
-                onPressed: null, // TODO: play audio
+                onPressed: (selectedAyah == null || selectedSurah == null)
+                    ? null
+                    : () {
+                        final surah = selectedSurah!;
+                        final ayah = selectedAyah!;
+                        final pageAyahs = _getPageAyahs();
+                        final surahName = _resolveSurahName(context, surah);
+                        _removePopup();
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (_) => PlayOptionsSheet(
+                            ayahNumber: ayah,
+                            pageNo: widget.page.pageNo,
+                            surahName: surahName,
+                            onPlayAyah: () => context
+                                .read<AudioPlayerBloc>()
+                                .add(RequestPlayAyah(surah, ayah)),
+                            onPlayPage: () => context
+                                .read<AudioPlayerBloc>()
+                                .add(RequestPlayPage(pageAyahs)),
+                            onPlaySurah: () => context
+                                .read<AudioPlayerBloc>()
+                                .add(RequestPlaySurah(surah, ayah)),
+                          ),
+                        );
+                      },
               ),
             ],
           ),
@@ -190,11 +251,22 @@ class _PageViewerState extends State<PageViewer> {
     );
   }
 
-  void _handleAyahTap(int ayahNumber, Offset globalPosition) {
+  String _resolveSurahName(BuildContext context, int surahNumber) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    for (final block in widget.page.blocks) {
+      if (block is SurahHeaderBlockDto && block.chapter.id == surahNumber) {
+        return isArabic ? block.chapter.nameArabic : block.chapter.nameSimple;
+      }
+    }
+    return '${AppLocalizations.of(context)!.partitionSurah} $surahNumber';
+  }
+
+  void _handleAyahTap(int surah, int ayahNumber, Offset globalPosition) {
     setState(() {
-      if (selectedAyah == ayahNumber) {
+      if (selectedAyah == ayahNumber && selectedSurah == surah) {
         _removePopup();
       } else {
+        selectedSurah = surah;
         selectedAyah = ayahNumber;
         _popupPosition = globalPosition;
       }

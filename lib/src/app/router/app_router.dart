@@ -4,7 +4,11 @@ import 'package:tajweed_ai/src/features/home/quran/listing/router/surah_listing_
 import 'package:tajweed_ai/src/features/home/quran/page/router/quran_page_router.dart';
 import 'package:tajweed_ai/src/features/home/quran/tajweed_test/router/quran_page_router.dart';
 import 'package:tajweed_ai/src/features/home/screen/router/home_screen_route.dart';
+import 'package:tajweed_ai/src/features/legal/router/legal_router.dart';
+import 'package:tajweed_ai/src/features/my_account/router/my_account_router.dart';
 import 'package:tajweed_ai/src/features/settings/router/settings_route.dart';
+import 'package:tajweed_ai/src/features/tajweed_courses/router/tajweed_courses_router.dart';
+import 'package:tajweed_ai/src/features/tajweed_courses/router/tajweed_rule_detail_route.dart';
 
 import '../../features/auth/export.dart';
 import '../config/app_config.dart';
@@ -21,6 +25,10 @@ final router = GoRouter(
     quranPageRoute,
     tajweedRoute,
     settingsRoute,
+    termsOfUseRoute,
+    myAccountRoute,
+    tajweedCoursesRoute,
+    tajweedRuleDetailRoute,
   ],
 );
 
