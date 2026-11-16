@@ -65,8 +65,13 @@ class RequestPerformer with GenericResponseDecoder {
     }
 
     //! Dio definition
+    // Carry the configured timeouts over — without them a dead host hangs
+    // for the OS-level timeout (~2 min) instead of failing fast.
     dio.options = BaseOptions(
       baseUrl: baseUrl ?? _baseOptions.baseUrl,
+      connectTimeout: _baseOptions.connectTimeout,
+      sendTimeout: _baseOptions.sendTimeout,
+      receiveTimeout: _baseOptions.receiveTimeout,
       contentType: contentType,
       headers: headers..addAll(extraHeaders ?? {}),
     );

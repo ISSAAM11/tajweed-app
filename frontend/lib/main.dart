@@ -1,4 +1,4 @@
-import 'dart:async' show runZonedGuarded;
+import 'dart:async' show runZonedGuarded, unawaited;
 
 import 'package:flutter/material.dart';
 
@@ -21,6 +21,8 @@ void _application() async {
   ConnectivityPlus.init();
 
   RequesterConfig.configure();
+
+  unawaited(refreshReciterCatalog());
 
   await AppConfig.setInitialRoute();
 

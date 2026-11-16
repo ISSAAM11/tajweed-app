@@ -56,8 +56,11 @@ class QuranAudioPlayerService {
 
   Future<void> pause() => _player.pause();
 
+  /// Deliberately not awaited: just_audio's `play()` future completes when
+  /// playback *ends*, not when it starts. Awaiting it would stall the caller
+  /// for the whole track — the bloc would never emit its playing state.
   Future<void> resume() async {
-    return _player.play().catchError((e) => _errorController.add(e));
+    unawaited(_player.play().catchError((e) => _errorController.add(e)));
   }
 
   Future<void> stop() => _player.stop();

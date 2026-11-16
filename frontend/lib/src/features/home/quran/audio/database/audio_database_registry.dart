@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:generic_requester/generic_requester.dart' show Dio;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/database/audio_database.dart';
@@ -10,7 +11,10 @@ import 'package:tajweed_ai/src/features/home/quran/audio/models/cheikh_reciter.d
 /// Uses Future caching to avoid double-open on concurrent calls.
 /// Failed futures are evicted from the cache so the next call retries cleanly.
 class AudioDatabaseRegistry {
+  final Dio _dio;
   final Map<String, Future<AudioDatabase>> _opening = {};
+
+  AudioDatabaseRegistry(this._dio);
 
   Future<AudioDatabase> forCheikh(CheikhReciter cheikh) {
     final existing = _opening[cheikh.id];
@@ -34,28 +38,36 @@ class AudioDatabaseRegistry {
 
     if (!await file.exists()) {
       await file.parent.create(recursive: true);
-      await _copyAssetAtomically(cheikh.dbAssetPath, file);
+      await _fetchAtomically(cheikh.dbAssetPath, file);
     }
 
     // Verify the DB is not corrupt.  NativeDatabase is lazy, so we must run a
-    // query to trigger the actual open.  On failure, delete and re-copy.
+    // query to trigger the actual open.  On failure, delete and re-fetch.
     try {
       final db = AudioDatabase.fromFile(file);
       await db.customSelect('SELECT 1').get();
       return db;
     } catch (_) {
       try { await file.delete(); } catch (_) {}
-      await _copyAssetAtomically(cheikh.dbAssetPath, file);
+      await _fetchAtomically(cheikh.dbAssetPath, file);
       return AudioDatabase.fromFile(file);
     }
   }
 
   /// Writes to a `.tmp` file first, then renames atomically.
   /// If the process is killed mid-write the final file stays clean.
-  Future<void> _copyAssetAtomically(String assetPath, File target) async {
+  ///
+  /// [source] is either a Flutter asset path (the bundled default reciter)
+  /// or an http(s) URL — reciters synced from the backend catalog ship only
+  /// their timing db as a download, never as an app asset.
+  Future<void> _fetchAtomically(String source, File target) async {
     final tmp = File('${target.path}.tmp');
-    final data = await rootBundle.load(assetPath);
-    await tmp.writeAsBytes(data.buffer.asUint8List(), flush: true);
+    if (source.startsWith('http')) {
+      await _dio.download(source, tmp.path);
+    } else {
+      final data = await rootBundle.load(source);
+      await tmp.writeAsBytes(data.buffer.asUint8List(), flush: true);
+    }
     await tmp.rename(target.path);
   }
 

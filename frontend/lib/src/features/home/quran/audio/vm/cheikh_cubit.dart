@@ -4,7 +4,7 @@ import 'package:tajweed_ai/src/features/home/quran/audio/services/cheikh_prefere
 
 class CheikhCubit extends Cubit<CheikhReciter> {
   final CheikhPreferenceService _prefs;
-  final List<CheikhReciter> availableCheikhs;
+  List<CheikhReciter> availableCheikhs;
 
   CheikhCubit(
     this._prefs,
@@ -21,5 +21,18 @@ class CheikhCubit extends Cubit<CheikhReciter> {
     if (state == cheikh) return;
     await _prefs.set(cheikh.id);
     emit(cheikh);
+  }
+
+  /// Called once the backend reciter catalog has synced into
+  /// `cheikh_registry.db`, so newly added reciters show up without an app
+  /// restart. Keeps the current selection (matched by id) if it still exists.
+  void refreshAvailable(List<CheikhReciter> updated) {
+    if (updated.isEmpty) return;
+    availableCheikhs = updated;
+    final current = updated.firstWhere(
+      (c) => c.id == state.id,
+      orElse: () => updated.first,
+    );
+    if (current != state) emit(current);
   }
 }

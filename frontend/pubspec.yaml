@@ -83,8 +83,7 @@ flutter:
     - assets/fonts/
     - assets/db/prebuilt.db
     - assets/db/cheikh_registry.db
-    - assets/db/surah-recitation-ahmad-alnufais.db
-    - assets/db/ayah-recitation-abdur-rahman-as-sudais-recitation.db
+    - assets/db/chiekh voices/surah-recitation-ahmad-alnufais.db
     - assets/images/background/left_background2.jpg
     - assets/images/background/right_background2.jpg
     - assets/images/background/left_background-normal.jpg

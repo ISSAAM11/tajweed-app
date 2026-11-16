@@ -107,6 +107,8 @@ class _HomeScreen {
   // Grid
   final double gridCrossSpacing = 14;
   final double gridMainSpacing = 14;
+  final double titleSpacing = 10;
+  
   // Taller than wide: the action cards stack a large illustration over a title
   // and a badge, and the illustration needs the vertical room.
   final double gridChildAspectRatio = 0.85;

@@ -34,5 +34,5 @@ const kDefaultCheikh = CheikhReciter(
   id: 'ahmad-alnufais',
   name: 'Ahmad Al-Nufais',
   nameArabic: 'أحمد النفيس',
-  dbAssetPath: 'assets/db/surah-recitation-ahmad-alnufais.db',
+  dbAssetPath: 'assets/db/chiekh voices/surah-recitation-ahmad-alnufais.db',
 );

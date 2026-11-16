@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cg_core_defs/cg_core_defs.dart';
@@ -20,6 +21,7 @@ import 'package:tajweed_ai/src/features/home/quran/audio/database/audio_dao.dart
 import 'package:tajweed_ai/src/features/home/quran/audio/database/audio_database_registry.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/database/cheikh_registry/cheikh_registry_dao.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/database/cheikh_registry/cheikh_registry_database.dart';
+import 'package:tajweed_ai/src/features/home/quran/audio/datasource/reciter_catalog_datasource.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/services/cheikh_preference_service.dart';
 import 'package:tajweed_ai/src/features/home/quran/audio/vm/cheikh_cubit.dart';
 import 'package:tajweed_ai/src/features/home/quran/listing/datasource/cache/listing_cache.dart';
@@ -58,17 +60,23 @@ final class AppBinding extends AppBindings {
       }
       return CheikhRegistryDatabase(file);
     });
+    di.registerSingletonAsync<CheikhRegistryDao>(
+      () async => CheikhRegistryDao(get<CheikhRegistryDatabase>()),
+      dependsOn: [CheikhRegistryDatabase],
+    );
     di.registerSingletonAsync<CheikhCubit>(() async {
-      final dao = CheikhRegistryDao(get<CheikhRegistryDatabase>());
+      final dao = get<CheikhRegistryDao>();
       final cheikhList = await dao.getAllCheikhs();
       final prefs = CheikhPreferenceService(
         get<CacheManager<SharedPreferences>>(),
       );
       return CheikhCubit(prefs, cheikhList, prefs.get());
-    }, dependsOn: [CheikhRegistryDatabase]);
+    }, dependsOn: [CheikhRegistryDao]);
 
     // 📦 Audio DB registry + DAO
-    di.registerLazySingleton<AudioDatabaseRegistry>(() => AudioDatabaseRegistry());
+    di.registerLazySingleton<AudioDatabaseRegistry>(
+      () => AudioDatabaseRegistry(get<Dio>()),
+    );
     di.registerLazySingleton<AudioDao>(() => AudioDao(get<AudioDatabaseRegistry>()));
 
     // 📦 DAOs
@@ -135,5 +143,38 @@ final class AppBinding extends AppBindings {
     di.registerLazySingleton<ConnectivityMonitor>(
       () => ConnectivityPlus(Connectivity()),
     );
+  }
+}
+
+/// Syncs the reciter catalog from the backend into `cheikh_registry.db` and
+/// re-points [CheikhCubit] at the refreshed list. Best-effort: offline or on
+/// failure the app just keeps working off the bundled/previously-synced
+/// registry, since every reciter's timing db is fetched lazily anyway.
+///
+/// Must run after `RequesterConfig.configure()` (see `main.dart`) — the
+/// underlying [ReciterCatalogDataSourceImpl] call throws a
+/// `LateInitializationError` otherwise, since `RequestPerformer` reads its
+/// base URL from that static configuration.
+Future<void> refreshReciterCatalog() async {
+  try {
+    final dao = get<CheikhRegistryDao>();
+    final cubit = get<CheikhCubit>();
+    final source = ReciterCatalogDataSourceImpl(
+      client: get<Dio>(),
+      cacheManager: get<CacheManager<SharedPreferences>>(),
+      connectivityMonitor: get<ConnectivityMonitor>(),
+    );
+    final result = await source.getReciters();
+    await result.fold<Future<void>>(
+      (_) async {},
+      (catalog) async {
+        if (catalog.reciters.isEmpty) return;
+        final updated = await dao.upsertReciters(catalog.reciters);
+        cubit.refreshAvailable(updated);
+      },
+    );
+  } catch (e) {
+    // Unreachable backend, timeout, malformed payload… — keep the local list.
+    Debugger.red('Reciter catalog sync failed: $e');
   }
 }

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # Local
     "apps.core",
     "apps.recitation",
+    "apps.reciters",
 ]
 
 MIDDLEWARE = [

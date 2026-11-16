@@ -28,7 +28,6 @@ final class HomeScreen extends Feature<HomeScreenBloc, HomeScreenState> {
         onNotifications: () => context.push('/settings'),
       ),
       body: SingleChildScrollView(
-        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -52,7 +51,7 @@ final class HomeScreen extends Feature<HomeScreenBloc, HomeScreenState> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Center(child: _SectionTitle()),
-                  SizedBox(height: metrics.sectionBottomSpacing),
+                  SizedBox(height: metrics.titleSpacing),
                   HomeActionGrid(
                     actions: _buildActions(context),
                     onActionTap: (action) => _onActionTap(context, action),
@@ -90,7 +89,7 @@ class _SectionTitle extends StatelessWidget {
       style: AppFonts.lato
           .withSize(FontSizes.title)
           .withColor(Theme.of(context).colorScheme.onSurfaceVariant)
-          .medium(),
+          .bold(),
     );
   }
 }
@@ -160,9 +159,7 @@ List<HomeAction> _buildActions(BuildContext context) {
   return [
     HomeAction(
       title: l10n.homeTajweedLessons,
-      levelLabel: l10n.homeLevelOne,
-      progressCurrent: 4,
-      progressTotal: 10,
+      actionLabel: l10n.homeStartHifth,
       iconAsset: AppImages.tajweedLessonsIcon,
       highlighted: true,
       targetRoute: '/tajweed-courses',
